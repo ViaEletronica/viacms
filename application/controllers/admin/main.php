@@ -628,16 +628,23 @@ class Main extends CI_controller {
 	// plugins tests
 	public function plugins_test(){
 		
-		$teste = array( 'status' => "0" );
+		$this->db->select('t1.*, t2.title as parent_title, t2.alias as parent_alias');
+		$this->db->from('tb_articles_categories t1');
+		$this->db->join('tb_articles_categories t2', 't1.parent = t2.id', 'left');
 		
-		echo var_dump( check_var( $teste ) );
+		$this->db->order_by('ordering asc, title asc, id asc');
+		$query = $this->db->get();
+		$query = $query->result_array();
 		
-		$this->load->model( 'plugins' );
+		$f_params = array(
+			
+			'array' => $query,
+			'parent_id' => 5,
+			
+		);
 		
-		
-		echo $this->plugins->load();
-		echo '<br/>--------------<br/>';
-		echo $this->plugins->load();
+		//echo '<pre>' . print_r( $query, TRUE ) . '</pre>';
+		echo '<pre>' . print_r( $this->main_common_model->get_children_as_list( $f_params ), TRUE ) . '</pre>';
 		
 	}
 	

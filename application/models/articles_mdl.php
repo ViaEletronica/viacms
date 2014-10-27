@@ -1091,6 +1091,7 @@ class Articles_mdl extends CI_Model{
 				// atribue cada valor da categoria em um array
 				$this->categories_tree[ $row[ 'id' ] ] = array( 
 					'id' => $row[ 'id' ],
+					'image' => $row[ 'image' ],
 					'alias' => $row[ 'alias' ],
 					'title' => $row[ 'title' ],
 					'parent' => $row[ 'parent' ],
@@ -1722,6 +1723,28 @@ class Articles_mdl extends CI_Model{
 	
 	// --------------------------------------------------------------------
 	
+	/**
+	 * Return articles categories array tree
+	 * 
+	 * @see get_array_tree() for params
+	 */
+	
+	public function get_categories_tree( $f_params = NULL ){
+		
+		// -------------------------------------------------
+		// Parsing vars ------------------------------------
+		
+		$f_params[ 'array' ] =				( ! isset( $f_params[ 'array' ] ) OR ! is_array( $f_params[ 'array' ] ) ) ? $this->get_categories() : $f_params[ 'array' ];
+		
+		// Parsing vars ------------------------------------
+		// -------------------------------------------------
+		
+		return $this->main_common_model->get_array_tree( $f_params );
+		
+	}
+	
+	// --------------------------------------------------------------------
+	
 	public function get_category_path( $id = 0, $parent_limit = 0, $categories = NULL, $html = FALSE, $separator = ' &#187; ' ){
 		
 		// -------------------------------------------------
@@ -1851,6 +1874,7 @@ class Articles_mdl extends CI_Model{
 	public function get_category( $id = NULL ){
 		
 		if ( $id!=NULL ){
+			
 			$this->db->select( 't1.*, t2.title as parent_category_title' );
 			$this->db->from( 'tb_articles_categories t1' );
 			$this->db->join( 'tb_articles_categories t2', 't1.parent = t2.id', 'left' );
@@ -1858,9 +1882,12 @@ class Articles_mdl extends CI_Model{
 			// limitando o resultando em apenas 1
 			$this->db->limit( 1 );
 			return $this->db->get()->row_array();
+			
 		}
 		else {
+			
 			return false;
+			
 		}
 		
 	}

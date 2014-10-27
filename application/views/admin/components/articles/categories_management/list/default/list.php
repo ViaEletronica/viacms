@@ -43,43 +43,30 @@
 				<?php if ( $category[ 'level' ] > 0 ){ ?>
 				<?= vui_el_button( array( 'icon' => 'sub-item', 'only_icon' => TRUE, ) ); ?>
 				<?php } ?>
-				<?= anchor( $category[ 'edit_link' ], $category[ 'title' ], 'class="" title="' . lang( 'click_to_edit_category' ) . '"' ); ?>
+				<?= anchor( $this->articles->get_c_url( 'edit', $category[ 'id' ] ), $category[ 'title' ], 'class="" title="' . lang( 'click_to_edit_category' ) . '"' ); ?>
 			</td>
 			
 			<td class="ordering">
 				
-				<?= form_open( $category[ 'down_order_link' ], 'class="form-change-order"' ); ?>
+				<?= form_open( get_url( $this->articles->get_c_url( 'change_ordering' ) ), 'class="form-change-ordering"' ); ?>
 				
-				<?= form_hidden( 'category_id', $category[ 'id' ] ); ?>
-				<?= form_hidden( 'ordering', $category[ 'ordering' ] ); ?>
-				
-				<?= vui_el_button( array( 'text' => lang( 'down_order' ), 'icon' => 'up', 'only_icon' => TRUE, 'button_type' => 'button', 'type' => 'submit', 'name' => 'submit_down_order', 'id' => 'submit-down-order', ) ); ?>
-				
-				<?= form_close(); ?>
-				
-				<?= form_open( $category[ 'change_order_link' ], 'class="form-change-order"' ); ?>
-				<?= form_input( array( 'id'=>'ordering-' . $category[ 'id' ], 'class'=>'inputbox-ordering','name'=>'ordering'), set_value( 'ordering', $category[ 'ordering' ] ) ); ?>
-				<?= form_hidden( 'category_id', $category[ 'id' ] ); ?>
-				<?= form_close(); ?>
-				
-				<?= form_open( $category[ 'up_order_link' ], 'class="form-change-order"' ); ?>
-				
-				<?= form_hidden( 'category_id', $category[ 'id' ] ); ?>
-				<?= form_hidden( 'ordering', $category[ 'ordering' ] ); ?>
-				
-				<?= vui_el_button( array( 'text' => lang( 'up_order' ), 'icon' => 'down', 'only_icon' => TRUE, 'button_type' => 'button', 'type' => 'submit', 'name' => 'submit_up_order', 'id' => 'submit-up-order', ) ); ?>
-				
+					<?= vui_el_button( array( 'url' => $this->articles->get_c_url( 'down_ordering', $category ), 'text' => lang( 'down_ordering' ), 'icon' => 'up', 'only_icon' => TRUE, ) ); ?>
+					
+					<?= form_input( array( 'id'=>'ordering-' . $category[ 'id' ], 'class'=>'inputbox-order', 'name' => 'ordering' ), set_value( 'ordering', $category[ 'ordering' ] ) ); ?>
+					
+					<?= vui_el_button( array( 'url' => $this->articles->get_c_url( 'up_ordering', $category ), 'text' => lang( 'up_ordering' ), 'icon' => 'down', 'only_icon' => TRUE, ) ); ?>
+					
 				<?= form_close(); ?>
 				
 			</td>
 			
 			<td class="operations">
 				
-				<?= vui_el_button( array( 'url' => $category[ 'view_link' ], 'text' => lang( 'action_view' ), 'target' => '_blank', 'icon' => 'view', 'only_icon' => TRUE, ) ); ?>
+				<?= vui_el_button( array( 'url' => $this->articles->get_c_url( 'edit', $category ), 'text' => lang( 'action_view' ), 'target' => '_blank', 'icon' => 'view', 'only_icon' => TRUE, ) ); ?>
 				
-				<?= vui_el_button( array( 'url' => $category[ 'edit_link' ], 'text' => lang( 'action_edit' ), 'icon' => 'edit', 'only_icon' => TRUE, ) ); ?>
+				<?= vui_el_button( array( 'url' => $this->articles->get_c_url( 'edit', $category ), 'text' => lang( 'action_edit' ), 'icon' => 'edit', 'only_icon' => TRUE, ) ); ?>
 				
-				<?= vui_el_button( array( 'url' => $category[ 'remove_link' ], 'text' => lang( 'action_delete' ), 'icon' => 'remove', 'only_icon' => TRUE, ) ); ?>
+				<?= vui_el_button( array( 'url' => $this->articles->get_c_url( 'remove', $category ), 'text' => lang( 'action_delete' ), 'icon' => 'remove', 'only_icon' => TRUE, ) ); ?>
 				
 			</td>
 		</tr>

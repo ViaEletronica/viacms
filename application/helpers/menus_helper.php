@@ -120,11 +120,15 @@ function _check_current_menu_item( &$reKeyed, $id_str, $parent_str ){
 	
 	$CI =& get_instance();
 	
-	foreach ( $reKeyed as &$item ) {
+	if ( isset( $CI->mcm->current_menu_item ) ) {
 		
-		if ( $CI->mcm->current_menu_item[ 'id' ] == $item[ $id_str ] ){
+		foreach ( $reKeyed as &$item ) {
 			
-			_set_current_menu_item( $reKeyed, $item, $id_str, $parent_str );
+			if ( $CI->mcm->current_menu_item[ 'id' ] == $item[ $id_str ] ){
+				
+				_set_current_menu_item( $reKeyed, $item, $id_str, $parent_str );
+				
+			}
 			
 		}
 		

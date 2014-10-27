@@ -14,11 +14,241 @@ class Main_common_model extends CI_Model{
 	public $loaded_modules = FALSE; // Array dos módulos carregados
 	public $html_data = FALSE; // Array dos elementos html da página enviados ao template
 	
+	private $_items_tree = NULL;
+	
 	public $params = array();
 	
 	public function __construct(){
 		
 	}
+	
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Return a array tree (unidimensional or multidimensional array)
+	 * 
+	 * @access public
+	 * @param f_params				array				function params, where:
+	 * 		parent_id | int
+	 * 		level | int
+	 * 		array | array | the items array
+	 * 		array_type | string | array return type, can be 'unidimensional' or 'multidimensional'
+	 * @return array
+	 */
+	
+	public function get_array_tree( $f_params = NULL ){
+		
+		// -------------------------------------------------
+		// Parsing vars ------------------------------------
+		
+		$type_options_allowed = array(
+			
+			'unidimensional',
+			'multidimensional',
+			
+		);
+		
+		$f_params[ 'parent_id' ] =			( isset( $f_params[ 'parent_id' ] ) AND is_numeric( $f_params[ 'parent_id' ] ) AND $f_params[ 'parent_id' ] >= 0 ) ? ( int ) $f_params[ 'parent_id' ] : 0;
+		$f_params[ 'level' ] =				( isset( $f_params[ 'level' ] ) AND is_numeric( $f_params[ 'level' ] ) AND $f_params[ 'level' ] >= 0 ) ? ( int ) $f_params[ 'level' ] : 0;
+		$f_params[ 'array' ] =				( ! isset( $f_params[ 'array' ] ) OR ! is_array( $f_params[ 'array' ] ) ) ? array() : $f_params[ 'array' ];
+		$f_params[ 'array_type' ] =			( isset( $f_params[ 'type' ] ) AND is_string( $f_params[ 'array_type' ] ) AND in_array( $f_params[ 'array_type' ], $type_options_allowed ) ) ? $f_params[ 'array_type' ] : 'unidimensional';
+		
+		// Parsing vars ------------------------------------
+		// -------------------------------------------------
+		
+		if ( $f_params[ 'array_type' ] == 'multidimensional' ) {
+			
+			return $this->array_to_multidimensional_array( $f_params );
+			
+		}
+		else if ( $f_params[ 'array_type' ] == 'unidimensional' ) {
+			
+			return $this->array_to_parent_ordered( $f_params );
+			
+		}
+		
+		return FALSE;
+		
+	}
+	
+	// --------------------------------------------------------------------
+	
+	public function array_to_menu( $f_params ) {
+		
+		// -------------------------------------------------
+		// Parsing vars ------------------------------------
+		
+		if ( ! is_array( $f_params ) AND ! check_var( $f_params ) ) {
+			
+			return array();
+			
+		}
+		
+		$f_params[ 'array' ] =					( isset( $f_params[ 'array' ] ) AND is_array( $f_params[ 'array' ] ) ) ? $f_params[ 'array' ] : array();
+		
+		// Parsing vars ------------------------------------
+		// -------------------------------------------------
+		
+		$array_tree = $this->array_to_multidimensional_array( $f_params );
+		
+		return ul_menu( $array_tree );
+		
+	}
+	
+	// --------------------------------------------------------------------
+	
+	public function array_to_multidimensional_array( $f_params ) { 
+		
+		// -------------------------------------------------
+		// Parsing vars ------------------------------------
+		
+		if ( ! is_array( $f_params ) AND ! check_var( $f_params ) ) {
+			
+			return array();
+			
+		}
+		
+		$f_params[ 'parent_id' ] =						( isset( $f_params[ 'parent_id' ] ) AND is_numeric( $f_params[ 'parent_id' ] ) AND $f_params[ 'parent_id' ] >= 0 ) ? ( int ) $f_params[ 'parent_id' ] : 0;
+		$f_params[ 'array' ] =							( isset( $f_params[ 'array' ] ) AND is_array( $f_params[ 'array' ] ) ) ? $f_params[ 'array' ] : array();
+		$f_params[ 'id_field' ] =						( isset( $f_params[ 'id_field' ] ) AND is_string( $f_params[ 'id_field' ] ) ) ? $f_params[ 'id_field' ] : 'id';
+		$f_params[ 'parent_field' ] =					( isset( $f_params[ 'parent_field' ] ) AND is_string( $f_params[ 'parent_field' ] ) ) ? $f_params[ 'parent_field' ] : 'parent';
+		
+		// Parsing vars ------------------------------------
+		// -------------------------------------------------
+		
+		$array = $f_params[ 'array' ];
+		
+		// First, convert the array so that the keys match the ids
+		$new = array();
+		foreach ( $array as $item ) {
+			
+			$new[ ( int ) $item[ $f_params[ 'id_field' ] ] ] = $item;
+			
+		}
+		
+		// Next, use references to associate children with parents
+		foreach ( $new as $id => $item ) {
+			
+			if ( 
+				
+				( isset( $item[ $f_params[ 'parent_field' ] ] ) AND $item[ $f_params[ 'parent_field' ] ] )
+				AND ( isset( $new[ ( int ) $item[ $f_params[ 'parent_field' ] ] ] ) AND $new[ ( int ) $item[ $f_params[ 'parent_field' ] ] ] )
+				
+			 ){
+				
+				$new[ ( int ) $item[ $f_params[ 'parent_field' ] ] ][ 'children' ][] =& $new[ $id ];
+				
+			}
+			
+		}
+		
+		// Finally, go through and remove children from the outer level
+		foreach ( $new as $id => $item ) {
+			
+			if ( isset( $item[ $f_params[ 'parent_field' ] ] ) AND $item[ $f_params[ 'parent_field' ] ] ) {
+				
+				unset( $new[ $id ] );
+			}
+			
+		}
+		
+		return $new;
+		
+	}
+	
+	// --------------------------------------------------------------------
+	
+	public function array_to_parent_ordered( $f_params ) { 
+		
+		// -------------------------------------------------
+		// Parsing vars ------------------------------------
+		
+		if ( ! is_array( $f_params ) AND ! check_var( $f_params ) ) {
+			
+			return array();
+			
+		}
+		
+		$f_params[ 'parent_id' ] =				( isset( $f_params[ 'parent_id' ] ) AND is_numeric( $f_params[ 'parent_id' ] ) AND $f_params[ 'parent_id' ] >= 0 ) ? ( int ) $f_params[ 'parent_id' ] : 0;
+		$f_params[ 'level' ] =					( isset( $f_params[ 'level' ] ) AND is_numeric( $f_params[ 'level' ] ) AND $f_params[ 'level' ] >= 0 ) ? ( int ) $f_params[ 'level' ] : 0;
+		$f_params[ 'array' ] =					( isset( $f_params[ 'array' ] ) AND is_array( $f_params[ 'array' ] ) ) ? $f_params[ 'array' ] : array();
+		$f_params[ 'id_field' ] =				( isset( $f_params[ 'id_field' ] ) AND is_string( $f_params[ 'id_field' ] ) ) ? $f_params[ 'id_field' ] : 'id';
+		$f_params[ 'title_field' ] =			( isset( $f_params[ 'title_field' ] ) AND is_string( $f_params[ 'title_field' ] ) ) ? $f_params[ 'title_field' ] : 'title';
+		$f_params[ 'parent_field' ] =			( isset( $f_params[ 'parent_field' ] ) AND is_string( $f_params[ 'parent_field' ] ) ) ? $f_params[ 'parent_field' ] : 'parent';
+		$f_params[ 'indented_symbol' ] =		( isset( $f_params[ 'indented_symbol' ] ) AND is_string( $f_params[ 'indented_symbol' ] ) ) ? $f_params[ 'indented_symbol' ] : lang( 'indented_symbol' );
+		
+		// Parsing vars ------------------------------------
+		// -------------------------------------------------
+		
+		$return = $this->_array_to_parent_ordered( $f_params );
+		$this->_items_tree = NULL;
+		return $return;
+		
+	}
+	
+	// --------------------------------------------------------------------
+	
+	private function _array_to_parent_ordered( $f_params ) { 
+		
+		$array = $f_params[ 'array' ];
+		
+		foreach( $array as $row ) {
+			
+			if ( $row[ 'parent' ] == $f_params[ 'parent_id' ] ) {
+				
+				$this->_items_tree[ $row[ $f_params[ 'id_field' ] ] ] = $row;
+				$this->_items_tree[ $row[ $f_params[ 'id_field' ] ] ][ 'indented_title' ] = str_repeat( '&nbsp;' , $f_params[ 'level' ] * 4 + 4 ) . lang( 'indented_symbol' ) . $row[ $f_params[ 'title_field' ] ];
+				$this->_items_tree[ $row[ $f_params[ 'id_field' ] ] ][ 'level' ] = $f_params[ 'level' ];
+				
+				// chama esta função novamente para mostrar os filhos deste filho
+				
+				$gcalp = $f_params;
+				
+				$gcalp[ 'level' ] += 1;
+				$gcalp[ 'parent_id' ] = $row[ $f_params[ 'id_field' ] ];
+				
+				$this->_array_to_parent_ordered( $gcalp );
+				
+			}
+			
+		}
+		
+		return $this->_items_tree;
+		
+	}
+	
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Obtém o número de filhos a partir de uma árvore de array
+	 * 
+	 * @access	public
+	 * @param	id_field			string			the index name for id
+	 * @param	parent_id_field		string			the index name for parent_id
+	 * @param	parent_id			int				the parent item id
+	 * @param	array				array			the items array
+	 * @return	boolean
+	 */
+	 
+	private function _get_num_childrens( $id_field, $parent_id_field, $parent_id, $array ){
+		
+		$return = 0;
+		
+		foreach ( $array as $key => $item ) {
+			
+			if ( $item[ $parent_id_field ] == $parent_id ) {
+				
+				$return++;
+				
+			}
+			
+		}
+		
+		return $return;
+		
+	}
+	
+	// --------------------------------------------------------------------
 	
 	/**
 	 * Fix items ordering
@@ -27,6 +257,7 @@ class Main_common_model extends CI_Model{
 	 * @param	f_params array
 	 * @return	boolean
 	 */
+	 
 	public function fix_items_ordering( $f_params = NULL ){
 		
 		$table_name =							isset( $f_params[ 'table_name' ] ) ? $f_params[ 'table_name' ] : NULL;

@@ -303,8 +303,7 @@ class Articles extends Main {
 				
 				$data[ 'articles' ] = $articles;
 				$data[ 'pagination' ] = get_pagination( $pagination_url, $cp, $ipp, $this->search->count_all_results( 'articles_search' ) );
-				$data[ 'component_name' ] = $this->component_name;
-				$data[ 'categories' ] = $this->articles_model->get_categories_tree( 0, 0, 'list' );
+				$data[ 'categories' ] = $this->articles->get_categories_tree();
 				$data[ 'filter_by_category' ] = $filter_by_category;
 				
 				// -------------------------------------------------
@@ -541,7 +540,7 @@ class Articles extends Main {
 				}
 				
 				$data[ 'f_action' ] = $action;
-				$data[ 'categories' ] = $this->articles_model->get_categories_tree( 0, 0, 'list' );
+				$data[ 'categories' ] = $this->articles_model->get_categories_tree();
 				$data[ 'article' ] = & $article;
 				$data[ 'users' ] = $this->users_common_model->get_users_checking_privileges()->result_array();
 				$data[ 'users_groups' ] = $this->users_common_model->get_accessible_users_groups( $this->users_common_model->user_data[ 'id' ] );
@@ -1053,8 +1052,16 @@ class Articles extends Main {
 		$action =								isset( $f_params[ 'a' ] ) ? $f_params[ 'a' ] : NULL; // action
 		$sub_action =							isset( $f_params[ 'sa' ] ) ? $f_params[ 'sa' ] : NULL; // sub action
 		$category_id =							isset( $f_params[ 'cid' ] ) ? $f_params[ 'cid' ] : NULL; // category id
-		$component_id =							isset( $f_params[ 'cid' ] ) ? $f_params[ 'cid' ] : NULL; // component id
-		$component_item =						isset( $f_params[ 'ci' ] ) ? $f_params[ 'ci' ] : NULL; // component item
+		$order_by =								isset( $f_params[ 'ob' ] ) ? $f_params[ 'ob' ] : NULL; // order by
+		$post =									$this->input->post( NULL, TRUE ); // post array input
+		$get =									$this->input->get(); // get array input
+		
+		// -------------
+		
+		$cp =									isset( $f_params[ 'cp' ] ) ? ( int ) $f_params[ 'cp' ] : NULL; // current page
+			$cp =								( $cp < 1 ) ? 1 : $cp;
+		$ipp =									isset( $f_params[ 'ipp' ] ) ? ( int ) $f_params[ 'ipp' ] : NULL; // items per page
+			$ipp =								( $ipp < 1 ) ? $this->mcm->filtered_system_params[ $this->mcm->environment . '_items_per_page' ] : $ipp;
 		
 		// Parsing vars ------------------------------------
 		// -------------------------------------------------
@@ -1073,17 +1080,133 @@ class Articles extends Main {
 			
 			if ( $action == 'l' ){
 				
-				$categories = $this->articles_model->get_categories_tree( 0, 0, 'list' );
+				$this->load->helper( array( 'pagination' ) );
 				
-				if ( ! $categories ){
+				// -------------------------------------------------
+				// Columns ordering --------------------------------
+				
+				if ( ! ( ( $order_by_direction = $this->users_common_model->get_user_preference( 'articles_categories_order_by_direction' ) ) != FALSE ) ){
 					
-					$categories = FALSE;
+					$order_by_direction = 'ASC';
 					
 				}
 				
-				$data[ 'categories' ] = $categories;
+				// order by complement
+				$comp_ob = '';
 				
-				set_last_url($url);
+				if ( ( $order_by = $this->users_common_model->get_user_preference( 'articles_categories_order_by' ) ) != FALSE ){
+					
+					$data[ 'order_by' ] = $order_by;
+					
+					switch ( $order_by ) {
+						
+						case 'id':
+							
+							$order_by = 't1.id';
+							break;
+							
+						case 'image':
+							
+							$order_by = 'if( `t1`.`image` = \'\' or `t1`.`image` is null, 1, 0 ), `t1`.`image`';
+							$comp_ob = ', t1.ordering ' . $order_by_direction . ', t1.title ' . $order_by_direction;
+							break;
+							
+						case 'created_by_alias':
+						
+							$order_by = 't1.created_by_alias';
+							break;
+							
+					}
+					
+				}
+				else{
+					
+					$order_by = 't1.parent';
+					$comp_ob = ', t1.ordering ' . $order_by_direction . ', t1.title ' . $order_by_direction;
+					$data[ 'order_by' ] = 't1.parent';
+					
+				}
+				
+				$data[ 'order_by_direction' ] = $order_by_direction;
+				
+				$order_by = $order_by . ' ' . $order_by_direction . $comp_ob;
+				
+				// Columns ordering --------------------------------
+				// -------------------------------------------------
+				
+				// -------------------------------------------------
+				// List / Search -----------------------------------
+				
+				$terms = trim( $this->input->post( 'terms', TRUE ) ? $this->input->post( 'terms', TRUE ) : ( ( $this->input->get( 'q' ) != FALSE ) ? $this->input->get( 'q' ) : FALSE ) );
+				
+				$search_config = array(
+					
+					'plugins' => 'articles_categories_search',
+					'ipp' => $ipp,
+					'cp' => $cp,
+					'terms' => $terms,
+					'allow_empty_terms' => ( $action === 's' ? FALSE : TRUE ),
+					'order_by' => array( // deve-se enviar um array associativo, onde cada chave deve ser so nome do plugin, order by não pode ser usado globalmente, apenas por plugin
+						
+						'articles_categories_search' => $order_by, // pode ser um array
+						
+					),
+					
+				);
+				
+				$this->load->library( 'search', $search_config );
+				
+				$categories = $this->search->get_full_results( 'articles_categories_search' );
+				
+				// List / Search -----------------------------------
+				// -------------------------------------------------
+				
+				// -------------------------------------------------
+				// Pagination --------------------------------------
+				
+				// get article url params
+				$gaup = array(
+					
+					'ipp' => $ipp,
+					'cp' => $cp,
+					'get' => $this->input->get(),
+					'return' => 'template',
+					'template_fields' => array(
+						
+						'ipp' => '%ipp%',
+						'cp' => '%p%',
+						
+					),
+					
+				);
+				
+				if ( $terms ) {
+					
+					$gaup[ 'get' ][ 'q' ] = $terms;
+					
+				}
+				
+				$pagination_url = $this->articles->get_c_url( ( $action === 's' ? 'search' : 'list' ), $gaup );
+				
+				// Pagination --------------------------------------
+				// -------------------------------------------------
+				
+				// -------------------------------------------------
+				// Last url ----------------------------------------
+				
+				// setting up the last url
+				unset( $gaup[ 'return' ] );
+				unset( $gaup[ 'template_fields' ] );
+				set_last_url( $this->articles->get_c_url( ( $action === 's' ? 'search' : 'list' ), $gaup ) );
+				
+				// Last url ----------------------------------------
+				// -------------------------------------------------
+				
+				$data[ 'categories' ] = $categories;
+				$data[ 'pagination' ] = get_pagination( $pagination_url, $cp, $ipp, $this->search->count_all_results( 'articles_categories_search' ) );
+				
+				// -------------------------------------------------
+				// Load page ---------------------------------------
 				
 				$this->_page(
 					
@@ -1099,6 +1222,9 @@ class Articles extends Main {
 					)
 					
 				);
+				
+				// Load page ---------------------------------------
+				// -------------------------------------------------
 				
 			}
 			
