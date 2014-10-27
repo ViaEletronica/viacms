@@ -13,14 +13,6 @@
 			
 			<div class="form-actions to-toolbar">
 				
-				<?= vui_el_button( array( 'text' => lang( 'copy' ), 'icon' => 'copy', 'class' => 'multi-selection-action-input', 'button_type' => 'button', 'type' => 'submit', 'value' => 'copy', 'name' => 'submit_copy', 'id' => 'submit-copy', 'form' => 'articles-form', ) ); ?>
-				
-				<?= vui_el_button( array( 'text' => lang( 'remove' ), 'icon' => 'remove', 'class' => 'multi-selection-action-input', 'button_type' => 'button', 'type' => 'submit', 'value' => 'remove', 'name' => 'submit_remove', 'id' => 'submit-remove', 'form' => 'articles-form', ) ); ?>
-				
-			</div>
-			
-			<div class="form-actions to-toolbar">
-				
 				<?php echo form_open( get_url( 'admin' . $this->uri->ruri_string() . assoc_array_to_qs() ), array( 'id' => 'articles-filter-by-category-form', ) ); ?>
 				
 					<div class="filter-fields-wrapper fields-wrapper-inline">
@@ -67,13 +59,53 @@
 			
 			<?php if ( isset( $articles ) AND $articles ){ ?>
 			
+			<div class="form-actions to-toolbar">
+				
+				<?= vui_el_button( array( 'text' => lang( 'copy' ), 'icon' => 'copy', 'class' => 'multi-selection-action-input', 'button_type' => 'button', 'type' => 'submit', 'value' => 'copy', 'name' => 'submit_copy', 'id' => 'submit-copy', 'form' => 'articles-form', ) ); ?>
+				
+				<?= vui_el_button( array( 'text' => lang( 'remove' ), 'icon' => 'remove', 'class' => 'multi-selection-action-input', 'button_type' => 'button', 'type' => 'submit', 'value' => 'remove', 'name' => 'submit_remove', 'id' => 'submit-remove', 'form' => 'articles-form', ) ); ?>
+				
+				<?= vui_el_button( array( 'url' => $this->articles->get_a_url( 'fix_ordering' ), 'text' => lang( 'fix_ordering' ), 'icon' => 'apply', 'class' => '', 'id' => 'fix-ordering', ) ); ?>
+				
+			</div>
+			
+			<div class="form-actions">
+				
+				<?php echo form_open( get_url( 'admin' . $this->uri->ruri_string() . assoc_array_to_qs() ), array( 'id' => 'change-ipp-form', ) ); ?>
+				
+					<div class="filter-fields-wrapper fields-wrapper-inline">
+						
+						<?php
+							
+							$field_name = 'ipp';
+							$field_error = form_error( $field_name, '<div class="msg-inline-error">', '</div>' );
+							$field_attr = ( $field_error ? 'autofocus' : '' ) . ' ' .
+								'id="' . $field_name . '" ' .
+								'name="' . $field_name . '" ' .
+								'min="-1" ' .
+								'form="change-ipp-form" ' .
+								'title="' . lang( 'tip_change_items_per_page' ) . '" ' .
+								'class="' . $field_name . ' ' . ( $field_error ? 'field-error' : '' ) . '"' . ( $field_error ? element_title( $field_error ) : '' );
+							
+						?>
+						
+						<?= form_input_number( $field_name, $ipp, $field_attr ); ?>
+						
+						<?= vui_el_button( array( 'text' => lang( 'action_change_ipp' ), 'icon' => 'apply', 'button_type' => 'button', 'type' => 'submit', 'name' => 'submit_change_ipp', 'id' => 'submit-change-ipp', 'only_icon' => TRUE, 'form' => 'change-ipp-form', ) ); ?>
+						
+					</div>
+					
+				<?php echo form_close(); ?>
+				
+			</div>
+			
 			<?php if ( $pagination ){ ?>
 			<div class="pagination">
-				<?php echo $pagination; ?>
+				
+				<?= $pagination; ?>
+				
 			</div>
 			<?php } ?>
-			
-			<?php echo form_open( get_url( 'admin/'.$component_name.'/' . $component_function . '/change_order/' ), 'class="form-change-order" id="form-change-order"' ); ?><?php echo form_close(); ?>
 			
 			<?= form_open( get_url( $this->articles->get_a_url( 'batch' ) ), array( 'id' => 'articles-form', ) ); ?><?= form_close(); ?>
 			
@@ -86,13 +118,6 @@
 						
 					</th>
 					
-					<?php $current_column = 'image'; ?>
-					<th class="url-<?= $current_column; ?>  order-by <?= ( $order_by == $current_column ) ? 'order-by-column ' . 'order-by-' . $order_by_direction : '' ?>">
-						
-						<?= anchor( get_url( $this->articles->get_a_url( 'change_order_by', $current_column ) ) , lang( $current_column ), 'class="" title="'. ( ( $order_by == $current_column ) ? lang('ordering_by_this_column_' . $order_by_direction . '_click_to_' . ( $order_by_direction == 'ASC' ? 'DESC' : 'ASC' ) ) :  ( ( $order_by == $current_column ) ? lang('ordering_by_this_column_' . $order_by_direction . '_click_to_' . ( $order_by_direction == 'ASC' ? 'DESC' : 'ASC' ) ) : lang('click_to_order_by_this_column') )  ) .'"'); ?>
-						
-					</th>
-					
 					<?php $current_column = 'id'; ?>
 					<th class="url-<?= $current_column; ?>  order-by <?= ( $order_by == $current_column ) ? 'order-by-column ' . 'order-by-' . $order_by_direction : '' ?>">
 						
@@ -100,14 +125,14 @@
 						
 					</th>
 					
-					<?php $current_column = 'title'; ?>
+					<?php $current_column = 'image'; ?>
 					<th class="url-<?= $current_column; ?>  order-by <?= ( $order_by == $current_column ) ? 'order-by-column ' . 'order-by-' . $order_by_direction : '' ?>">
 						
-						<?= anchor(get_url( $this->articles->get_a_url( 'change_order_by', $current_column ) ) , lang( $current_column ), 'class="" title="'. ( ( $order_by == $current_column ) ? lang('ordering_by_this_column_' . $order_by_direction . '_click_to_' . ( $order_by_direction == 'ASC' ? 'DESC' : 'ASC' ) ) :  ( ( $order_by == $current_column ) ? lang('ordering_by_this_column_' . $order_by_direction . '_click_to_' . ( $order_by_direction == 'ASC' ? 'DESC' : 'ASC' ) ) : lang('click_to_order_by_this_column') )  ) .'"'); ?>
+						<?= anchor( get_url( $this->articles->get_a_url( 'change_order_by', $current_column ) ) , lang( $current_column ), 'class="" title="'. ( ( $order_by == $current_column ) ? lang('ordering_by_this_column_' . $order_by_direction . '_click_to_' . ( $order_by_direction == 'ASC' ? 'DESC' : 'ASC' ) ) :  ( ( $order_by == $current_column ) ? lang('ordering_by_this_column_' . $order_by_direction . '_click_to_' . ( $order_by_direction == 'ASC' ? 'DESC' : 'ASC' ) ) : lang('click_to_order_by_this_column') )  ) .'"'); ?>
 						
 					</th>
 					
-					<?php $current_column = 'alias'; ?>
+					<?php $current_column = 'title'; ?>
 					<th class="url-<?= $current_column; ?>  order-by <?= ( $order_by == $current_column ) ? 'order-by-column ' . 'order-by-' . $order_by_direction : '' ?>">
 						
 						<?= anchor(get_url( $this->articles->get_a_url( 'change_order_by', $current_column ) ) , lang( $current_column ), 'class="" title="'. ( ( $order_by == $current_column ) ? lang('ordering_by_this_column_' . $order_by_direction . '_click_to_' . ( $order_by_direction == 'ASC' ? 'DESC' : 'ASC' ) ) :  ( ( $order_by == $current_column ) ? lang('ordering_by_this_column_' . $order_by_direction . '_click_to_' . ( $order_by_direction == 'ASC' ? 'DESC' : 'ASC' ) ) : lang('click_to_order_by_this_column') )  ) .'"'); ?>
@@ -150,8 +175,11 @@
 					</th>
 					
 					<th class="op-column">
-						<?php echo lang('operations'); ?>
+						
+						<?= lang('operations'); ?>
+						
 					</th>
+					
 				</tr>
 				
 				<?php foreach( $articles as $article ): ?>
@@ -160,6 +188,12 @@
 					<td class="col-checkbox">
 						
 						<?= vui_el_checkbox( array( 'value' => $article[ 'id' ], 'name' => 'selected_articles_ids[]', 'form' => 'articles-form', 'class' => 'multi-selection-action', ) ); ?>
+						
+					</td>
+					
+					<td class="id">
+						
+						<?= $article[ 'id' ]; ?>
 						
 					</td>
 					
@@ -177,31 +211,31 @@
 						
 					</td>
 					
-					<td class="id">
-						<?= $article[ 'id' ]; ?>
-					</td>
 					<td class="title">
 						
-						<?= anchor( $this->articles->get_a_url( 'edit', $article ), strip_tags( $article[ 'title' ] ), 'class="" title="' . lang( 'action_view' ) . '"' ); ?>
+						<?= anchor( $this->articles->get_a_url( 'edit', $article ), strip_tags( $article[ 'title' ] ), 'class="" title="' . lang( 'action_view' ) . '"' ); ?><br />
+						<small class="small">(<?= $article[ 'alias' ]; ?>)</small>
 						
 					</td>
-					<td class="article-alias">
-						<?php echo $article[ 'alias' ]; ?>
-					</td>
+					
 					<td class="article-created-by">
 						
 						<?= anchor( 'admin/users/users_management/edit_user/' . base64_encode( base64_encode( base64_encode( base64_encode( $article[ 'created_by_id' ] ) ) ) ), $article[ 'created_by_name' ], 'class="" title="' . $article[ 'created_by_name' ] . '"' ); ?>
 						
 					</td>
+					
 					<td class="article-category">
-						<?php if ($article[ 'category_id' ] > 0){ ?>
+						
+						<?php if ( $article[ 'category_id' ] > 0 ){ ?>
 							
 						<?= $this->articles->get_category_path( $article[ 'category_id' ], NULL, NULL, TRUE ); ?>
 						
 						<?php } else { ?>
 						<?php echo lang('uncategorized'); ?>
 						<?php } ?>
+						
 					</td>
+					
 					<td class="access">
 						
 						<?php if ($article[ 'access_type' ] == 'users') { ?>
@@ -213,10 +247,13 @@
 						<?php } ?>
 						
 					</td>
+					
 					<td class="ordering">
 						
 						<?= form_open( get_url( $this->articles->get_a_url( 'change_ordering' ) ), 'class="form-change-ordering"' ); ?>
-						
+							
+							<?= form_hidden( 'article_id', $article[ 'id' ] ); ?>
+							
 							<?= vui_el_button( array( 'url' => $this->articles->get_a_url( 'down_ordering', $article ), 'text' => lang( 'down_ordering' ), 'icon' => 'up', 'only_icon' => TRUE, ) ); ?>
 							
 							<?= form_input( array( 'id'=>'ordering-' . $article[ 'id' ], 'class'=>'inputbox-order', 'name' => 'ordering' ), set_value( 'ordering', $article[ 'ordering' ] ) ); ?>
@@ -226,6 +263,7 @@
 						<?= form_close(); ?>
 						
 					</td>
+					
 					<td class="status">
 						
 						<?=
@@ -242,6 +280,7 @@
 						?>
 						
 					</td>
+					
 					<td class="operations">
 						
 						<?= vui_el_button( array( 'url' => $this->articles_model->get_link_article_detail( 0, $article[ 'id' ] ), 'text' => lang( 'action_view' ), 'target' => '_blank', 'icon' => 'view', 'only_icon' => TRUE, ) ); ?>
@@ -257,20 +296,17 @@
 				<?php endforeach; ?>
 			</table>
 			
-			
-			
 			<?php if ( $pagination ){ ?>
 			<div class="pagination">
-				<?php echo $pagination; ?>
+				
+				<?= $pagination; ?>
+				
 			</div>
 			<?php } ?>
 			
-			<?php
-				
-				$this->plugins->load( array( 'jquery_checkboxes', ) );
-				
-			?>
+			<?php $this->plugins->load( 'jquery_checkboxes' ); ?>
 			
+			<?php if ( $this->plugins->load( 'fancybox' ) ) { ?>
 			<script type="text/javascript" >
 				
 				$( document ).on( 'ready', function( e ){
@@ -286,6 +322,7 @@
 				});
 				
 			</script>
+			<?php } ?>
 			
 			<?php } else { ?>
 				

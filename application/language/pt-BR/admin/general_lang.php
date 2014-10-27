@@ -19,6 +19,7 @@ $lang['global_configuration'] = 																"Configurações globais";
 $lang['admin_preferences'] = 																	"Preferências administrativas";
 $lang['default_items_per_page'] = 																"Itens por página padrão";
 $lang['default_custom_items_per_page'] = 														"Itens por página personalizado";
+$lang['tip_change_items_per_page'] = 															"Informe quantos itens devem ser exibidos por página. Informe <b>0</b> para exibir todos os itens, <b>-1</b> para utilizar o valor global";
 $lang['tip_default_items_per_page'] = 															"<p>Define a quantidade padrão de itens por página, em locais que contenham listagens de informações, como Usuários, Artigos, Itens de menu, etc.</p><p>Esta configuração pode ser substituída nas preferências de cada usuário ou em configurações específicas de cada extensão.</p>";
 $lang['hide_pagination_when_only_one_page'] = 													"Ocultar paginação quando houver apenas 1 página";
 $lang['tip_hide_pagination_when_only_one_page'] = 												"Se sim, a paginação será ocultada quando a listagem de informações não ultrapassar 1 página.";

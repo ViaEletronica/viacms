@@ -177,14 +177,20 @@ class Articles extends Main {
 							$order_by = 't1.created_by_alias';
 							break;
 							
+						default:
+							
+							$order_by = 't1.id';
+							$data[ 'order_by' ] = 'id';
+							
+							break;
+							
 					}
 					
 				}
 				else{
 					
-					$order_by = 't1.category_id';
-					$comp_ob = ', t1.ordering ' . $order_by_direction . ', t1.title ' . $order_by_direction;
-					$data[ 'order_by' ] = 'category_id';
+					$order_by = 't1.id';
+					$data[ 'order_by' ] = 'id';
 					
 				}
 				
@@ -198,10 +204,23 @@ class Articles extends Main {
 				// -------------------------------------------------
 				// Filtering ---------------------------------------
 				
+				// items per page
+				if ( isset( $post[ 'ipp' ] ) AND isset( $post[ 'submit_change_ipp' ] ) ){
+					
+					// setting the user preference
+					$this->users_common_model->set_user_preferences( array( $this->mcm->environment . '_articles_categories_items_per_page' => $post[ 'ipp' ] ) );
+					
+					// também temos que definir a página atual como 1, para cortar o risco do resultado da pesquisa cair fora do alcance
+					$cp = 1;
+					
+				}
+				
+				// -------------
+				
+				// category
 				$filter_by_category = $this->users_common_model->get_user_preference( 'articles_filter_by_category' );
 				
-				// se hover submit de filtro de categoria, definimos a variável correspondente, bem como a preferência do usuário
-				if ( isset( $post[ 'articles_filter_by_category' ] ) AND $post[ 'submit_filter_by_category' ] ){
+				if ( isset( $post[ 'articles_filter_by_category' ] ) AND isset( $post[ 'submit_filter_by_category' ] ) ){
 					
 					$filter_by_category = $post[ 'articles_filter_by_category' ];
 					
@@ -372,7 +391,7 @@ class Articles extends Main {
 				
 				if ( $this->articles->status( $article_id, $sub_action ) ) {
 					
-					msg( ( 'article_'.( $sub_action == 'p' ? 'published' : ( $sub_action == 'u' ? 'unpublished' : 'archived' ) ) ), 'success' );
+					msg( ( 'article_' . ( $sub_action == 'p' ? 'published' : ( $sub_action == 'u' ? 'unpublished' : 'archived' ) ) ), 'success' );
 					redirect_last_url();
 					
 				}
@@ -879,20 +898,18 @@ class Articles extends Main {
 					if ( $set_up ){
 						
 						$this->articles->up_ordering( $article_id );
+						msg( ( 'article_order_changed' ), 'success' );
+						redirect_last_url();
 						
-							msg( ( 'article_order_changed' ), 'success' );
-							redirect_last_url();
-							
 					}
 					else if ( $set_down ){
 						
 						$this->articles->down_ordering( $article_id );
+						msg( ( 'article_order_changed' ), 'success' );
+						redirect_last_url();
 						
-							msg( ( 'article_order_changed' ), 'success' );
-							redirect_last_url();
-							
 					}
-					else if ( $set_custom_ordering AND ( $article = $this->articles->get_article( $article_id ) ) ){
+					else if ( $set_custom_ordering AND ( $article = $this->articles->get( $article_id ) ) ){
 						
 						if ( $this->articles->set_ordering( $article_id, ( int ) $set_custom_ordering ) ){
 							
@@ -916,6 +933,31 @@ class Articles extends Main {
 			/*
 			 --------------------------------------------------------
 			 Change ordering
+			 --------------------------------------------------------
+			 ********************************************************
+			 */
+			
+			/*
+			 ********************************************************
+			 --------------------------------------------------------
+			 Fix ordering
+			 --------------------------------------------------------
+			 */
+			
+			else if ( ( $action == 'fo' ) ) {
+				
+				if ( $this->articles->fix_ordering() ) {
+					
+					msg( 'articles_ordering_fixed', 'success' );
+					redirect_last_url();
+					
+				}
+				
+			}
+			
+			/*
+			 --------------------------------------------------------
+			 Fix ordering
 			 --------------------------------------------------------
 			 ********************************************************
 			 */
@@ -1061,7 +1103,36 @@ class Articles extends Main {
 		$cp =									isset( $f_params[ 'cp' ] ) ? ( int ) $f_params[ 'cp' ] : NULL; // current page
 			$cp =								( $cp < 1 ) ? 1 : $cp;
 		$ipp =									isset( $f_params[ 'ipp' ] ) ? ( int ) $f_params[ 'ipp' ] : NULL; // items per page
-			$ipp =								( $ipp < 1 ) ? $this->mcm->filtered_system_params[ $this->mcm->environment . '_items_per_page' ] : $ipp;
+			$ipp =								isset( $post[ 'ipp' ] ) ? ( int ) $post[ 'ipp' ] : $ipp; // items per page
+		
+		if (
+			
+			is_numeric( $this->users_common_model->get_user_preference( $this->mcm->environment . '_articles_categories_items_per_page' ) ) AND
+			$this->users_common_model->get_user_preference( $this->mcm->environment . '_articles_categories_items_per_page' ) > -1 AND
+			! isset( $post[ 'ipp' ] )
+			
+		){
+			
+			$ipp = $this->users_common_model->get_user_preference( $this->mcm->environment . '_articles_categories_items_per_page' );
+			
+		}
+		else if ( ! isset( $ipp ) OR $ipp == -1 ){
+			
+			$ipp = $this->mcm->filtered_system_params[ $this->mcm->environment . '_items_per_page' ];
+			
+		}
+		
+		if ( $ipp < -1 ){
+			
+			$ipp = -1;
+			
+			if ( isset( $post[ 'ipp' ] ) ) {
+				
+				$post[ 'ipp' ] = $ipp;
+				
+			}
+			
+		}
 		
 		// Parsing vars ------------------------------------
 		// -------------------------------------------------
@@ -1111,19 +1182,38 @@ class Articles extends Main {
 							$comp_ob = ', t1.ordering ' . $order_by_direction . ', t1.title ' . $order_by_direction;
 							break;
 							
-						case 'created_by_alias':
+						case 'title':
+							
+							$order_by = 't1.title';
+							$comp_ob = ', t1.ordering ' . $order_by_direction;
+							break;
+							
+						case 'ordering':
 						
-							$order_by = 't1.created_by_alias';
+							$order_by = 't1.parent';
+							$comp_ob = ', t1.ordering ' . $order_by_direction . ', t1.title ' . $order_by_direction;
+							break;
+							
+						case 'status':
+						
+							$order_by = 't1.status';
+							$comp_ob = ', t1.parent ' . $order_by_direction . ', t1.ordering ' . $order_by_direction . ', t1.title ' . $order_by_direction;
+							break;
+							
+						default:
+							
+							$order_by = 't1.id';
+							$data[ 'order_by' ] = 'id';
+							
 							break;
 							
 					}
 					
 				}
-				else{
+				else {
 					
-					$order_by = 't1.parent';
-					$comp_ob = ', t1.ordering ' . $order_by_direction . ', t1.title ' . $order_by_direction;
-					$data[ 'order_by' ] = 't1.parent';
+					$order_by = 't1.id';
+					$data[ 'order_by' ] = 'id';
 					
 				}
 				
@@ -1132,6 +1222,23 @@ class Articles extends Main {
 				$order_by = $order_by . ' ' . $order_by_direction . $comp_ob;
 				
 				// Columns ordering --------------------------------
+				// -------------------------------------------------
+				
+				// -------------------------------------------------
+				// Filtering ---------------------------------------
+				
+				// se hover submit de filtro de categoria, definimos a variável correspondente, bem como a preferência do usuário
+				if ( isset( $post[ 'ipp' ] ) AND isset( $post[ 'submit_change_ipp' ] ) ){
+					
+					// setting the user preference
+					$this->users_common_model->set_user_preferences( array( $this->mcm->environment . '_articles_categories_items_per_page' => $post[ 'ipp' ] ) );
+					
+					// também temos que definir a página atual como 1, para cortar o risco do resultado da pesquisa cair fora do alcance
+					$cp = 1;
+					
+				}
+				
+				// Filtering ---------------------------------------
 				// -------------------------------------------------
 				
 				// -------------------------------------------------
@@ -1157,6 +1264,15 @@ class Articles extends Main {
 				$this->load->library( 'search', $search_config );
 				
 				$categories = $this->search->get_full_results( 'articles_categories_search' );
+				
+				// get categories tree params
+				$gctp = array(
+					
+					'array' => $categories,
+					
+				);
+				
+				//$categories = $this->articles->get_categories_tree();
 				
 				// List / Search -----------------------------------
 				// -------------------------------------------------
@@ -1202,6 +1318,7 @@ class Articles extends Main {
 				// Last url ----------------------------------------
 				// -------------------------------------------------
 				
+				$data[ 'ipp' ] = $ipp;
 				$data[ 'categories' ] = $categories;
 				$data[ 'pagination' ] = get_pagination( $pagination_url, $cp, $ipp, $this->search->count_all_results( 'articles_categories_search' ) );
 				
@@ -1242,18 +1359,45 @@ class Articles extends Main {
 			 --------------------------------------------------------
 			 */
 			
-			else if ( ( $action == 'co' ) AND $this->input->post( 'category_id' ) ){
+			else if ( ( $action == 'co' ) ){
 				
-				$update_data = array(
-					
-					'order' => $this->input->post( 'order' ) > 0?$this->input->post( 'order' ):1,
-					
-				);
+				$category_id = $category_id ? ( int ) $category_id : ( $this->input->post( 'category_id' ) ? ( int ) $this->input->post( 'category_id' ) : FALSE );
+				$set_up = $sub_action == 'u' ? TRUE : ( $this->input->post( 'submit_up_ordering' ) ? TRUE : FALSE );
+				$set_down = $sub_action == 'd' ? TRUE : ( $this->input->post( 'submit_down_ordering' ) ? TRUE : FALSE );
+				$set_custom_ordering = $this->input->post( 'ordering' ) ? ( string ) ( ( int ) $this->input->post( 'ordering' ) ) : FALSE;
 				
-				if ( $this->articles_model->update_category( $update_data, array( 'id' => $this->input->post( 'category_id' ) ) ) ){
+				if ( $category_id ){
 					
-					msg( ( 'category_order_changed' ), 'success' );
-					redirect( get_url( $data[ 'categories_list_link' ] ) );
+					if ( $set_up ){
+						
+						$this->articles->up_c_ordering( $category_id );
+						msg( ( 'category_order_changed' ), 'success' );
+						redirect_last_url();
+						
+					}
+					else if ( $set_down ){
+						
+						$this->articles->down_c_ordering( $category_id );
+						msg( ( 'category_order_changed' ), 'success' );
+						redirect_last_url();
+						
+					}
+					else if ( $set_custom_ordering AND ( $category = $this->articles->get_category( $category_id ) ) ){
+						
+						if ( $this->articles->set_c_ordering( $category_id, ( int ) $set_custom_ordering ) ){
+							
+							msg( ( 'category_order_changed' ), 'success' );
+							redirect_last_url();
+							
+						}
+						
+					}
+					
+				}
+				else {
+					
+					msg( ( 'no_category_id_informed' ), 'error' );
+					redirect_last_url();
 					
 				}
 				
@@ -1262,6 +1406,103 @@ class Articles extends Main {
 			/*
 			 --------------------------------------------------------
 			 Change ordering
+			 --------------------------------------------------------
+			 ********************************************************
+			 */
+			
+			/*
+			 ********************************************************
+			 --------------------------------------------------------
+			 Fix ordering
+			 --------------------------------------------------------
+			 */
+			
+			else if ( ( $action == 'fo' ) ) {
+				
+				if ( $this->articles->fix_c_ordering() ) {
+					
+					msg( 'articles_categories_ordering_fixed', 'success' );
+					redirect_last_url();
+					
+				}
+				
+			}
+			
+			/*
+			 --------------------------------------------------------
+			 Fix ordering
+			 --------------------------------------------------------
+			 ********************************************************
+			 */
+			
+			/*
+			 ********************************************************
+			 --------------------------------------------------------
+			 Set status
+			 --------------------------------------------------------
+			 */
+			
+			else if ( ( $action == 'ss' ) AND $category_id AND $sub_action ) {
+				
+				if ( $this->articles->category_status( $category_id, $sub_action ) ) {
+					
+					msg( ( 'category_' . ( $sub_action == 'p' ? 'published' : 'unpublished' ) ), 'success' );
+					redirect_last_url();
+					
+				}
+				
+			}
+			
+			/*
+			 --------------------------------------------------------
+			 Set status
+			 --------------------------------------------------------
+			 ********************************************************
+			 */
+			
+			/*
+			 ********************************************************
+			 --------------------------------------------------------
+			 Change order by
+			 --------------------------------------------------------
+			 */
+			
+			else if ( ( $action == 'cob' ) AND $order_by ){
+				
+				$this->users_common_model->set_user_preferences( array( 'articles_categories_order_by' => $order_by ) );
+				
+				if ( ( $order_by_direction = $this->users_common_model->get_user_preference( 'articles_categories_order_by_direction' ) ) != FALSE ){
+					
+					switch ( $order_by_direction ) {
+						
+						case 'ASC':
+							
+							$order_by_direction = 'DESC';
+							break;
+							
+						case 'DESC':
+						
+							$order_by_direction = 'ASC';
+							break;
+							
+					}
+					
+					$this->users_common_model->set_user_preferences( array( 'articles_categories_order_by_direction' => $order_by_direction ) );
+					
+				}
+				else {
+					
+					$this->users_common_model->set_user_preferences( array( 'articles_categories_order_by_direction' => 'ASC' ) );
+					
+				}
+				
+				redirect( get_last_url() );
+				
+			}
+			
+			/*
+			 --------------------------------------------------------
+			 Change order by
 			 --------------------------------------------------------
 			 ********************************************************
 			 */

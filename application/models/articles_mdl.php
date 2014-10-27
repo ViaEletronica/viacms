@@ -3,7 +3,7 @@
 class Articles_mdl extends CI_Model{
 	
 	private $_articles = array();
-	private $_categories = array();
+	private $_categories = NULL;
 	private $_c_urls_array = array(); // Component urls in array format
 	private $_c_urls = array(); // Component urls in string format
 	
@@ -101,7 +101,7 @@ class Articles_mdl extends CI_Model{
 		
 		$id =									( isset( $var1 ) AND is_numeric( $var1 ) AND $var1 > 0 ) ? $var1 : NULL;
 		$db_data =								( isset( $var1 ) AND check_var( $var1 ) AND is_array( $var1 ) ) ? $var1 : NULL;
-		$db_data =								( $id AND ! is_array( $var1 ) AND check_var( $var2 ) AND is_array( $var2 ) ) ? $var2 : $db_data;
+		$db_data =								( $id AND check_var( $var2 ) AND is_array( $var2 ) ) ? $var2 : $db_data;
 		$condition =							( ! $id AND isset( $var2 ) AND check_var( $var2 ) AND is_array( $var2 ) ) ? $var2 : NULL;
 		
 		// Parsing vars ------------------------------------
@@ -713,6 +713,7 @@ class Articles_mdl extends CI_Model{
 		
 		if ( $article ){
 			
+			$article[ 'image' ] = isset( $article[ 'image' ] ) ? ( string ) $article[ 'image' ] : '';
 			$article[ 'alias' ] = strip_tags( $article[ 'alias' ] );
 			$article[ 'category_id' ] = ( int ) $article[ 'category_id' ];
 			$article[ 'ordering' ] = ( int ) $article[ 'ordering' ];
@@ -804,6 +805,22 @@ class Articles_mdl extends CI_Model{
 		
 		if ( $function === 'categories' ){
 			
+			// if we don't have the category array, but we have the id
+			if ( ! is_array( $category ) AND isset( $category_id ) ) {
+				
+				$category = $this->get_category( $category_id );
+				
+			}
+			// else, if we have the category array
+			else if ( is_array( $category ) AND isset( $category[ 'id' ] ) ) {
+				
+				$this->_categories[ $category_id ] = $category;
+				
+			}
+			
+			// last try to get the category id
+			$category_id =							isset( $category[ 'id' ] ) ? $category[ 'id' ] : NULL;
+			
 		}
 		else if ( $function === 'ajax' ){
 			
@@ -892,7 +909,7 @@ class Articles_mdl extends CI_Model{
 				
 			) {
 				
-				if ( $category_id ){
+				if ( $category_id AND $function !== 'categories' ){
 					
 					$complement .= '/cid/' . $category_id;
 					
@@ -951,6 +968,7 @@ class Articles_mdl extends CI_Model{
 					case 'remove_all': $return = 'a/ra'; break;
 					case 'change_order_by': $return = 'a/cob/ob/' . $order_by_value; break;
 					case 'change_ordering': $return = 'a/co'; break;
+					case 'fix_ordering': $return = 'a/fo'; break;
 					case 'up_ordering': $return = 'a/co/sa/u'; break;
 					case 'down_ordering': $return = 'a/co/sa/d'; break;
 					case 'set_status_publish': $return = 'a/ss/sa/p'; break;
@@ -1031,8 +1049,9 @@ class Articles_mdl extends CI_Model{
 					case 'copy': $return = 'a/c'; break;
 					case 'remove': $return = 'a/r'; break;
 					case 'remove_all': $return = 'a/ra'; break;
-					case 'change_order_by': $return = 'a/ob'; break;
+					case 'change_order_by': $return = 'a/cob/ob/' . $order_by_value; break;
 					case 'change_ordering': $return = 'a/co'; break;
+					case 'fix_ordering': $return = 'a/fo'; break;
 					case 'up_ordering': $return = 'a/co/sa/u'; break;
 					case 'down_ordering': $return = 'a/co/sa/d'; break;
 					case 'set_status_publish': $return = 'a/ss/sa/p'; break;
@@ -1804,11 +1823,54 @@ class Articles_mdl extends CI_Model{
 	 * Return categories as array
 	 * 
 	 * @access public
-	 * @param numeric
+	 * @param numeric			the parent id
 	 * @return array
 	 */
 	
 	public function get_categories( $value = NULL ){
+		
+		if ( ! isset( $this->_categories ) ) {
+			
+			$this->db->select('
+				
+				t1.*,
+				t2.title as parent_title,
+				t2.alias as parent_alias
+				
+			');
+			
+			$this->db->where( 't1.status', '1' );
+			$this->db->from( 'tb_articles_categories t1' );
+			$this->db->join('tb_articles_categories t2', 't1.parent = t2.id', 'left');
+			$this->db->order_by( 't1.ordering asc, t1.title asc, t1.id asc' );
+			$categories = $this->db->get();
+			
+			if ( $categories->num_rows() > 0 ) {
+				
+				$categories = $categories->result_array();
+				
+				$this->_categories = NULL;
+				
+				foreach( $categories as $category ) {
+					
+					$this->_categories[ $category[ 'id' ] ] = $category;
+					
+				}
+				
+			}
+			else {
+				
+				return NULL;
+				
+			}
+			
+		}
+		
+		$p = array(
+			
+			'array' => $this->_categories,
+			
+		);
 		
 		if ( isset( $this->_categories[ $value ] ) AND is_array( $this->_categories[ $value ] ) AND check_var( $this->_categories[ $value ] ) ) {
 			
@@ -1817,55 +1879,20 @@ class Articles_mdl extends CI_Model{
 			return $this->_categories[ $value ];
 			
 		}
-		else if ( isset( $this->_categories ) AND is_array( $this->_categories ) AND check_var( $this->_categories ) ) {
+		else if ( is_array( $this->_categories ) AND check_var( $this->_categories ) ) {
 			
 			$this->_categories = array_filter( $this->_categories );
 			
 			return $this->_categories;
 			
 		}
-		
-		if ( is_numeric( $value ) AND $value > 0 ){
+		else if ( is_numeric( $value ) AND $value > 0 ){
 			
-			$this->db->where( 't1.parent', ( int ) $value );
-			
-		}
-		
-		$this->db->select('
-			
-			t1.*,
-			t2.title as parent_title,
-			t2.alias as parent_alias
-			
-		');
-		
-		$this->db->from( 'tb_articles_categories t1' );
-		$this->db->join('tb_articles_categories t2', 't1.parent = t2.id', 'left');
-		$this->db->order_by( 't1.ordering asc, t1.title asc, t1.id asc' );
-		$categories = $this->db->get();
-		
-		if ( $categories->num_rows() > 0 ) {
-			
-			$categories = $categories->result_array();
-			
-			$this->_categories = NULL;
-			
-			foreach( $categories as $category ) {
-				
-				$this->_categories[ $category[ 'id' ] ] = $category;
-				
-			}
-			
-			$categories = & $this->_categories;
-			
-		}
-		else {
-			
-			return NULL;
+			$p[ 'parent_id' ] = $value;
 			
 		}
 		
-		return $categories;
+		return $this->get_categories_tree( $p );
 		
 	}
 	
@@ -1873,22 +1900,261 @@ class Articles_mdl extends CI_Model{
 	
 	public function get_category( $id = NULL ){
 		
-		if ( $id!=NULL ){
+		if ( ! isset( $this->_categories ) ) {
 			
-			$this->db->select( 't1.*, t2.title as parent_category_title' );
-			$this->db->from( 'tb_articles_categories t1' );
-			$this->db->join( 'tb_articles_categories t2', 't1.parent = t2.id', 'left' );
-			$this->db->where( 't1.id',$id );
-			// limitando o resultando em apenas 1
-			$this->db->limit( 1 );
-			return $this->db->get()->row_array();
+			$this->get_categories();
 			
 		}
-		else {
+		
+		if ( isset( $id ) ){
 			
-			return false;
+			if ( ! isset( $this->_categories[ $id ] ) ) {
+				
+				$this->db->select( 't1.*, t2.title as parent_category_title' );
+				$this->db->from( 'tb_articles_categories t1' );
+				$this->db->join( 'tb_articles_categories t2', 't1.parent = t2.id', 'left' );
+				$this->db->where( 't1.id',$id );
+				// limitando o resultando em apenas 1
+				$this->db->limit( 1 );
+				return $this->db->get()->row_array();
+				
+				
+			}
+			else {
+				
+				return $this->_categories[ $id ];
+				
+			}
 			
 		}
+		
+		return false;
+		
+	}
+	
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Update a category
+	 * 
+	 * @access public
+	 * @param mixed
+	 * @param mixed
+	 * @return bool
+	 */
+	
+	public function update_category( $var1 = NULL, $var2 = NULL ){
+		
+		// -------------------------------------------------
+		// Parsing vars ------------------------------------
+		
+		$id =									( isset( $var1 ) AND is_numeric( $var1 ) AND $var1 > 0 ) ? $var1 : NULL;
+		$db_data =								( isset( $var1 ) AND check_var( $var1 ) AND is_array( $var1 ) ) ? $var1 : NULL;
+		$db_data =								( $id AND check_var( $var2 ) AND is_array( $var2 ) ) ? $var2 : $db_data;
+		$condition =							( ! $id AND isset( $var2 ) AND check_var( $var2 ) AND is_array( $var2 ) ) ? $var2 : NULL;
+		
+		// Parsing vars ------------------------------------
+		// -------------------------------------------------
+		
+		if ( is_array( $db_data ) AND is_array( $condition ) ){
+			
+			return $this->db->update( 'tb_articles_categories', $db_data, $condition );
+			
+		}
+		else if ( $id AND is_array( $db_data ) ) {
+			
+			$condition = array( 'id' => $id );
+			
+			return $this->update_category( $db_data, $condition );
+			
+		}
+		
+		return FALSE;
+		
+	}
+	
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Get / set category status
+	 * 
+	 * @access public
+	 * @param int
+	 * @param string
+	 * @return bool
+	 */
+	
+	public function category_status( $id = NULL, $value = NULL ){
+		
+		// -------------------------------------------------
+		// Parsing vars ------------------------------------
+		
+		$id =								( isset( $id ) AND is_numeric( $id ) AND $id > 0 ) ? ( int ) $id : NULL;
+		$value =							( isset( $value ) AND is_string( $value ) ) ? $value : NULL;
+		
+		// Parsing vars ------------------------------------
+		// -------------------------------------------------
+		
+		if ( $id ) {
+			
+			if ( $value ) {
+				
+				$update_data = array(
+					
+					'status' => $value == 'p' ? '1' : '0',
+					
+				);
+				
+				return $this->update_category( $id, $update_data );
+				
+			}
+			else {
+				
+				$category = $this->get_category( $id );
+				
+				if ( $category ) {
+					
+					return $category[ 'status' ];
+					
+				}
+				
+			}
+			
+		}
+		
+		return FALSE;
+		
+	}
+	
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Down category ordering
+	 * 
+	 * @access public
+	 * @param numeric
+	 * @return bool
+	 */
+	
+	public function down_c_ordering( $category_id = NULL ){
+		
+		$category = $this->get_category( $category_id );
+		
+		if ( $category ){
+			
+			$new_ordering = ( int ) $category[ 'ordering' ] - 1;
+			
+			return $this->set_c_ordering( $category_id, $new_ordering );
+			
+		}
+		
+		return FALSE;
+		
+	}
+	
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Up category ordering
+	 * 
+	 * @access public
+	 * @param numeric
+	 * @return bool
+	 */
+	
+	public function up_c_ordering( $category_id = NULL ){
+		
+		$category = $this->get_category( $category_id );
+		
+		if ( $category ){
+			
+			$new_ordering = ( int ) $category[ 'ordering' ] + 1;
+			
+			return $this->set_c_ordering( $category_id, $new_ordering );
+			
+		}
+		
+		return FALSE;
+		
+	}
+	
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Set category ordering
+	 * 
+	 * @access public
+	 * @param numeric
+	 * @param numeric
+	 * @return bool
+	 */
+	
+	public function set_c_ordering( $id = NULL, $requested_position = NULL ){
+		
+		// set item ordering params
+		$siop = array(
+			
+			'table_name' => 'tb_articles_categories',
+			'id_column_name' => 'id',
+			'id_value' => $id,
+			'parent_column_name' => 'parent',
+			'ordering_column_name' => 'ordering',
+			'requested_position' => ( int ) $requested_position,
+			
+		);
+		
+		return $this->mcm->set_item_ordering( $siop );
+		
+	}
+	
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Fix categories ordering
+	 * 
+	 * @access public
+	 * @param numeric | the parent category, set NULL to all categories
+	 * @return bool
+	 */
+	
+	public function fix_c_ordering( $parent_value = NULL ){
+		
+		// fix items ordering params
+		$fiop = array(
+			
+			'table_name' => 'tb_articles_categories',
+			'parent_column_name' => 'parent',
+			'ordering_column_name' => 'ordering',
+			'parent_value' => ( int ) $parent_value,
+			
+		);
+		
+		return $this->mcm->fix_items_ordering( $fiop );
+		
+	}
+	
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Return the highest ordering value within a specific category
+	 * 
+	 * @access public
+	 * @param numeric | the parent category, NULL to all categories
+	 * @return bool
+	 */
+	
+	public function get_c_max_ordering( $parent_value = NULL ){
+		
+		// get max ordering params
+		$gmop = array(
+			
+			'table_name' => 'tb_articles',
+			'parent_column_name' => 'category_id',
+			'parent_value' => ( int ) $parent_value,
+			
+		);
+		
+		return $this->mcm->get_max_ordering( $gmop );
 		
 	}
 	
@@ -1963,6 +2229,31 @@ class Articles_mdl extends CI_Model{
 		}
 		
 		return ( string ) $this->_url( $gup );
+		
+	}
+	
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Parse a category data
+	 * 
+	 * @access public
+	 * @param array
+	 * @return void
+	 */
+	
+	public function parse_category( & $category = NULL ){
+		
+		if ( $category ){
+			
+			$category[ 'image' ] = isset( $category[ 'image' ] ) ? ( string ) $category[ 'image' ] : '';
+			$category[ 'alias' ] = strip_tags( $category[ 'alias' ] );
+			$category[ 'ordering' ] = ( int ) $category[ 'ordering' ];
+			$category[ 'title' ] = html_entity_decode( $category[ 'title' ] );
+			$category[ 'description' ] = check_var( $category[ 'description' ] ) ? html_entity_decode( $category[ 'description' ] ) : '';
+			$category[ 'status' ] = ( int ) $category[ 'status' ];
+			
+		}
 		
 	}
 	

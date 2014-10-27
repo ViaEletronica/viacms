@@ -18,7 +18,7 @@ class Articles_search_plugin extends Plugins_mdl{
 			
 			$category_id =										( isset( $plugin_params[ 'category_id' ] ) AND is_numeric( $plugin_params[ 'category_id' ] ) ) ? $plugin_params[ 'category_id' ] : NULL;
 			
-			if ( $this->search->config( 'plugins_params' ) )
+			//if ( $this->search->config( 'plugins_params' ) )
 			
 			// Parsing vars ------------------------------------
 			// -------------------------------------------------

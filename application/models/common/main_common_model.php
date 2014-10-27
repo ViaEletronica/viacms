@@ -194,16 +194,13 @@ class Main_common_model extends CI_Model{
 		
 		foreach( $array as $row ) {
 			
-			if ( $row[ 'parent' ] == $f_params[ 'parent_id' ] ) {
+			if ( $row[ $f_params[ 'parent_field' ] ] == $f_params[ 'parent_id' ] ) {
 				
 				$this->_items_tree[ $row[ $f_params[ 'id_field' ] ] ] = $row;
 				$this->_items_tree[ $row[ $f_params[ 'id_field' ] ] ][ 'indented_title' ] = str_repeat( '&nbsp;' , $f_params[ 'level' ] * 4 + 4 ) . lang( 'indented_symbol' ) . $row[ $f_params[ 'title_field' ] ];
 				$this->_items_tree[ $row[ $f_params[ 'id_field' ] ] ][ 'level' ] = $f_params[ 'level' ];
 				
-				// chama esta função novamente para mostrar os filhos deste filho
-				
 				$gcalp = $f_params;
-				
 				$gcalp[ 'level' ] += 1;
 				$gcalp[ 'parent_id' ] = $row[ $f_params[ 'id_field' ] ];
 				
