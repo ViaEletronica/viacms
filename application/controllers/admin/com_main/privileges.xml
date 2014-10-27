@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<params>
+	
+	<section name="admin_privileges">
+		
+		<param name="privileges" value="admin_config_management" type="checkbox" default="" label="admin_config_management" tip="tip_admin_config_management" />
+		
+	</section>
+	
+</params>

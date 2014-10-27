@@ -1,0 +1,2 @@
+		
+		<h1 class="component-name"><?= vui_el_button( array( 'url' => 'admin/' . $component_name . '/' . $component_function .'/countries_list', 'text' => lang( $component_name ), 'icon' => $component_name, ) ); ?></h1>

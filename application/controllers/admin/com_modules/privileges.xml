@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<params>
+	
+	<section name="modules_management">
+		
+		<param name="privileges" value="modules_management_modules_management" type="checkbox" default="" label="modules_management_modules_management" tip="tip_modules_management_modules_management" />
+		
+	</section>
+	
+</params>

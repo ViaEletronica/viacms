@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<params>
+	
+	<section name="submit_forms_management">
+		
+		<param name="privileges" value="submit_forms_management_submit_forms_management" type="checkbox" default="" label="submit_forms_management_submit_forms_management" tip="tip_submit_forms_management_submit_forms_management" />
+		
+	</section>
+	
+</params>
