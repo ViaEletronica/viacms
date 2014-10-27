@@ -65,7 +65,7 @@
 				
 				<?= vui_el_button( array( 'text' => lang( 'remove' ), 'icon' => 'remove', 'class' => 'multi-selection-action-input', 'button_type' => 'button', 'type' => 'submit', 'value' => 'remove', 'name' => 'submit_remove', 'id' => 'submit-remove', 'form' => 'articles-form', ) ); ?>
 				
-				<?= vui_el_button( array( 'url' => $this->articles->get_a_url( 'fix_ordering' ), 'text' => lang( 'fix_ordering' ), 'icon' => 'apply', 'class' => '', 'id' => 'fix-ordering', ) ); ?>
+				<?= vui_el_button( array( 'url' => $this->articles->get_a_url( 'fix_ordering' ), 'title' => lang( 'tip_fix_ordering' ), 'text' => lang( 'fix_ordering' ), 'icon' => 'apply', 'class' => '', 'id' => 'fix-ordering', ) ); ?>
 				
 			</div>
 			

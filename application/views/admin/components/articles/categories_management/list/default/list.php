@@ -45,7 +45,7 @@
 	
 	<div class="form-actions to-toolbar">
 		
-		<?= vui_el_button( array( 'url' => $this->articles->get_c_url( 'fix_ordering' ), 'text' => lang( 'fix_ordering' ), 'icon' => 'apply', 'class' => '', 'id' => 'fix-ordering', ) ); ?>
+		<?= vui_el_button( array( 'url' => $this->articles->get_c_url( 'fix_ordering' ), 'title' => lang( 'tip_fix_ordering' ), 'text' => lang( 'fix_ordering' ), 'icon' => 'apply', 'class' => '', 'id' => 'fix-ordering', ) ); ?>
 		
 	</div>
 	
