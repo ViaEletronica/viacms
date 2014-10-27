@@ -1188,14 +1188,15 @@ class Articles extends Main {
 							$comp_ob = ', t1.ordering ' . $order_by_direction;
 							break;
 							
+							// se mudar este valor, lembre de alterá-lo também na condição order_by do plugin de buscas de categorias de artigos
 						case 'ordering':
-						
+							
 							$order_by = 't1.parent';
 							$comp_ob = ', t1.ordering ' . $order_by_direction . ', t1.title ' . $order_by_direction;
 							break;
 							
 						case 'status':
-						
+							
 							$order_by = 't1.status';
 							$comp_ob = ', t1.parent ' . $order_by_direction . ', t1.ordering ' . $order_by_direction . ', t1.title ' . $order_by_direction;
 							break;

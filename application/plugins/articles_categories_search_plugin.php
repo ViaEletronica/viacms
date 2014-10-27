@@ -39,15 +39,51 @@ class Articles_categories_search_plugin extends Plugins_mdl{
 				'search_columns' => 't1.title, t1.alias, t1.description',
 				
 			);
+			//t1.parent DESC, t1.ordering DESC, t1.title DESC
 			
 			$full_search_results = $this->search->db_search( $dsp );
 			$full_search_results = $full_search_results ? $full_search_results->result_array() : $full_search_results;
 			
+			// -------------------------------------------------
+			// Checking the get categories tree function use ---
+			
+			/*
+			 * We can't get a categories tree when using pagination
+			 * so, let's check this
+			 */
+			
+			$get_tree = FALSE;
+			
+			$order_by = $this->search->config( 'order_by' );
+			if (
+				
+				isset( $order_by[ 'articles_categories_search' ] ) AND
+				trim( $order_by[ 'articles_categories_search' ] ) === 't1.parent DESC, t1.ordering DESC, t1.title DESC' AND // if current order_by is ordering
+				(
+					
+					! $this->search->config( 'ipp' ) OR
+					! ( $this->search->count_all_results( 'articles_categories_search' ) > $this->search->config( 'ipp' ) )
+					
+				)
+				
+			) {
+				
+				$get_tree = TRUE;
+				
+			}
+			
+			// Checking the get categories tree function use ---
+			// -------------------------------------------------
+			
 			if ( $full_search_results ) {
 				
-				$_tmp = $this->articles->get_categories_tree( array( 'array' => $full_search_results, ) );
-				
-				$full_search_results = check_var( $_tmp ) ? $_tmp : $full_search_results;
+				if ( $get_tree ) {
+					
+					$_tmp = $this->articles->get_categories_tree( array( 'array' => $full_search_results, ) );
+					
+					$full_search_results = check_var( $_tmp ) ? $_tmp : $full_search_results;
+					
+				}
 				
 				// apply the string highlight
 				if ( $this->search->config( 'terms' ) ) {
