@@ -236,11 +236,19 @@ class Plugins_mdl extends CI_Model{
 				
 				$plugin_model_name = $name . '_plugin';
 				
+				// loading model
 				if ( file_exists( PLUGINS_PATH . $plugin_model_name . '.php' ) ) {
 					
 					if ( ! $this->_is_loaded( $name ) ) {
 						
 						$this->load->model( '../plugins/' . $plugin_model_name, $name );
+						
+					}
+					
+					// loadgin language
+					if ( file_exists( LANG_PATH . $this->mcm->filtered_system_params[ 'language' ] . DS . 'plugins' . DS . $name . '_lang.php' ) ) {
+						
+						$this->load->language( 'plugins/' . $name );
 						
 					}
 					

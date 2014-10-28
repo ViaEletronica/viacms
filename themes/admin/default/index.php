@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" class="vui vui-box-level-1 <?= ( $current_component ) ? $current_component[ 'unique_name' ] :''; ?>" >
+<html lang="en" class="vui <?= ( $current_component ) ? $current_component[ 'unique_name' ] :''; ?>" >
 	<head>
 		
 		<?php
@@ -169,7 +169,7 @@
 		
 	</head>
 
-	<body id="" class="vui vui-box-level-1 <?= ( $current_component ) ? $current_component[ 'unique_name' ] :''; ?> <?= ( ! $this->session->userdata( 'admin_login' ) ) ? 'login' :''; ?> <?= $this->session->userdata('select_on') ? 'select-on' : ''; ?> <?= ( ( $this->session->userdata('profiler') === TRUE ) ? 'profiler-on' : 'profiler-off' ); ?>">
+	<body id="" class="vui <?= ( $current_component ) ? $current_component[ 'unique_name' ] :''; ?> <?= ( ! $this->session->userdata( 'admin_login' ) ) ? 'login' :''; ?> <?= $this->session->userdata('select_on') ? 'select-on' : ''; ?> <?= ( ( $this->session->userdata('profiler') === TRUE ) ? 'profiler-on' : 'profiler-off' ); ?>">
 		
 		<?= $this->voutput->get_body_start(); ?>
 		
@@ -195,7 +195,7 @@
 		
 		<div id="fake-top-block"></div>
 		
-		<div id="site-block" class="vui-box-level-1">
+		<div id="site-block" class="">
 			
 			<?php if ( $this->session->userdata( 'admin_login' ) ){ ?>
 			<div id="top-block">
@@ -203,7 +203,7 @@
 				<?php if ( $this->session->userdata( 'admin_login' ) ){ ?>
 				
 				<?php if ( ! $this->session->userdata( 'select_on' ) ){ ?>
-				<div id="top-bar" class="vui-box-level-2">
+				<div id="top-bar" class="">
 					
 					<nav>
 						<ul class="fl main-menu">
@@ -361,7 +361,7 @@
 				
 				<?php if ( trim( $toolbar ) !== '' ) { ?>
 				
-				<div id="toolbar" class="vui-box-level-2">
+				<div id="toolbar" class="">
 					
 					<?= $toolbar; ?>
 					

@@ -58,7 +58,36 @@ class Articles extends Main {
 		$cp =									isset( $f_params[ 'cp' ] ) ? ( int ) $f_params[ 'cp' ] : NULL; // current page
 			$cp =								( $cp < 1 ) ? 1 : $cp;
 		$ipp =									isset( $f_params[ 'ipp' ] ) ? ( int ) $f_params[ 'ipp' ] : NULL; // items per page
-			$ipp =								( $ipp < 1 ) ? $this->mcm->filtered_system_params[ $this->mcm->environment . '_items_per_page' ] : $ipp;
+			$ipp =								isset( $post[ 'ipp' ] ) ? ( int ) $post[ 'ipp' ] : $ipp; // items per page
+		
+		if (
+			
+			is_numeric( $this->users_common_model->get_user_preference( $this->mcm->environment . '_articles_items_per_page' ) ) AND
+			$this->users_common_model->get_user_preference( $this->mcm->environment . '_articles_items_per_page' ) > -1 AND
+			! isset( $post[ 'ipp' ] )
+			
+		){
+			
+			$ipp = $this->users_common_model->get_user_preference( $this->mcm->environment . '_articles_items_per_page' );
+			
+		}
+		else if ( ! isset( $ipp ) OR $ipp == -1 ){
+			
+			$ipp = $this->mcm->filtered_system_params[ $this->mcm->environment . '_items_per_page' ];
+			
+		}
+		
+		if ( $ipp < -1 ){
+			
+			$ipp = -1;
+			
+			if ( isset( $post[ 'ipp' ] ) ) {
+				
+				$post[ 'ipp' ] = $ipp;
+				
+			}
+			
+		}
 		
 		// Parsing vars ------------------------------------
 		// -------------------------------------------------
@@ -208,7 +237,7 @@ class Articles extends Main {
 				if ( isset( $post[ 'ipp' ] ) AND isset( $post[ 'submit_change_ipp' ] ) ){
 					
 					// setting the user preference
-					$this->users_common_model->set_user_preferences( array( $this->mcm->environment . '_articles_categories_items_per_page' => $post[ 'ipp' ] ) );
+					$this->users_common_model->set_user_preferences( array( $this->mcm->environment . '_articles_items_per_page' => $post[ 'ipp' ] ) );
 					
 					// também temos que definir a página atual como 1, para cortar o risco do resultado da pesquisa cair fora do alcance
 					$cp = 1;
@@ -320,6 +349,7 @@ class Articles extends Main {
 				// Last url ----------------------------------------
 				// -------------------------------------------------
 				
+				$data[ 'ipp' ] = $ipp;
 				$data[ 'articles' ] = $articles;
 				$data[ 'pagination' ] = get_pagination( $pagination_url, $cp, $ipp, $this->search->count_all_results( 'articles_search' ) );
 				$data[ 'categories' ] = $this->articles->get_categories_tree();
@@ -559,7 +589,7 @@ class Articles extends Main {
 				}
 				
 				$data[ 'f_action' ] = $action;
-				$data[ 'categories' ] = $this->articles_model->get_categories_tree();
+				$data[ 'categories' ] = $this->articles->get_categories_tree();
 				$data[ 'article' ] = & $article;
 				$data[ 'users' ] = $this->users_common_model->get_users_checking_privileges()->result_array();
 				$data[ 'users_groups' ] = $this->users_common_model->get_accessible_users_groups( $this->users_common_model->user_data[ 'id' ] );
@@ -1149,7 +1179,7 @@ class Articles extends Main {
 			 --------------------------------------------------------
 			 */
 			
-			if ( $action == 'l' ){
+			if ( $action == 'l' OR $action === 's' ){
 				
 				$this->load->helper( array( 'pagination' ) );
 				
@@ -1555,7 +1585,7 @@ class Articles extends Main {
 			
 			else if ( $action == 'a' ){
 				
-				$data[ 'categories' ] = $this->articles_model->get_categories_tree( 0, 0, 'list' );
+				$data[ 'categories' ] = $this->articles->get_categories_tree();
 				
 				//validação dos campos
 				$this->form_validation->set_rules('status',lang('status'),'trim|required|integer');
@@ -1963,14 +1993,12 @@ class Articles extends Main {
 				
 				$search_config = array(
 					
-					'plugins' => 'articles_search',
-					'terms' => $terms,
-					
-				);
-				
-				$search_config = array(
-					
-					'plugins' => 'articles_search',
+					'plugins' => array(
+						
+						'articles_search',
+						'articles_categories_search'
+						
+					),
 					'ipp' => $ipp,
 					'cp' => $cp,
 					'terms' => $terms,
@@ -1989,12 +2017,12 @@ class Articles extends Main {
 				
 				$this->load->library( 'search', $search_config );
 				
-				$articles = $this->search->get_full_results( 'articles_search' );
-				
+				$results = $this->search->get_results();
+				//print_r( $results );
 				// list / search -----------------------------------
 				// -------------------------------------------------
 				
-				$data[ 'articles' ] = $articles;
+				$data[ 'results' ] = $results;
 				
 				$this->_page(
 					
@@ -2004,7 +2032,7 @@ class Articles extends Main {
 						'function' => 'ajax',
 						'action' => 'live_search',
 						'layout' => 'default',
-						'view' => 'articles_live_search',
+						'view' => 'live_search',
 						'data' => $data,
 						'html' => FALSE,
 						'load_index' => FALSE,
@@ -2016,7 +2044,7 @@ class Articles extends Main {
 			}
 			else if ( $action == 'categories_live_search' ){
 				
-				$categories = $this->articles_model->get_categories_tree( 0, 0, 'list' );
+				$categories = $this->articles->get_categories_tree();
 				
 				if ( $categories ){
 					

@@ -428,6 +428,7 @@ function vui_el_thumb( $f_params = NULL ){
 	$text = $f_params[ 'text' ] =												isset( $f_params[ 'text' ] ) ? $f_params[ 'text' ] : '';
 	$title = $f_params[ 'title' ] =												isset( $f_params[ 'title' ] ) ? $f_params[ 'title' ] : '';
 	$wrapper_class = $f_params[ 'wrapper_class' ] =								isset( $f_params[ 'wrapper_class' ] ) ? $f_params[ 'wrapper_class' ] : '';
+	$wrappers_el_type = $f_params[ 'wrappers_el_type' ] =						isset( $f_params[ 'wrappers_el_type' ] ) ? $f_params[ 'wrappers_el_type' ] : 'div'; // wrappers element type
 	$class = $f_params[ 'class' ] =												isset( $f_params[ 'class' ] ) ? $f_params[ 'class' ] : '';
 	$id = $f_params[ 'id' ] =													isset( $f_params[ 'id' ] ) ? $f_params[ 'id' ] : '';
 	$src = $f_params[ 'src' ] =													isset( $f_params[ 'src' ] ) ? $f_params[ 'src' ] : '';

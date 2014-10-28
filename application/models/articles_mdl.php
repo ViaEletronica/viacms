@@ -824,6 +824,8 @@ class Articles_mdl extends CI_Model{
 		}
 		else if ( $function === 'ajax' ){
 			
+			// nothing for now
+			
 		}
 		else {
 			

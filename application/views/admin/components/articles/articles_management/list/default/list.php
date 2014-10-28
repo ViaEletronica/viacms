@@ -191,13 +191,15 @@
 						
 					</td>
 					
-					<td class="id">
+					<?php $current_column = 'id'; ?>
+					<td class="<?= $current_column; ?> col-<?= $current_column; ?>">
 						
 						<?= $article[ 'id' ]; ?>
 						
 					</td>
 					
-					<td class="article-thumb ta-center">
+					<?php $current_column = 'image'; ?>
+					<td class="<?= $current_column; ?> col-<?= $current_column; ?>">
 						
 						<?php if ( $article[ 'image' ] ){ ?>
 						
@@ -211,20 +213,23 @@
 						
 					</td>
 					
-					<td class="title">
+					<?php $current_column = 'title'; ?>
+					<td class="<?= $current_column; ?> col-<?= $current_column; ?>">
 						
 						<?= anchor( $this->articles->get_a_url( 'edit', $article ), strip_tags( $article[ 'title' ] ), 'class="" title="' . lang( 'action_view' ) . '"' ); ?><br />
 						<small class="small">(<?= $article[ 'alias' ]; ?>)</small>
 						
 					</td>
 					
-					<td class="article-created-by">
+					<?php $current_column = 'created_by_name'; ?>
+					<td class="<?= $current_column; ?> col-<?= $current_column; ?>">
 						
 						<?= anchor( 'admin/users/users_management/edit_user/' . base64_encode( base64_encode( base64_encode( base64_encode( $article[ 'created_by_id' ] ) ) ) ), $article[ 'created_by_name' ], 'class="" title="' . $article[ 'created_by_name' ] . '"' ); ?>
 						
 					</td>
 					
-					<td class="article-category">
+					<?php $current_column = 'category'; ?>
+					<td class="<?= $current_column; ?> col-<?= $current_column; ?>">
 						
 						<?php if ( $article[ 'category_id' ] > 0 ){ ?>
 							
@@ -236,7 +241,8 @@
 						
 					</td>
 					
-					<td class="access">
+					<?php $current_column = 'access'; ?>
+					<td class="<?= $current_column; ?> col-<?= $current_column; ?>">
 						
 						<?php if ($article[ 'access_type' ] == 'users') { ?>
 						<span class="access-level access-level-users"><?php echo lang('specific_users'); ?></span>
@@ -248,7 +254,8 @@
 						
 					</td>
 					
-					<td class="ordering">
+					<?php $current_column = 'ordering'; ?>
+					<td class="<?= $current_column; ?> col-<?= $current_column; ?>">
 						
 						<?= form_open( get_url( $this->articles->get_a_url( 'change_ordering' ) ), 'class="form-change-ordering"' ); ?>
 							
@@ -264,7 +271,8 @@
 						
 					</td>
 					
-					<td class="status">
+					<?php $current_column = 'status'; ?>
+					<td class="<?= $current_column; ?> col-<?= $current_column; ?>">
 						
 						<?=
 							
@@ -281,7 +289,8 @@
 						
 					</td>
 					
-					<td class="operations">
+					<?php $current_column = 'operations'; ?>
+					<td class="<?= $current_column; ?> col-<?= $current_column; ?>">
 						
 						<?= vui_el_button( array( 'url' => $this->articles_model->get_link_article_detail( 0, $article[ 'id' ] ), 'text' => lang( 'action_view' ), 'target' => '_blank', 'icon' => 'view', 'only_icon' => TRUE, ) ); ?>
 						

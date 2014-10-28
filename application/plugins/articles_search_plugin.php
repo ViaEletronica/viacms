@@ -110,8 +110,9 @@ class Articles_search_plugin extends Plugins_mdl{
 					
 					$line = & $default_search_results[];
 					
-					$line[ 'title' ] = $search_result[ 'title' ];
-					$line[ 'image' ] = $search_result[ 'image' ];
+					$line[ 'id' ] = isset( $search_result[ 'id' ] ) ? $search_result[ 'id' ] : '';
+					$line[ 'title' ] = isset( $search_result[ 'title' ] ) ? $search_result[ 'title' ] : '';
+					$line[ 'image' ] = isset( $search_result[ 'image' ] ) ? $search_result[ 'image' ] : '';
 					$line[ 'content' ] = $search_result[ 'fulltext' ] ? word_limiter( strip_tags( html_entity_decode( $search_result[ 'fulltext' ] ) ), 20, '...' ) : ( $search_result[ 'introtext' ] ? word_limiter( strip_tags( html_entity_decode( $search_result[ 'introtext' ] ) ), 20, '...' ) : '' );
 					
 				}

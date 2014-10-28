@@ -43,8 +43,6 @@ class Facebook_comments_plugin extends Plugins_mdl{
 				
 				log_message( 'debug', '[Plugins] Facebook comments plugin initialized' );
 				
-				$this->lang->load( 'admin/plugins/facebook_comments' );
-				
 				$this->voutput->append_body_start_script_declaration( 'facebook_comments_js_sdk', $this->load->view( 'admin/plugins/facebook_comments/default/facebook_comments', NULL, TRUE ), NULL, NULL );
 				
 				$this->_set_plugin_output( 'facebook_comments', '<fb:comments href="' . current_url() . '" width="100%" numposts="5" colorscheme="light"' . ( $this->ua->is_mobile() ? ' mobile="true"' : '' ) . '></fb:comments>' );
@@ -60,8 +58,6 @@ class Facebook_comments_plugin extends Plugins_mdl{
 	}
 	
 	public function get_params_spec(){
-		
-		$this->lang->load( 'admin/plugins/facebook_comments' );
 		
 		$current_component = $this->current_component;
 		

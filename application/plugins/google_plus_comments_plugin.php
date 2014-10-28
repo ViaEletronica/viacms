@@ -37,8 +37,6 @@ class Google_plus_comments_plugin extends Plugins_mdl{
 				
 				log_message( 'debug', '[Plugins] Google Plus comments plugin initialized' );
 				
-				$this->lang->load( 'admin/plugins/google_plus_comments' );
-				
 				$this->_set_plugin_output( 'google_plus_comments', $this->load->view( 'admin/plugins/google_plus_comments/default/google_plus_comments', NULL, TRUE ) );
 				
 			}
@@ -52,8 +50,6 @@ class Google_plus_comments_plugin extends Plugins_mdl{
 	}
 	
 	public function get_params_spec(){
-		
-		$this->lang->load( 'admin/plugins/google_plus_comments' );
 		
 		$current_component = $this->current_component;
 		

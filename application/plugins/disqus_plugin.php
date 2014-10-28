@@ -37,8 +37,6 @@ class Disqus_plugin extends Plugins_mdl{
 				
 				log_message( 'debug', '[Plugins] Disqus comments plugin initialized' );
 				
-				$this->lang->load( 'admin/plugins/disqus_comments' );
-				
 				$this->_set_plugin_output( 'disqus_comments', $this->load->view( 'admin/plugins/disqus/default/disqus', NULL, TRUE ) );
 				
 			}
@@ -52,8 +50,6 @@ class Disqus_plugin extends Plugins_mdl{
 	}
 	
 	public function get_params_spec(){
-		
-		$this->lang->load( 'admin/plugins/disqus' );
 		
 		$current_component = $this->current_component;
 		

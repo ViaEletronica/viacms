@@ -24,7 +24,7 @@
 	display: block;
 	overflow: auto;
 	float: left;
-	z-index: 1;
+	z-index: 1000;
 	margin: 0;
 	padding: 0;
 	text-align: left;

@@ -121,14 +121,14 @@
 			</td>
 			
 			<?php $current_column = 'id'; ?>
-			<td class="<?= $current_column; ?> col-<?= $current_column; ?> ta-center">
+			<td class="<?= $current_column; ?> col-<?= $current_column; ?>">
 				
 				<?= $category[ $current_column ]; ?>
 				
 			</td>
 			
 			<?php $current_column = 'image'; ?>
-			<td class="<?= $current_column; ?> col-<?= $current_column; ?> ta-center">
+			<td class="<?= $current_column; ?> col-<?= $current_column; ?>">
 				
 				<?php if ( $category[ $current_column ] ){ ?>
 				

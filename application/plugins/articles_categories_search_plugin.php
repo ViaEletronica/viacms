@@ -107,9 +107,10 @@ class Articles_categories_search_plugin extends Plugins_mdl{
 					
 					$line = & $default_search_results[];
 					
+					$line[ 'id' ] = isset( $search_result[ 'id' ] ) ? $search_result[ 'id' ] : '';
 					$line[ 'title' ] = isset( $search_result[ 'title' ] ) ? $search_result[ 'title' ] : '';
 					$line[ 'image' ] = isset( $search_result[ 'image' ] ) ? $search_result[ 'image' ] : '';
-					$line[ 'content' ] = isset( $search_result[ 'description' ] ) ? word_limiter( strip_tags( html_entity_decode( $search_result[ 'description' ] ) ), 20, '...' ) : '';
+					$line[ 'content' ] = $search_result[ 'description' ] ? word_limiter( strip_tags( html_entity_decode( $search_result[ 'description' ] ) ), 20, '...' ) : '';
 					
 				}
 				

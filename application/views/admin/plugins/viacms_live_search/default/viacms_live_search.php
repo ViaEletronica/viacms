@@ -43,7 +43,7 @@
 						show : function(event, api){
 							
 							// Setup the map container and append it to the tooltip
-							container = $( '<div class="qtip-contact-info-wrapper"></div>' ).appendTo( api.elements.content.empty() );
+							container = $( '<div class="s1"></div>' ).appendTo( api.elements.content.empty() );
 							
 							$.ajax({
 								type: "GET",
@@ -95,7 +95,7 @@
 					},
 					style: {
 						def: false,
-						classes: 'qtip-viacms-live-search qtip-vecms'
+						classes: 'qtip-viacms-live-search live-search qtip-vecms'
 					}
 				});
 			});

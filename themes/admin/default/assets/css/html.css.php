@@ -39,6 +39,8 @@ body.vui{
 	font-size: <?= DEFAULT_FONT_SIZE; ?>;
 	line-height: <?= DEFAULT_LINE_HEIGHT; ?>;
 	
+	background: <?= $vui->colors->vui_lighter->hex_s; ?>;
+	
 }
 
 body.login.vui{

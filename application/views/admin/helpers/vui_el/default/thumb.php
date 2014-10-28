@@ -1,10 +1,10 @@
 
 
-<<?= $figure ? 'figure' : 'div'; ?> id="<?= $id; ?>" class="thumb <?= $wrapper_class; ?>">
+<<?= $figure ? 'figure' : $wrappers_el_type; ?> id="<?= $id; ?>" class="thumb <?= $wrapper_class; ?>">
 	
-	<div class="s1 inner">
+	<<?= $wrappers_el_type; ?> class="s1 inner">
 		
-		<div class="s2">
+		<<?= $wrappers_el_type; ?> class="s2">
 			
 			<?php if ( check_var( $href ) ){ ?>
 			<a class="s3 <?= $modal ? 'thumb-modal' : ''; ?>" href="<?= $href; ?>" title="<?= $title; ?>" <?= $target ? 'target="' . $target . '"' : ''; ?> <?= $rel ? 'rel="' . $rel . '"' : ''; ?>>
@@ -16,9 +16,9 @@
 			</a>
 			<?php } ?>
 			
-		</div>
+		</<?= $wrappers_el_type; ?>>
 		
-	</div>
+	</<?= $wrappers_el_type; ?>>
 	
 	<?php if ( $text ){ ?>
 		
@@ -26,7 +26,7 @@
 		
 	<?php } ?>
 	
-</<?= $figure ? 'figure' : 'div'; ?>>
+</<?= $figure ? 'figure' : $wrappers_el_type; ?>>
 
 <?php if ( $modal ) { ?>
 	

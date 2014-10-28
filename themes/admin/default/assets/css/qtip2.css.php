@@ -209,6 +209,23 @@ label.info-tip:hover:before{
 	
 }
 
+/* ---------------------------------------------------- */
+/* Live search */
+
+.qtip.live-search{
+	
+}
+.qtip.live-search .qtip-content{
+	
+}
+.qtip.live-search .qtip-content > .s1{
+	
+	position: relative;
+	max-height: 500px;
+	overflow: auto;
+	
+}
+
 /*
  ---------------------------------------------------------
  qTip

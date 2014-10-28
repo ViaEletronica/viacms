@@ -6,8 +6,77 @@
  ---------------------------------------------------------
  */
 
+th.col-checkbox,
+th.col-id,
+th.col-image,
+th.col-operations,
+th.col-status,
+th.col-order,
+th.col-ordering,
+td.col-checkbox,
+td.col-id,
+td.col-image,
+td.col-priority,
+td.col-status,
+td.col-operations,
+td.col-ordering{
+	
+	text-align: center;
+	white-space: nowrap;
+	vertical-align: middle;
+	
+	width: 1px;
+	
+}
+
+td.tree-title{
+	
+	text-align: left;
+	
+}
+tr.tree-level-1 td.tree-title{
+	
+	padding-left: <?= ( DEFAULT_SPACING * 4 ) * 1; ?>px;
+	
+}
+tr.tree-level-2 td.tree-title{
+	
+	padding-left: <?= ( DEFAULT_SPACING * 4 ) * 2; ?>px;
+	
+}
+tr.tree-level-3 td.tree-title{
+	
+	padding-left: <?= ( DEFAULT_SPACING * 4 ) * 3; ?>px;
+	
+}
+tr.tree-level-4 td.tree-title{
+	
+	padding-left: <?= ( DEFAULT_SPACING * 4 ) * 4; ?>px;
+	
+}
+.btn.btn-sub-item{
+	
+	min-height:.95em;
+	height:.95em;
+	line-height:115%;
+	padding-top:0;
+	padding-bottom:0;
+	
+}
+.btn.btn-sub-item .icon-sub-item:before{
+	
+	line-height: 64%;
+	
+}
+.btn.btn-sub-item:hover{
+	background-color: transparent;
+	-webkit-box-shadow: none;
+	box-shadow: none;
+}
 th.order-by{
+	
 	position: relative;
+	
 }
 th.order-by-column{
 	
@@ -46,7 +115,9 @@ th.order-by-column a{
 @-moz-document url-prefix() {
 	
 	th.order-by a:after{
+		
 		display: none;
+		
 	}
 	
 }

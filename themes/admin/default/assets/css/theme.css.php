@@ -859,7 +859,7 @@ table.table-form{
 	table.table-form td select,
 	table.table-form td .button{
 		
-		margin-bottom:<?= DEFAULT_SPACING; ?>px;
+		margin-bottom: <?= DEFAULT_SPACING; ?>px;
 		
 	}
 
@@ -876,91 +876,6 @@ table.table-form{
 
 
 
-tr.status-3{
-	color:rgba(0,0,0,.5);
-}
-tr.status-3 td,
-tr.status-3.priority-0 td.priority,
-tr.status-3.priority-1 td.priority,
-tr.status-3.priority-2 td.priority{
-	background:rgba(101,160,41,0.2);
-}
-th.operations,
-th.order,
-th.col-operations,
-th.col-order
-th.col-ordering{
-	width: 1px;
-}
-td.priority,
-td.status,
-td.operations,
-td.order,
-td.col-priority,
-td.col-status,
-td.col-operations,
-td.col-order,
-td.col-ordering{
-	text-align:center;
-	white-space: nowrap;
-	vertical-align:middle;
-}
-
-td.tree-title{
-	text-align: left;
-}
-tr.tree-level-1 td.tree-title{
-	padding-left: 1em;
-}
-tr.tree-level-2 td.tree-title{
-	padding-left: 3em;
-}
-tr.tree-level-3 td.tree-title{
-	padding-left: 5em;
-}
-tr.tree-level-4 td.tree-title{
-	padding-left: 7em;
-}
-.btn.btn-sub-item{
-	min-height:.95em;
-	height:.95em;
-	line-height:115%;
-	padding-top:0;
-	padding-bottom:0;
-}
-.btn.btn-sub-item .icon-sub-item:before{
-	line-height: 64%;
-}
-.btn.btn-sub-item:hover{
-	background-color: transparent;
-	-webkit-box-shadow: none;
-	box-shadow: none;
-}
-th.op-column,
-td.op-column{
-	width:1px;
-}
-th.title,
-td.title{
-	width:400px;
-}
-th.product-title,
-td.product-title{
-	
-}
-th.provider,
-td.provider{
-	white-space: nowrap;
-	width:1px;
-}
-th.cost_price,
-td.cost_price{
-	width:120px;
-}
-th.warranty,
-td.warranty{
-	width:100px;
-}
 
 
 
@@ -1536,13 +1451,8 @@ th.company-trading-name{
 
 
 
-.article-list-live-search,
+.live-search-result-wrapper,
 .contact-list-live-search{
-	
-	max-height: 500px;
-	overflow: auto;
-	-webkit-mask-position: 0 0;
-	-webkit-mask-size: 100% 100%;
 	
 }
 .article-list-live-search .info-wrapper,
