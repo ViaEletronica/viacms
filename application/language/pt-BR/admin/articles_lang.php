@@ -10,6 +10,8 @@ $lang['article_title'] = 																		"Título do artigo";
 $lang['article_order'] = 																		"Ordem do artigo";
 $lang['category_order'] = 																		"Ordem da categoria";
 $lang['articles_global_config'] = 																"Configurações globais do componente Artigos";
+$lang['search_articles'] = 																		"Pesquisar artigos";
+$lang['show_image_on_detail_view'] = 															"Exibir imagem";
 
 
 $lang['live_search_no_results'] = 																"Nada encontrado";
@@ -17,7 +19,7 @@ $lang['live_search_no_results'] = 																"Nada encontrado";
 
 
 
-/* 
+/*
  * -------------------------------------------------------
  * General
  */
@@ -29,12 +31,14 @@ $lang['show_readmore_link'] = 																	"Links \"<b><i>Leia mais</i></b>\
 $lang['tip_show_readmore_link'] = 																"Exibe o link para acessar o artigo completo, geralmente conhecido como \"<b><i>Leia mais</i></b>\".";
 $lang['readmore_text'] = 																		"Texto para o link \"<b><i>Leia mais</i></b>\"";
 $lang['tip_readmore_text'] = 																	"Informe um texto personalizado para o link \"<b><i>Leia mais</i></b>\".</p>Informe \"global\" para utilizar o texto padrão.";
- 
-/* 
+
+$lang['error_trying_insert_image_as_article'] = 												"Erro ao tentar criar artigo a partir da imagem <strong>%s</strong>!";
+
+/*
  * -------------------------------------------------------
  * List view
  */
- 
+
 $lang['Articles list'] = 																		"Lista de artigos";
 $lang['articles_list'] = 																		"Lista de artigos";
 $lang['show_title_on_list_view'] = 																"Título do artigo";
@@ -61,8 +65,9 @@ $lang['show_image_as_link_on_list_view'] = 														"Imagem como link";
 $lang['tip_show_image_as_link_on_list_view'] = 													"Se ativo, as imagens serão exibidas como links.";
 $lang['list_view_image_link_mode'] = 															"Destino do link da imagem";
 $lang['tip_list_view_image_link_mode'] = 														"Defina se o link da imagem apontará para o artigo ou para a própria imagem.";
+$lang['articles_category_readmore'] = 															"Veja mais";
 
-/* 
+/*
  * -------------------------------------------------------
  * Detail view
  */
@@ -107,7 +112,7 @@ $lang['article_copied_sufix'] = 																"(Cópia)";
 
 $lang['category_has_articles'] = 																"A categoria possui artigos";
 $lang['delete_warning_category_has_articles'] = 												"Existem artigos utilizando esta categoria, se você continuar, os mesmos serão <span class=\"important\">descategorizados</span>:";
-$lang['delete_warning_category_has_childrens'] = 												"Esta categoria possui sub-categorias, se você continuar, suas categorias pais serão a categoria pai mais próxima:";
+$lang['delete_warning_category_has_childrens'] = 												"Esta categoria possui sub-categorias, se você continuar, as mesmas serão movidas para a categoria pai mais próxima:";
 
 $lang['article_updated'] = 																		"Artigo atualizado com sucesso!";
 $lang['no_categories_records'] = 																"Não existem categorias cadastradas.";
@@ -129,6 +134,8 @@ $lang['category_created'] = 																	"Categoria criada com sucesso!";
 $lang['category_updated'] = 																	"Categoria atualizada com sucesso!";
 $lang['create_category_fail'] = 																"Erro ao tentar criar a categoria!";
 $lang['update_category_fail'] = 																"Erro ao tentar atualizar a categoria!";
+$lang['article_category_confirm_delete'] = 														"Você tem certeza que deseja excluir a categoria <strong>%s</strong>?";
+$lang['category_deleted'] = 																	"Categoria removida com sucesso";
 
 
 

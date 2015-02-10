@@ -2,9 +2,9 @@
 /* tradução: franksouza.com.br */
 
 $lang['menus'] = 																						"Menus";
-$lang['menu_types'] = 																					"Menus";
-$lang['new_menu_type'] = 																				"Novo menu";
-$lang['edit_menu_type'] = 																				"Editar menu";
+$lang['menu_types'] = 																					"Grupos de menus";
+$lang['new_menu_type'] = 																				"Novo grupo de menu";
+$lang['edit_menu_type'] = 																				"Editar grupo de menu";
 $lang['menu_items'] = 																					"Itens de menu";
 $lang['menu_item'] = 																					"Item de menu";
 $lang['new_menu_item'] = 																				"Novo item de menu";
@@ -56,6 +56,7 @@ $lang['menus_management_menus_management'] = 															"Pode gerenciar menu
 
 // messages
 $lang['access_denied_menus_management_menus_management'] = 												"Você não possui privilégios suficientes para gerenciar menus";
+$lang['no_menu_types_add_one_first'] = 																	"Não há grupos de menus, adicione um primeiro";
 
 /* End of file general_lang.php */
 /* Location: ./system/language/pt-br/admin/menus_lang.php */

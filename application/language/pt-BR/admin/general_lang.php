@@ -111,6 +111,8 @@ $lang['separator'] = 																			"Separador";
 $lang['target'] = 																				"Alvo";
 $lang['modified_date'] = 																		"Data de modificação";
 $lang['author'] = 																				"Autor";
+$lang['breadcrumb_you_are_here'] = 																"Você está aqui:";
+$lang['breadcrumb_separator'] = 																" &#187; ";
 
 $lang['id'] = 																					"Id";
 $lang['title'] = 																				"Título";
@@ -292,6 +294,8 @@ $lang['pt-br'] = 																				$lang['pt-BR'];
 $lang['component_preferences_updated'] = 														"Configurações globais do componente atualizadas!";
 $lang['update_component_preferences_fail'] = 													"Falha ao tentar atualizar as configurações globais do componente!";
 $lang['unable_to_create_directory'] = 															"Não foi possível criar diretório";
+$lang['page_not_found'] = 																		"Página inexistente";
+$lang['the_page_could_not_be_found'] = 															"A página <strong>%s</strong> não foi encontrada";
 
 /*********** messages ***********/
 /********************************/
@@ -308,6 +312,8 @@ $lang['phone'] = 																				"Telefone";
 $lang['celphone'] = 																			"Celular";
 
 
+$lang['create_datetime'] = 																		"Data de criação";
+$lang['mod_datetime'] = 																		"Data de modificação";
 
 
 

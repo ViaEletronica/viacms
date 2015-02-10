@@ -41,6 +41,8 @@ $lang['next'] = 																				"Próximo";
 $lang['previous_page'] = 																		"Página anterior";
 $lang['next_page'] = 																			"Próxima página";
 $lang['form_required_string'] = 																"*";
+$lang['breadcrumb_you_are_here'] = 																"Você está aqui:";
+$lang['breadcrumb_separator'] = 																" &#187; ";
 
 $lang['contact'] = 																				"Contato";
 $lang['contacts'] = 																			"Contatos";

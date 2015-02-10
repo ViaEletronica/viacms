@@ -1,35 +1,92 @@
 <?php
 /* tradução: franksouza.com.br */
 
-// formulários
+// surbmit forms
 $lang['Submit_forms'] = 																		"Formulários";
 $lang['submit_forms'] = 																		"Formulários";
 $lang['submit_form_id'] = 																		"Id do formulário";
 $lang['submit_form_title'] = 																	"Título do formulário";
 $lang['no_submit_forms'] = 																		"Não há nenhum formulário cadastrado";
 $lang['add_submit_form'] = 																		"Novo formulário";
+
+// post sending messages
+$lang['post_sending_messages'] = 																"Mensagens pós envio";
+$lang['sfpsm_user_submit_save_into_db_success_title'] = 										"Sucesso ao salvar no banco de dados (Título)";
+$lang['tip_sfpsm_user_submit_save_into_db_success_title'] = 									"Título da mensagem exibida ao salvar no banco de dados com sucesso";
+$lang['sfpsm_user_submit_save_into_db_success'] =												"Sucesso ao salvar no banco de dados";
+$lang['tip_sfpsm_user_submit_save_into_db_success'] =											"Mensagem exibida ao salvar no banco de dados com sucesso";
+
+// submitter message receiving
+
+
+// email sending
 $lang['sending'] = 																				"Envio do formulário";
+$lang['submit_form_param_send_email_to'] = 														"E-mails de destino";
+$lang['tip_submit_form_param_send_email_to'] = 													"<p>Defina para onde as mensagens devem ser enviadas.</p><ul><li><strong>E-mails do contato:</strong> Se selecionado, as mensagens serão enviadas para todos os e-mails do contato selecionado no campo <strong><i>Contato de recebimento</i></strong>. <span class=\"warning\"><strong>Importante: </strong>Tenha certeza que os e-mails do contato selecionado estão <strong>marcados para recebimento de mensagens</strong>. Você pode definir isto nas configurações do contato.</span></li><li><strong>E-mails personalizados:</strong> Se selecionado, as mensagens serão enviadas para os e-mails definidos no campo <strong><i>E-mails de recebimento personalizados</i></strong>.</li></ul>";
+$lang['submit_form_param_send_email_to_contact'] =												"Contato de recebimento";
+$lang['tip_submit_form_param_send_email_to_contact'] =											"<p>Se você selecionou a opção <strong><i>E-mails do contato</i></strong> no campo <strong><i>E-mails de destino</i></strong>, defina aqui o contato que recebrá as mensagens.</p><p><span class=\"warning\"><br /><strong>Importante: </strong>Tenha certeza que os e-mails do contato selecionado estão <strong>marcados para recebimento de mensagens</strong>. Você pode definir isto nas configurações do contato.</span></p>";
+$lang['submit_form_param_send_email_to_custom_emails'] =										"E-mails de recebimento personalizados";
+$lang['tip_submit_form_param_send_email_to_custom_emails'] =									"<p>Se você selecionou a opção <strong><i>E-mails personalizados</i></strong> no campo <strong><i>E-mails de destino</i></strong>, defina aqui os endereços de e-mail para os quais serão enviadas as mensagens.</p><p>Se desejar mais de um endereço de e-mail, informe um por linha.</p>";
+
+$lang['submit_form_param_send_email_to_from'] =													"De (e-mail)";
+$lang['submit_form_param_send_email_to_from_name'] =											"Em nome de";
+$lang['submit_form_param_send_email_to_reply_to'] =												"Responder para";
+$lang['submit_form_param_send_email_to_cc'] =													"Cópia para (Cc)";
+$lang['submit_form_param_send_email_to_bcc'] =													"Cópia oculta para (Cco)";
+$lang['submit_form_param_send_email_to_subject'] =												"Assunto";
+
+
+$lang['submit_form_sending_email_layout_source'] =												"Origem do modelo de envio";
+$lang['submit_form_sending_email_layout_view'] =												"Modelo de envio";
+$lang['submit_form_sending_email_show_empty_fields'] =											"Enviar campos em branco";
+$lang['submit_form_sending_email_layout_custom'] =												"Modelo de envio personalizado";
+
+
+
+
+
+
 $lang['look_and_feel'] = 																		"Aparência";
 $lang['edit_submit_form'] = 																	"Editar formulário";
 
-// campos
+// fields
 $lang['fields'] = 																				"Campos";
 $lang['field_type'] = 																			"Tipo";
 $lang['field_key'] = 																			"Ordem";
 $lang['field_is_required'] = 																	"Obrigatório";
 $lang['validation_rule'] = 																		"Validação";
+$lang['add_field'] =																			"Adicionar campo";
 $lang['remove_field'] = 																		"Remover campo";
+$lang['enter_amount_fields'] = 																	"Quantidade";
 
 $lang['input_text'] = 																			"Texto";
 $lang['textarea'] = 																			"Área de texto";
 $lang['select'] = 																				"Seleção";
 $lang['combo_box'] = 																			"Seleção";
 $lang['button'] = 																				"Botão";
+$lang['label'] = 																				"Título";
+$lang['conditional_field'] = 																	"Condicional";
+$lang['conditional_field_function'] = 															"Função condicional";
+$lang['show'] =																					"Exibir";
+$lang['conditional_target_field'] =																"Campo alvo";
+$lang['conditional_field_cond'] =																"Condição";
+$lang['equal'] =																				"Se igual a";
+$lang['different_of'] =																			"Se diferente de";
+$lang['conditional_field_values'] =																"Valores da condição";
+
+$lang['sf_date_field_day_min_value'] = 															"Dia mínimo";
+$lang['sf_date_field_day_max_value'] = 															"Dia máximo";
+$lang['sf_date_field_month_min_value'] = 														"Mês mínimo";
+$lang['sf_date_field_month_max_value'] = 														"Mês máximo";
+$lang['sf_date_field_year_min_value'] = 														"Ano mínimo";
+$lang['sf_date_field_year_max_value'] = 														"Ano máximo";
+
+$lang['submit_forms_error_no_field_on_submit_form'] = 											"Este campo não foi encontrado no formulário, pode ter sido removido ou seu nome foi alterado.";
 
 $lang['submit_forms_validation_rule_matches'] = 												"Combinação";
-$lang['submit_forms_validation_rule_valid_email'] = 											"Email";
-$lang['submit_forms_validation_rule_valid_email_dns'] = 										"Email e DNS";
-$lang['submit_forms_validation_rule_valid_emails'] = 											"Emails";
+$lang['submit_forms_validation_rule_valid_email'] = 											"E-mail";
+$lang['submit_forms_validation_rule_valid_email_dns'] = 										"E-mail e DNS";
+$lang['submit_forms_validation_rule_valid_emails'] = 											"E-mails";
 $lang['submit_forms_validation_rule_min_length'] = 												"Mímimo de caractéres";
 $lang['submit_forms_validation_rule_max_length'] = 												"Máximo de caractéres";
 $lang['submit_forms_validation_rule_exact_length'] = 											"Quantidade exata de caractéres";
@@ -48,7 +105,7 @@ $lang['submit_forms_validation_rule_valid_base64'] = 											"Somente caract�
 $lang['validation_rule_parameter_matches'] = 													"Título do campo";
 $lang['tip_field_validation_rule_parameter_matches'] = 											"Informe o título do campo que este deve combinar";
 
-// envios
+// users submits
 $lang['user_submit'] = 																			"Envio";
 $lang['users_submits'] = 																		"Envios";
 $lang['submit_datetime'] = 																		"Data e hora do envio";
@@ -56,7 +113,16 @@ $lang['user_submit_id'] = 																		"Id do envio";
 $lang['no_users_submits'] = 																	"Não há envios";
 $lang['submit_forms_no_users_submits'] = 														"Este formulário ainda não possui qualquer envio. Quando o formulário possuir envios registrados, esta opção estará disponível";
 $lang['edit_user_submit'] = 																	"Editar envio";
+$lang['user_submit_confirm_delete'] = 															"Tem certeza que deseja remover o envio de id %s?";
+$lang['users_submits_for_this_submit_form'] = 													"Ver os envios deste formulário";
 
+
+$lang['submit_export_params'] = 																"Exportação e download";
+$lang['csv_export'] = 																			"Exportação .CSV";
+$lang['submit_form_export_csv_delimiter'] = 													"Separador";
+$lang['tip_submit_form_export_csv_delimiter'] = 												"<p>Especifique o caracter que será usado como separador dos campos.</p><p><strong>Se deixado em branco, vírgulas (,) serão usadas.</strong></p>";
+$lang['submit_form_export_csv_enclosure'] = 													"Delimitador de texto";
+$lang['tip_submit_form_export_csv_enclosure'] = 												"<p>Especifique o caracter que será usado como delimitador de texto.</p><p><strong>Se deixado em branco, aspa dupla (\") será usada.</strong></p>";
 $lang['download_json'] = 																		"Baixar .JSON";
 $lang['download_csv'] = 																		"Baixar .CSV";
 $lang['download_xls'] = 																		"Baixar .XLS";
@@ -67,6 +133,8 @@ $lang['users_submits_export_error'] = 															"Erro ao tentar exportar";
 $lang['no_users_submits_selected'] = 															"Nenhum envio selecionado";
 $lang['select_submissions_to_export'] = 														"Por favor, selecione os envios que deseja exportar";
 $lang['users_submits_removed_success'] = 														"Envios excluídos com sucesso!";
+
+
 
 $lang['submit_form_title_sprintf'] = 															"Formulário: %s";
 $lang['submit_form_id_sprintf'] = 																"Id: %s";
@@ -101,9 +169,5 @@ $lang['articles_management_can_view_only_low_groups'] = 										"Somente de us
 $lang['articles_management_can_view_only_your_own'] = 											"Apenas seus artigos e acessíveis";
 
 
-
-
-
-
-/* End of file general_lang.php */
-/* Location: ./system/language/pt-br/admin/articles_lang.php */
+/* End of file submit_forms_lang.php */
+/* Location: ./application/language/pt-BR/admin/submit_forms_lang.php */

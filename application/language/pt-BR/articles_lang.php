@@ -27,6 +27,7 @@ $lang['new_article'] = 																			"Novo artigo";
 $lang['edit_article'] = 																		"Editar artigo";
 $lang['article_published'] = 																	"Artigo publicado";
 $lang['article_unpublished'] = 																	"Artigo despublicado";
+$lang['articles_category_readmore'] = 															"Veja mais";
 
 $lang['category_has_articles'] = 																"A categoria possui artigos";
 $lang['delete_warning_category_has_articles'] = 												"Existem artigos utilizando esta categoria, se você continuar, os mesmos serão descategorizados:";
