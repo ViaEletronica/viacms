@@ -513,7 +513,7 @@ class Users_common_model extends CI_Model{
 		
 		$this->get_users_groups_query();
 		
-		if ($this->check_privileges('users_management_can_edit_only_same_and_low_group_level')){
+		if ( $this->check_privileges( 'users_management_can_edit_only_same_and_low_group_level' ) ){
 			
 			$accessible_groups = $this->get_users_groups_same_and_low_group_level();
 			
@@ -538,23 +538,45 @@ class Users_common_model extends CI_Model{
 			$accessible_groups = $this->get_users_groups_low_groups( $this->user_data );
 			
 		}
-		else if ($this->check_privileges('users_management_can_edit_only_your_own_user')){
-			if ( $this->user_data['id'] == $user_id ){
-				$accessible_groups = $this->get_users_groups_as_list_childrens_hidden($this->user_data['parent_user_group_id'], $this->user_data['group_id']);
-				foreach ($accessible_groups as $key => $value) {
-					if ($value['parent'] != $this->user_data['parent_user_group_id']){
-						unset($accessible_groups[$key]);
+		else if ( $this->check_privileges( 'users_management_can_edit_only_your_own_user' ) ){
+			
+			if ( $this->user_data[ 'id' ] == $user_id ){
+				
+				$accessible_groups = $this->get_users_groups_as_list_childrens_hidden( $this->user_data[ 'parent_user_group_id' ], $this->user_data[ 'group_id' ] );
+				
+				foreach ( $accessible_groups as $key => $value ) {
+					
+					if ( $value[ 'parent' ] != $this->user_data[ 'parent_user_group_id' ] ){
+						
+						unset( $accessible_groups[ $key ] );
+						
 					}
+					
 				}
-				foreach ($accessible_groups as $key => $value) {
-					if ($value['parent'] == $this->user_data['parent_user_group_id'] AND $value['id'] != $this->user_data['group_id']){
-						unset($accessible_groups[$key]);
+				
+				foreach ( $accessible_groups as $key => $value ) {
+					
+					if ( $value[ 'parent' ] == $this->user_data[ 'parent_user_group_id' ] AND $value[ 'id' ] != $this->user_data[ 'group_id' ] ){
+						
+						unset( $accessible_groups[ $key ] );
+						
 					}
+					
 				}
+				
 			}
+			
 			else{
+				
 				$accessible_groups = FALSE;
+				
 			}
+			
+		}
+		else {
+			
+			$accessible_groups = $this->users_groups_query->result_array();
+			
 		}
 		
 		return $accessible_groups;

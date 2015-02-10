@@ -158,6 +158,149 @@ class Main_common_model extends CI_Model{
 	
 	// --------------------------------------------------------------------
 	
+	public function dir_tree( $f_params ) {
+		
+		// -------------------------------------------------
+		// Parsing vars ------------------------------------
+		
+		if ( ! is_array( $f_params ) AND ! check_var( $f_params ) ) {
+			
+			return ;
+			
+		}
+		
+		$dir =									( isset( $f_params[ 'dir' ] ) AND is_string( $f_params[ 'dir' ] ) AND $f_params[ 'dir' ] >= 0 ) ? $f_params[ 'dir' ] : '';
+		$level =								( isset( $f_params[ 'level' ] ) AND is_numeric( $f_params[ 'level' ] ) AND $f_params[ 'level' ] >= 0 ) ? ( int ) $f_params[ 'level' ] : 0;
+		$var_set =								( isset( $f_params[ 'var_set' ] ) ) ? ( bool ) $f_params[ 'var_set' ] : TRUE;
+		$include_files =						( isset( $f_params[ 'include_files' ] ) ) ? ( bool ) $f_params[ 'include_files' ] : FALSE;
+		$return_multidimensional =				( isset( $f_params[ 'return_multidimensional' ] ) ) ? ( bool ) $f_params[ 'return_multidimensional' ] : FALSE;
+		$indented_symbol =						( isset( $f_params[ 'indented_symbol' ] ) AND is_string( $f_params[ 'indented_symbol' ] ) ) ? $f_params[ 'indented_symbol' ] : lang( 'indented_symbol' );
+		
+		// Parsing vars ------------------------------------
+		// -------------------------------------------------
+		
+		static $tree = array();
+		static $u_array = array(); // unidimensional array
+		static $child = FALSE;
+		
+		// Detect the current branch to append files/directories to
+		if ( $child !== FALSE AND isset( $tree[ $child ] ) ) {
+			
+			$branch =& $tree[ $child ];
+			
+		}
+		else
+		{
+			$branch =& $tree;
+		}
+		
+		// Force trailing slash on directory
+		$dir = rtrim( $dir, '/' ) . '/';
+		$dirlen = strlen( $dir );
+		
+		// Find files/directories
+		$items = glob( $dir . '*' );
+		
+		foreach( $items as $key => $item ) {
+			
+			// Get basename
+			$base = pathinfo( $item ); //substr($item, $dirlen);
+			$base_name = $base[ 'basename' ]; //substr($item, $dirlen);
+			$dir_name = $base[ 'dirname' ]; //substr($item, $dirlen);
+			//print_r( pathinfo( $item ) );
+			// always skip dot files
+			if ( $base_name[ 0 ] == '.' ) continue;
+			
+			// If is file
+			if ( is_file( $item ) AND is_readable( $item ) ) {
+				
+				if ( $include_files ) {
+					
+					$level++;
+					
+					$u_array[ $item ] =  str_repeat( '&nbsp;' , $level * 4 + 4 ) . $indented_symbol . pathinfo( $item, PATHINFO_BASENAME );
+					
+					$branch[] = $base_name;
+					
+					$level--;
+					
+				}
+				
+				$child = FALSE;
+				continue;
+				
+			}
+			
+			// If directory
+			if ( is_dir( $item ) AND is_readable( $item ) ) {
+				
+				// Dirty hack to get around PHP's numerical index rules
+				if ( ctype_digit( $base_name ) ) {
+					
+					$base_name = '~' . $base_name;
+					
+				}
+				
+				$u_array[ $dir_name ] = str_repeat( '&nbsp;' , $level * 4 + 4 ) . $indented_symbol . pathinfo( $dir_name, PATHINFO_BASENAME );
+				
+				$level++;
+				
+				$u_array[ $item ] =  str_repeat( '&nbsp;' , $level * 4 + 4 ) . $indented_symbol . pathinfo( $item, PATHINFO_BASENAME );
+				
+				$branch[ $base_name ] = array();
+				$child = $base_name;
+				
+				
+				$this->dir_tree(
+					
+					array(
+						
+						'dir' => $item,
+						'level' => $level,
+						'var_set' => FALSE,
+						'include_files' => $include_files,
+						'return_multidimensional' => $return_multidimensional,
+						'indented_symbol' => $indented_symbol,
+						
+					)
+					
+				);
+				
+				$level--;
+				
+				continue;
+				
+			}
+			
+		}
+		
+		// Only return from the root call
+		if ( $child === FALSE ) {
+			
+			$_tree = $tree;
+			$_u_array = $u_array;
+			
+			if ( $var_set ) {
+				
+				$tree = array();
+				$u_array = array();
+				
+			}
+			
+			if ( $return_multidimensional ) {
+				
+				return $_tree;
+				
+			}
+			
+			return $_u_array;
+			
+		}
+		
+	}
+	
+	// --------------------------------------------------------------------
+	
 	public function array_to_parent_ordered( $f_params ) { 
 		
 		// -------------------------------------------------
@@ -191,18 +334,31 @@ class Main_common_model extends CI_Model{
 	private function _array_to_parent_ordered( $f_params ) { 
 		
 		$array = $f_params[ 'array' ];
+		$parent_wanted = $f_params[ 'parent_id' ];
 		
 		foreach( $array as $row ) {
 			
-			if ( $row[ $f_params[ 'parent_field' ] ] == $f_params[ 'parent_id' ] ) {
+			$id = $row[ $f_params[ 'id_field' ] ];
+			$parent_id = $row[ $f_params[ 'parent_field' ] ];
+			$title = $row[ $f_params[ 'title_field' ] ];
+			
+			if ( $id == $parent_wanted ) {
 				
-				$this->_items_tree[ $row[ $f_params[ 'id_field' ] ] ] = $row;
-				$this->_items_tree[ $row[ $f_params[ 'id_field' ] ] ][ 'indented_title' ] = str_repeat( '&nbsp;' , $f_params[ 'level' ] * 4 + 4 ) . lang( 'indented_symbol' ) . $row[ $f_params[ 'title_field' ] ];
-				$this->_items_tree[ $row[ $f_params[ 'id_field' ] ] ][ 'level' ] = $f_params[ 'level' ];
+				$this->_items_tree[ $id ] = $row;
+				$this->_items_tree[ $id ][ 'indented_title' ] = str_repeat( '&nbsp;' , $f_params[ 'level' ] * 4 + 4 ) . $f_params[ 'indented_symbol' ] . $row[ $f_params[ 'title_field' ] ];
+				$this->_items_tree[ $id ][ 'level' ] = $f_params[ 'level' ];
+				
+			}
+			
+			if ( $parent_id == $parent_wanted ) {
+				
+				$this->_items_tree[ $id ] = $row;
+				$this->_items_tree[ $id ][ 'indented_title' ] = str_repeat( '&nbsp;' , $f_params[ 'level' ] * 4 + 4 ) . $f_params[ 'indented_symbol' ] . $row[ $f_params[ 'title_field' ] ];
+				$this->_items_tree[ $id ][ 'level' ] = $f_params[ 'level' ];
 				
 				$gcalp = $f_params;
 				$gcalp[ 'level' ] += 1;
-				$gcalp[ 'parent_id' ] = $row[ $f_params[ 'id_field' ] ];
+				$gcalp[ 'parent_id' ] = $id;
 				
 				$this->_array_to_parent_ordered( $gcalp );
 				

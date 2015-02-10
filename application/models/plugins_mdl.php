@@ -68,9 +68,19 @@ class Plugins_mdl extends CI_Model{
 			if ( check_var( $var1 ) AND is_array( $var1 ) ) {
 				
 				$f_params = $var1;
+				$params = check_var( $f_params[ 'params' ] ) ? $f_params[ 'params' ] : NULL;
 				
 				// batch mode
-				if ( ! isset( $f_params[ 'names' ] ) AND ! isset( $f_params[ 'types' ] ) ) { // treat each item as plugin name
+				if (
+					
+					// treat each item as plugin name
+					! isset( $f_params[ 'names' ] ) AND
+					! isset( $f_params[ 'types' ] ) AND
+					! isset( $f_params[ 'name' ] ) AND
+					! isset( $f_params[ 'type' ] ) AND
+					! isset( $f_params[ 'params' ] ) 
+					
+				) {
 					
 					foreach ( $f_params as $key => $name ) {
 						
@@ -90,20 +100,42 @@ class Plugins_mdl extends CI_Model{
 				}
 				else if ( isset( $f_params[ 'names' ] ) OR isset( $f_params[ 'types' ] ) ) {
 					
+					$success = TRUE;
+					
 					if ( isset( $f_params[ 'names' ] ) ) {
 						
 						if ( is_array( $f_params[ 'names' ] ) ) {
 							
 							foreach ( $f_params[ 'names' ] as $key => $name ) {
 								
-								$this->_load( $name );
+								$lp = array(
+									
+									'name' => $name,
+									'params' => $params,
+									
+								);
+								
+								$return = $this->_load( $lp );
+								
+								if ( ! $return ) {
+									
+									$success = FALSE;
+									
+								}
 								
 							}
 							
 						}
 						else if ( is_string( $f_params[ 'names' ] ) ) {
 							
-							return $this->_load( $f_params[ 'names' ] );
+							$lp = array(
+								
+								'name' => $f_params[ 'names' ],
+								'params' => $params,
+								
+							);
+							
+							$return = $this->_load( $lp );
 							
 						}
 						
@@ -115,12 +147,18 @@ class Plugins_mdl extends CI_Model{
 							
 							foreach ( $f_params[ 'types' ] as $key => $type ) {
 								
-								$return = $this->_load( NULL, $type );
-								
-								if ( ! isset( $return ) ) {
+								$lp = array(
 									
-									$return = NULL;
-									break;
+									'type' => $type,
+									'params' => $params,
+									
+								);
+								
+								$return = $this->_load( $lp );
+								
+								if ( ! $return ) {
+									
+									$success = FALSE;
 									
 								}
 								
@@ -131,11 +169,20 @@ class Plugins_mdl extends CI_Model{
 						}
 						else if ( is_string( $f_params[ 'types' ] ) ) {
 							
-							return $this->_load( NULL, $f_params[ 'types' ] );
+							$lp = array(
+								
+								'type' => $f_params[ 'types' ],
+								'params' => $params,
+								
+							);
+							
+							$return = $this->_load( $lp );
 							
 						}
 						
 					}
+					
+					return $success;
 					
 				}
 				
@@ -172,6 +219,7 @@ class Plugins_mdl extends CI_Model{
 			
 			$name =										( check_var( $var1 ) AND is_string( $var1 ) ) ? $var1 : NULL;
 			$type =										( check_var( $var2 ) AND is_string( $var2 ) ) ? $var2 : NULL;
+			$params =									NULL; // for passing params trought above method, with arrays
 			$return_type =								( check_var( $var3 ) AND is_string( $var3 ) ) ? $var3 : 'bool';
 			
 		}
@@ -252,7 +300,7 @@ class Plugins_mdl extends CI_Model{
 						
 					}
 					
-					$this->_run_plugin( $name );
+					$this->_run_plugin( $name, $params );
 					
 				}
 				else {

@@ -11,7 +11,12 @@ class Articles_module extends CI_Model{
 		 * Loading models and helpers
 		 */
 		
-		$this->load->model( 'articles_mdl', 'articles' );
+		if ( ! $this->load->is_model_loaded( 'articles' ) ) {
+			
+			$this->load->model( 'articles_mdl', 'articles' );
+			
+		}
+		
 		$this->load->helper(
 			
 			array(
@@ -119,7 +124,12 @@ class Articles_module extends CI_Model{
 			
 			
 			
-			$article[ 'category_url' ] = $article[ 'category_id' ] ? get_url( $this->articles->get_link_articles_list( current_menu_id(), $article[ 'category_id' ] ) ) : FALSE;
+			$article[ 'category_url' ] = $this->articles->get_a_url( 'list', array(
+				
+				'menu_item_id' => current_menu_id(),
+				'category_id' => $article[ 'category_id' ],
+				
+			) );
 			
 			$grouped_articles[ $article[ 'category_alias' ] ][ 'title' ] = $article[ 'category_title' ];
 			$grouped_articles[ $article[ 'category_alias' ] ][ 'articles' ][] = $article;
