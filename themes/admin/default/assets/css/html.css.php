@@ -927,12 +927,12 @@ tr td.order-by-column,
 .vui th,
 .vui tr:hover td{
 	
-	background: <?= $vui->colors->vui_extra_3->rgba_s( 10 ); ?>;
+	background-color: <?= $vui->colors->vui_extra_3->rgba_s( 10 ); ?>;
 	
 }
 .vui tr.selected{
 	
-	background: <?= $vui->colors->vui_base->rgba_s( 10 ); ?>;
+	background-color: <?= $vui->colors->vui_base->rgba_s( 10 ); ?>;
 	
 }
 .vui table.no-bg tr td,
@@ -941,7 +941,7 @@ tr td.order-by-column,
 .vui table.no-bg tr.odd td,
 .vui table.no-bg tr.even td{
 	
-	background: none;
+	background-color: none;
 	
 }
 

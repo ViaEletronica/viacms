@@ -31,26 +31,38 @@ td.col-ordering{
 
 td.tree-title{
 	
+	background-image: url('<?= $vui->svg_file( 'tree-level-bg', $vui->colors->vui_base->rgba_s( 100 ) ); ?>');
+	background-repeat: no-repeat;
+	
 	text-align: left;
+	
+}
+tr.tree-level-0 td.tree-title{
+	
+	background-image: none;
 	
 }
 tr.tree-level-1 td.tree-title{
 	
+	background-position: <?= ( ( ( DEFAULT_SPACING * 4 ) * 1 ) - ( DEFAULT_SPACING * 2 ) ); ?>px center;
 	padding-left: <?= ( DEFAULT_SPACING * 4 ) * 1; ?>px;
 	
 }
 tr.tree-level-2 td.tree-title{
 	
+	background-position: <?= ( ( ( DEFAULT_SPACING * 4 ) * 2 ) - ( DEFAULT_SPACING * 2 ) ); ?>px center;
 	padding-left: <?= ( DEFAULT_SPACING * 4 ) * 2; ?>px;
 	
 }
 tr.tree-level-3 td.tree-title{
 	
+	background-position: <?= ( ( ( DEFAULT_SPACING * 4 ) * 3 ) - ( DEFAULT_SPACING * 2 ) ); ?>px center;
 	padding-left: <?= ( DEFAULT_SPACING * 4 ) * 3; ?>px;
 	
 }
 tr.tree-level-4 td.tree-title{
 	
+	background-position: <?= ( ( ( DEFAULT_SPACING * 4 ) * 4 ) - ( DEFAULT_SPACING * 2 ) ); ?>px center;
 	padding-left: <?= ( DEFAULT_SPACING * 4 ) * 4; ?>px;
 	
 }

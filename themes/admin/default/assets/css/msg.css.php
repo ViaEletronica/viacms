@@ -40,8 +40,19 @@
 .msg-type-error{
 	
 	background: <?= $vui->colors->vui_red->rgba_s( 20 ); ?>;
-	
 	color: <?= $vui->colors->vui_red->hex_s; ?>;
+	
+}
+.msg-type-info{
+	
+	background: <?= $vui->colors->vui_blue->rgba_s( 20 ); ?>;
+	color: <?= $vui->colors->vui_blue->hex_s; ?>;
+	
+}
+.msg-type-warning{
+	
+	background: <?= $vui->colors->vui_yellow->rgba_s( 20 ); ?>;
+	color: <?= $vui->colors->vui_yellow->get_ro_color()->hex_s; ?>;
 	
 }
 .msg-inline-error{
@@ -85,6 +96,13 @@
 	
 	border: thin solid <?= $vui->colors->vui_blue->hex_s; ?>;
 	border-left: 5px solid <?= $vui->colors->vui_blue->hex_s; ?>;
+	
+}
+/* qtip warning*/
+.vui .qtip.msg-type-warning{
+	
+	border: thin solid <?= $vui->colors->vui_yellow->hex_s; ?>;
+	border-left: 5px solid <?= $vui->colors->vui_yellow->hex_s; ?>;
 	
 }
 

@@ -1,16 +1,10 @@
-.icon-expand {
-	*zoom: expression(this.runtimeStyle['zoom'] = '1', this.innerHTML = '&#xe640;');
-}
-.icon-retract {
-	*zoom: expression(this.runtimeStyle['zoom'] = '1', this.innerHTML = '&#xe641;');
-}
-.icon-pictures,images,gallery {
+.icon-pictures {
 	*zoom: expression(this.runtimeStyle['zoom'] = '1', this.innerHTML = '&#xe63f;');
 }
-.icon-pictures,images,gallery {
+.icon-images {
 	*zoom: expression(this.runtimeStyle['zoom'] = '1', this.innerHTML = '&#xe63f;');
 }
-.icon-pictures,images,gallery {
+.icon-gallery {
 	*zoom: expression(this.runtimeStyle['zoom'] = '1', this.innerHTML = '&#xe63f;');
 }
 .icon-download {
@@ -22,10 +16,10 @@
 .icon-users_submits {
 	*zoom: expression(this.runtimeStyle['zoom'] = '1', this.innerHTML = '&#xe63c;');
 }
-.icon-appearence,look_and_feel {
+.icon-appearence {
 	*zoom: expression(this.runtimeStyle['zoom'] = '1', this.innerHTML = '&#xe63b;');
 }
-.icon-appearence,look_and_feel {
+.icon-look_and_feel {
 	*zoom: expression(this.runtimeStyle['zoom'] = '1', this.innerHTML = '&#xe63b;');
 }
 .icon-phone {
@@ -61,19 +55,19 @@
 .icon-email {
 	*zoom: expression(this.runtimeStyle['zoom'] = '1', this.innerHTML = '&#xe630;');
 }
-.icon-document-properties,basic_details,details {
+.icon-document-properties {
 	*zoom: expression(this.runtimeStyle['zoom'] = '1', this.innerHTML = '&#xe62f;');
 }
-.icon-document-properties,basic_details,details {
+.icon-basic_details {
 	*zoom: expression(this.runtimeStyle['zoom'] = '1', this.innerHTML = '&#xe62f;');
 }
-.icon-document-properties,basic_details,details {
+.icon-details {
 	*zoom: expression(this.runtimeStyle['zoom'] = '1', this.innerHTML = '&#xe62f;');
 }
-.icon-submit-forms,forms {
+.icon-submit-forms {
 	*zoom: expression(this.runtimeStyle['zoom'] = '1', this.innerHTML = '&#xe62e;');
 }
-.icon-submit-forms,forms {
+.icon-forms {
 	*zoom: expression(this.runtimeStyle['zoom'] = '1', this.innerHTML = '&#xe62e;');
 }
 .icon-url {
@@ -82,10 +76,10 @@
 .icon-sub-item {
 	*zoom: expression(this.runtimeStyle['zoom'] = '1', this.innerHTML = '&#xe62c;');
 }
-.icon-preview_site,web {
+.icon-preview_site {
 	*zoom: expression(this.runtimeStyle['zoom'] = '1', this.innerHTML = '&#xe62b;');
 }
-.icon-preview_site,web {
+.icon-web {
 	*zoom: expression(this.runtimeStyle['zoom'] = '1', this.innerHTML = '&#xe62b;');
 }
 .icon-modules {
@@ -94,13 +88,13 @@
 .icon-ordering {
 	*zoom: expression(this.runtimeStyle['zoom'] = '1', this.innerHTML = '&#xe628;');
 }
-.icon-clock,time,schedule {
+.icon-clock {
 	*zoom: expression(this.runtimeStyle['zoom'] = '1', this.innerHTML = '&#xe627;');
 }
-.icon-clock,time,schedule {
+.icon-time {
 	*zoom: expression(this.runtimeStyle['zoom'] = '1', this.innerHTML = '&#xe627;');
 }
-.icon-clock,time,schedule {
+.icon-schedule {
 	*zoom: expression(this.runtimeStyle['zoom'] = '1', this.innerHTML = '&#xe627;');
 }
 .icon-add-customer {
@@ -118,13 +112,13 @@
 .icon-truck {
 	*zoom: expression(this.runtimeStyle['zoom'] = '1', this.innerHTML = '&#xe622;');
 }
-.icon-places,coord,map {
+.icon-places {
 	*zoom: expression(this.runtimeStyle['zoom'] = '1', this.innerHTML = '&#xe621;');
 }
-.icon-places,coord,map {
+.icon-coord {
 	*zoom: expression(this.runtimeStyle['zoom'] = '1', this.innerHTML = '&#xe621;');
 }
-.icon-places,coord,map {
+.icon-map {
 	*zoom: expression(this.runtimeStyle['zoom'] = '1', this.innerHTML = '&#xe621;');
 }
 .icon-pdf {
@@ -133,10 +127,10 @@
 .icon-customers {
 	*zoom: expression(this.runtimeStyle['zoom'] = '1', this.innerHTML = '&#xe61f;');
 }
-.icon-cancel,error {
+.icon-cancel {
 	*zoom: expression(this.runtimeStyle['zoom'] = '1', this.innerHTML = '&#xe61e;');
 }
-.icon-cancel,error {
+.icon-error {
 	*zoom: expression(this.runtimeStyle['zoom'] = '1', this.innerHTML = '&#xe61e;');
 }
 .icon-clear {
@@ -151,10 +145,10 @@
 .icon-add-company {
 	*zoom: expression(this.runtimeStyle['zoom'] = '1', this.innerHTML = '&#xe61a;');
 }
-.icon-analyzer,profiler {
+.icon-analyzer {
 	*zoom: expression(this.runtimeStyle['zoom'] = '1', this.innerHTML = '&#xe619;');
 }
-.icon-analyzer,profiler {
+.icon-profiler {
 	*zoom: expression(this.runtimeStyle['zoom'] = '1', this.innerHTML = '&#xe619;');
 }
 .icon-logout {
@@ -169,19 +163,19 @@
 .icon-add-menu {
 	*zoom: expression(this.runtimeStyle['zoom'] = '1', this.innerHTML = '&#xe615;');
 }
-.icon-key,login,security {
+.icon-key {
 	*zoom: expression(this.runtimeStyle['zoom'] = '1', this.innerHTML = '&#xe614;');
 }
-.icon-key,login,security {
+.icon-login {
 	*zoom: expression(this.runtimeStyle['zoom'] = '1', this.innerHTML = '&#xe614;');
 }
-.icon-key,login,security {
+.icon-security {
 	*zoom: expression(this.runtimeStyle['zoom'] = '1', this.innerHTML = '&#xe614;');
 }
-.icon-vecms,fire {
+.icon-vecms {
 	*zoom: expression(this.runtimeStyle['zoom'] = '1', this.innerHTML = '&#xe613;');
 }
-.icon-vecms,fire {
+.icon-fire {
 	*zoom: expression(this.runtimeStyle['zoom'] = '1', this.innerHTML = '&#xe613;');
 }
 .icon-add-category {
@@ -193,28 +187,28 @@
 .icon-add-user {
 	*zoom: expression(this.runtimeStyle['zoom'] = '1', this.innerHTML = '&#xe601;');
 }
-.icon-arrow-down,down {
+.icon-arrow-down {
 	*zoom: expression(this.runtimeStyle['zoom'] = '1', this.innerHTML = '&#xe602;');
 }
-.icon-arrow-down,down {
+.icon-down {
 	*zoom: expression(this.runtimeStyle['zoom'] = '1', this.innerHTML = '&#xe602;');
 }
-.icon-arrow-left,back {
+.icon-arrow-left {
 	*zoom: expression(this.runtimeStyle['zoom'] = '1', this.innerHTML = '&#xe603;');
 }
-.icon-arrow-left,back {
+.icon-back {
 	*zoom: expression(this.runtimeStyle['zoom'] = '1', this.innerHTML = '&#xe603;');
 }
-.icon-arrow-right,forward {
+.icon-arrow-right {
 	*zoom: expression(this.runtimeStyle['zoom'] = '1', this.innerHTML = '&#xe604;');
 }
-.icon-arrow-right,forward {
+.icon-forward {
 	*zoom: expression(this.runtimeStyle['zoom'] = '1', this.innerHTML = '&#xe604;');
 }
-.icon-arrow-up,up {
+.icon-arrow-up {
 	*zoom: expression(this.runtimeStyle['zoom'] = '1', this.innerHTML = '&#xe605;');
 }
-.icon-arrow-up,up {
+.icon-up {
 	*zoom: expression(this.runtimeStyle['zoom'] = '1', this.innerHTML = '&#xe605;');
 }
 .icon-articles {
@@ -232,19 +226,19 @@
 .icon-decrease {
 	*zoom: expression(this.runtimeStyle['zoom'] = '1', this.innerHTML = '&#xe60a;');
 }
-.icon-pencil,write,edit {
+.icon-pencil {
 	*zoom: expression(this.runtimeStyle['zoom'] = '1', this.innerHTML = '&#xe60b;');
 }
-.icon-pencil,write,edit {
+.icon-write {
 	*zoom: expression(this.runtimeStyle['zoom'] = '1', this.innerHTML = '&#xe60b;');
 }
-.icon-pencil,write,edit {
+.icon-edit {
 	*zoom: expression(this.runtimeStyle['zoom'] = '1', this.innerHTML = '&#xe60b;');
 }
-.icon-increase,add {
+.icon-increase {
 	*zoom: expression(this.runtimeStyle['zoom'] = '1', this.innerHTML = '&#xe60c;');
 }
-.icon-increase,add {
+.icon-add {
 	*zoom: expression(this.runtimeStyle['zoom'] = '1', this.innerHTML = '&#xe60c;');
 }
 .icon-menus {
@@ -253,10 +247,10 @@
 .icon-preferences {
 	*zoom: expression(this.runtimeStyle['zoom'] = '1', this.innerHTML = '&#xe60e;');
 }
-.icon-remove,trash {
+.icon-remove {
 	*zoom: expression(this.runtimeStyle['zoom'] = '1', this.innerHTML = '&#xe60f;');
 }
-.icon-remove,trash {
+.icon-trash {
 	*zoom: expression(this.runtimeStyle['zoom'] = '1', this.innerHTML = '&#xe60f;');
 }
 .icon-user {
@@ -268,13 +262,13 @@
 .icon-pastetext {
 	*zoom: expression(this.runtimeStyle['zoom'] = '1', this.innerHTML = '&#xe035;');
 }
-.icon-uniE033,ok,apply {
+.icon-uniE033 {
 	*zoom: expression(this.runtimeStyle['zoom'] = '1', this.innerHTML = '&#xe033;');
 }
-.icon-uniE033,ok,apply {
+.icon-ok {
 	*zoom: expression(this.runtimeStyle['zoom'] = '1', this.innerHTML = '&#xe033;');
 }
-.icon-uniE033,ok,apply {
+.icon-apply {
 	*zoom: expression(this.runtimeStyle['zoom'] = '1', this.innerHTML = '&#xe033;');
 }
 .icon-save {
@@ -283,10 +277,10 @@
 .icon-newdocument {
 	*zoom: expression(this.runtimeStyle['zoom'] = '1', this.innerHTML = '&#xe001;');
 }
-.icon-fullpage,config {
+.icon-fullpage {
 	*zoom: expression(this.runtimeStyle['zoom'] = '1', this.innerHTML = '&#xe002;');
 }
-.icon-fullpage,config {
+.icon-config {
 	*zoom: expression(this.runtimeStyle['zoom'] = '1', this.innerHTML = '&#xe002;');
 }
 .icon-alignleft {
@@ -307,13 +301,13 @@
 .icon-paste {
 	*zoom: expression(this.runtimeStyle['zoom'] = '1', this.innerHTML = '&#xe008;');
 }
-.icon-searchreplace,search,find {
+.icon-searchreplace {
 	*zoom: expression(this.runtimeStyle['zoom'] = '1', this.innerHTML = '&#xe009;');
 }
-.icon-searchreplace,search,find {
+.icon-search {
 	*zoom: expression(this.runtimeStyle['zoom'] = '1', this.innerHTML = '&#xe009;');
 }
-.icon-searchreplace,search,find {
+.icon-find {
 	*zoom: expression(this.runtimeStyle['zoom'] = '1', this.innerHTML = '&#xe009;');
 }
 .icon-bullist {
@@ -361,10 +355,10 @@
 .icon-inserttime {
 	*zoom: expression(this.runtimeStyle['zoom'] = '1', this.innerHTML = '&#xe018;');
 }
-.icon-preview,view {
+.icon-preview {
 	*zoom: expression(this.runtimeStyle['zoom'] = '1', this.innerHTML = '&#xe019;');
 }
-.icon-preview,view {
+.icon-view {
 	*zoom: expression(this.runtimeStyle['zoom'] = '1', this.innerHTML = '&#xe019;');
 }
 .icon-forecolor {

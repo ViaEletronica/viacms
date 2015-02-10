@@ -52,7 +52,7 @@ input[type=text].search-terms{
 	padding-bottom: 0;
 	
 }
-.search-result:after{
+.search-result > *:last-child:after{
 	
 	content: '';
 	
@@ -65,7 +65,8 @@ input[type=text].search-terms{
 	overflow: hidden;
 	
 }
-.search-result:hover{
+.search-result:hover,
+.search-result.selected{
 	
 	background: <?= $vui->colors->vui_base->darken( 20, TRUE )->rgba_s( 12 ); ?>;
 	
@@ -86,12 +87,28 @@ input[type=text].search-terms{
 
 .search-results .plugin-name{
 	
+	position: relative;
+	display: block;
+	
 	font-size: 110%;
 	font-weight: bold;
 	
 	padding: <?= VUI_SPACING; ?>px;
 	
 	background: <?= $vui->colors->vui_base->darken( 20, TRUE )->rgba_s( 20 ); ?>;
+	
+}
+
+/* ---------------------------------------------------- */
+/* Search results */
+
+.search-results .plugin-wrapper,
+.search-results .search-result-wrapper,
+.search-results .plugin-search-results{
+	
+	display: block;
+	padding: 0;
+	margin: 0;
 	
 }
 
@@ -135,14 +152,11 @@ input[type=text].search-terms{
 	padding-top: 100%;
 	
 }
+.search-result:hover .thumb .s1,
+.search-result.selected .thumb .s1,
 .search-results .thumb .s1:hover{
 	
 	<?= $vui->css->box_shadow( '0 0.7em 2em ' . $vui->colors->vui_base->darken( 30, TRUE )->rgba_s( 100 ) ); ?>
-	
-}
-.live-search-results .thumb .s1:hover{
-	
-	<?= $vui->css->box_shadow( '0 0.2em 0.8em ' . $vui->colors->vui_base->darken( 20, TRUE )->rgba_s( 50 ) ); ?>
 	
 }
 .search-results .thumb .s2{
@@ -168,7 +182,9 @@ input[type=text].search-terms{
 	<?= $vui->css->filter( array( 'saturate' => 0.3, ) ); ?>
 	
 }
-.search-results .thumb:hover .s2 img{
+.search-result:hover .thumb .s2 img,
+.search-results .thumb:hover .s2 img,
+.search-result.selected .thumb .s2 img{
 	
 	<?= $vui->css->filter( array( 'saturate' => 1, ) ); ?>
 	
@@ -186,6 +202,53 @@ input[type=text].search-terms{
 	
 	font-size: 110%;
 	font-weight: bold;
+	
+}
+
+/* ---------------------------------------------------- */
+/* Live search */
+
+.qtip.live-search{
+	
+	min-width: 400px;
+	max-width: 40%;
+	width: 40%;
+	
+}
+.qtip.live-search .search-results .plugins-names-wrapper,
+.qtip.live-search .search-results .plugin-name,
+.qtip.live-search .qtip-content{
+	
+	position: relative;
+	display: block;
+	
+	padding: 0;
+	margin: 0;
+	
+}
+.qtip.live-search .qtip-content > .s1{
+	
+	position: relative;
+	max-height: 500px;
+	overflow: auto;
+	
+}
+
+.qtip.live-search .search-results .plugins-names-wrapper{
+	
+	position: absolute;
+	width: 10%;
+	
+}
+.qtip.live-search .search-results .plugin-name .btn .text{
+	
+	display: none;
+	
+}
+.qtip.live-search .search-results .plugin-wrapper{
+	
+	width: 90%;
+	margin-left: 10%;
 	
 }
 

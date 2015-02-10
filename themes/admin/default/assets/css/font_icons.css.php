@@ -9,28 +9,28 @@
 
 
 @font-face {
-	font-family: 'vecms-icons';
-	src: url('../fonts/fonts/vecms-icons.eot');
-	src: url('../fonts/fonts/vecms-icons.eot?#iefix') format('embedded-opentype'),
-		url('../fonts/fonts/vecms-icons.svg#vecms-icons') format('svg'),
-		url('../fonts/fonts/vecms-icons.woff') format('woff'),
-		url('../fonts/fonts/vecms-icons.ttf') format('truetype');
+	font-family: 'viacms-icons';
+	src: url('../fonts/fonts/viacms-icons.eot');
+	src: url('../fonts/fonts/viacms-icons.eot?#iefix') format('embedded-opentype'),
+		url('../fonts/fonts/viacms-icons.svg#viacms-icons') format('svg'),
+		url('../fonts/fonts/viacms-icons.woff') format('woff'),
+		url('../fonts/fonts/viacms-icons.ttf') format('truetype');
 	font-weight: normal;
 	font-style: normal;
 }
 .icon,
 [class^='icon-']:before,
 .ui-icon:before {
-	
+
 	<?= FONT_ICONS_STYLESHEET; ?>
-	
+
 }
 .icon:before,
 .ui-icon:before {
-	
+
 	font-size: inherit;
 	line-height: inherit;
-	
+
 }
 
 
@@ -70,9 +70,17 @@
 .icon-articles:before,
 .icon-article_detail:before,
 .icon-articles_management:before,
+.icon-articles_search:before,
 .icon-articles_list:before{
 	content: "\e606";
 }
+.icon-pictures:before,
+.icon-images:before,
+.icon-gallery:before,
+.icon-articles_gallery:before{
+	content: "\e63f";
+}
+.icon-articles_categories_search:before,
 .icon-categories:before {
 	content: "\e607";
 }
@@ -494,6 +502,12 @@
 }
 .icon-download:before{
 	content: "\e63e";
+}
+.icon-expand:before {
+	content: "\e640";
+}
+.icon-retract:before {
+	content: "\e641";
 }
 
 /*

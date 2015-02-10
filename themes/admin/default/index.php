@@ -234,8 +234,8 @@
 										
 										$_menu_types = array();
 										
-										$this->load->model( array( 'admin/menus_model' ) );
-										$menu_types = menus_model::get_menu_types()->result_array();
+										$this->load->model( 'menus_mdl', 'menus' );
+										$menu_types = menus_mdl::get_menu_types();
 										
 										foreach ( $menu_types as $key => $menu_type ) {
 											
@@ -251,7 +251,7 @@
 										
 										<li>
 											
-											<?= vui_el_button( array( 'url' => 'admin/menus/mim/mtid/' . $menu_type[ 'id' ] . '/a/mil', 'text' => lang( $menu_type[ 'title' ] ), 'icon' => $menu_type[ 'alias' ], ) ); ?>
+											<?= vui_el_button( array( 'url' => menus_mdl::get_mi_url( 'list', array( 'menu_type_id' => $menu_type[ 'id' ], ) ), 'text' => lang( $menu_type[ 'title' ] ), 'icon' => $menu_type[ 'alias' ], ) ); ?>
 											
 										</li>
 										

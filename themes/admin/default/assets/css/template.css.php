@@ -71,7 +71,7 @@ body.responsive_file_manager #content .responsive-file-manager-container #respon
 	text-align:left;
 	margin:-<?= DEFAULT_SPACING*2; ?>px -<?= DEFAULT_SPACING*2; ?>px <?= DEFAULT_SPACING; ?>px -<?= DEFAULT_SPACING*2; ?>px;
 	
-	z-index: 3;
+	z-index: 1001;
 	
 	box-shadow: 0 1px 50px <?= $vui->colors->vui_extra_3->rgba_s( 30 ); ?>;
 	
