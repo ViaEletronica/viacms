@@ -112,7 +112,7 @@
 		</tr>
 		
 		<?php foreach($categories as $category) { ?>
-		<tr class="<?= ( isset( $category[ 'level' ] ) AND $order_by == 'ordering' ) ? ' level-' . $category[ 'level' ] . ' tree-level-' . $category[ 'level' ] : ''; ?>">
+		<tr class="<?= ( $category[ 'status' ] == 0 ? 'disabled' : '' ); ?> <?= ( isset( $category[ 'level' ] ) AND $order_by == 'ordering' ) ? ' level-' . $category[ 'level' ] . ' tree-level-' . $category[ 'level' ] : ''; ?>">
 			
 			<td class="col-checkbox">
 				
@@ -187,7 +187,9 @@
 			<?php $current_column = 'operations'; ?>
 			<td class="<?= $current_column; ?> col-<?= $current_column; ?>">
 				
-				<?= vui_el_button( array( 'url' => $this->articles->get_c_url( 'edit', $category ), 'text' => lang( 'action_view' ), 'target' => '_blank', 'icon' => 'view', 'only_icon' => TRUE, ) ); ?>
+				<?= vui_el_button( array( 'text' => lang( 'disabled_for_now' ), 'target' => '_blank', 'icon' => 'view', 'class' => 'disabled', 'only_icon' => TRUE, ) ); ?>
+				
+				<!-- <?= vui_el_button( array( 'url' => $this->articles_model->get_link_articles_list( 0, $category[ 'id' ] ), 'text' => lang( 'action_view' ), 'target' => '_blank', 'icon' => 'view', 'only_icon' => TRUE, ) ); ?> -->
 				
 				<?= vui_el_button( array( 'url' => $this->articles->get_c_url( 'edit', $category ), 'text' => lang( 'action_edit' ), 'icon' => 'edit', 'only_icon' => TRUE, ) ); ?>
 				
@@ -217,7 +219,7 @@
 			
 			<?php if ( $this->plugins->load( 'fancybox' ) ){ ?>
 			
-			$( ".article-image-thumb" ).fancybox();
+			$( ".category-image-thumb" ).fancybox();
 			
 			//$.fancybox.showLoading()
 			
