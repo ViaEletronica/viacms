@@ -81,7 +81,7 @@ function _ul_menu_items( $menuArray ){
 			$link = $CI->uri->uri_string() . '#';
 			
 		}
-			
+		
 		$tag = ( $link ) ? 'a' : 'span';
 		
 		$li_class = 'menu-item';

@@ -204,6 +204,7 @@ function vui_el_checkbox( $f_params = NULL ){
 	$text = $f_params[ 'text' ] =												isset( $f_params[ 'text' ] ) ? $f_params[ 'text' ] : '';
 	$icon = $f_params[ 'icon' ] =												isset( $f_params[ 'icon' ] ) ? $f_params[ 'icon' ] : '';
 	$title = $f_params[ 'title' ] =												isset( $f_params[ 'title' ] ) ? $f_params[ 'title' ] : '';
+	$ext_tip = $f_params[ 'ext_tip' ] =											isset( $f_params[ 'title' ] ) ? rawurlencode( $f_params[ 'title' ] ) : '';
 	$wrapper_class = $f_params[ 'wrapper_class' ] =								isset( $f_params[ 'wrapper_class' ] ) ? $f_params[ 'wrapper_class' ] : '';
 	$class = $f_params[ 'class' ] =												isset( $f_params[ 'class' ] ) ? $f_params[ 'class' ] : '';
 	$id = $f_params[ 'id' ] =													isset( $f_params[ 'id' ] ) ? $f_params[ 'id' ] : '';
@@ -259,6 +260,7 @@ function vui_el_radiobox( $f_params = NULL ){
 	$text = $f_params[ 'text' ] =												isset( $f_params[ 'text' ] ) ? $f_params[ 'text' ] : '';
 	$icon = $f_params[ 'icon' ] =												isset( $f_params[ 'icon' ] ) ? $f_params[ 'icon' ] : '';
 	$title = $f_params[ 'title' ] =												isset( $f_params[ 'title' ] ) ? $f_params[ 'title' ] : '';
+	$ext_tip = $f_params[ 'ext_tip' ] =											isset( $f_params[ 'title' ] ) ? rawurlencode( $f_params[ 'title' ] ) : '';
 	$wrapper_class = $f_params[ 'wrapper_class' ] =								isset( $f_params[ 'wrapper_class' ] ) ? $f_params[ 'wrapper_class' ] : '';
 	$class = $f_params[ 'class' ] =												isset( $f_params[ 'class' ] ) ? $f_params[ 'class' ] : '';
 	$id = $f_params[ 'id' ] =													isset( $f_params[ 'id' ] ) ? $f_params[ 'id' ] : '';

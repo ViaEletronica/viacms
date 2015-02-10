@@ -93,6 +93,7 @@ function get_params_spec_from_xml( $xml_file = NULL ){
 				// obtendo os atributos para facilitar a leitura do desenvolvedor e reduzir a codificação
 				$type = ( string )$param_1['type'];
 				$name = ( string )$param_1['name'];
+				$_id = $name ? $name : $i;
 				$value = ( string )$param_1['value'];
 				$default = ( string )$param_1['default'];
 				$label = ( string )$param_1['label'];
@@ -100,6 +101,7 @@ function get_params_spec_from_xml( $xml_file = NULL ){
 				$ext_tip = ( string )$param_1['ext_tip'];
 				$class = ( string )$param_1['class'];
 				$editor = ( string )$param_1['editor'];
+				$maxlength = ( string )$param_1['maxlength'];
 				
 				$disabled = ( string )$param_1['disabled'];
 				$readonly = ( string )$param_1['readonly'];
@@ -112,7 +114,7 @@ function get_params_spec_from_xml( $xml_file = NULL ){
 				$step = isset( $param_1['step'] ) ? ( int )$param_1['step'] : FALSE;
 				
 				//echo $default;
-				$params['params_spec'][$children_name][$i] = array(
+				$params['params_spec'][$children_name][ $_id ] = array(
 					
 					'type' => $type,
 					'name' => $name,
@@ -122,6 +124,7 @@ function get_params_spec_from_xml( $xml_file = NULL ){
 					'tip' => $tip,
 					'class' => $class,
 					'editor' => $editor,
+					'maxlength' => $maxlength,
 					
 					'disabled' => $disabled,
 					'readonly' => $readonly,
@@ -145,18 +148,18 @@ function get_params_spec_from_xml( $xml_file = NULL ){
 							
 							$param_2_name = 'options';
 							
-							$params['params_spec'][$children_name][$i][$param_2_name][( string )$param_2['value']] = ( string )$param_2;
+							$params['params_spec'][$children_name][ $_id ][$param_2_name][( string )$param_2['value']] = ( string )$param_2;
 						}
 						else if ( $param_2->getName() == 'validation' ){
 							
 							$param_2_name = 'validation';
 							
-							$params['params_spec'][$children_name][$i][$param_2_name]['rules'] = ( string )$param_2['rules'];
+							$params['params_spec'][$children_name][ $_id ][$param_2_name]['rules'] = ( string )$param_2['rules'];
 							foreach( $param_2->children() as $message ){
 								
 								if ( $message->getName() == 'message' ){
 									
-									$params['params_spec'][$children_name][$i][$param_2_name]['messages'] = array( 
+									$params['params_spec'][$children_name][ $_id ][$param_2_name]['messages'] = array( 
 										'rule' => ( string )$message['rule'],
 										'message' => ( string )$message,
 									 );
@@ -171,7 +174,7 @@ function get_params_spec_from_xml( $xml_file = NULL ){
 				else if ( $type == 'html' ){
 					
 					$default = ( string )$param_1;
-					$params['params_spec'][$children_name][$i][ 'value' ] = $default;
+					$params['params_spec'][$children_name][ $_id ][ 'value' ] = $default;
 					
 				}
 				else if ( $type == 'php' ){
@@ -193,7 +196,7 @@ function get_params_spec_from_xml( $xml_file = NULL ){
 							
 							$param_2_name = 'validation';
 							
-							$params['params_spec'][$children_name][$i][$param_2_name]['rules'] = ( string )$param_2['rules'];
+							$params['params_spec'][$children_name][ $_id ][$param_2_name]['rules'] = ( string )$param_2['rules'];
 							
 						}
 						
@@ -204,7 +207,7 @@ function get_params_spec_from_xml( $xml_file = NULL ){
 				
 				/************* criando o array final com os valores padrões *************/
 				
-				$key = $params['params_spec'][$children_name][$i]['name'];
+				$key = $params['params_spec'][$children_name][ $_id ]['name'];
 				
 				// definindo o valor padrão, que pode variar conforme o tipo de elemento
 				// por exemplo, campos de textos utilizam o atributo default como valor, radio e checkbox utilizam o value juntamente com o default, o qual indica se o campo estará marcado ou não
@@ -289,7 +292,11 @@ function set_params_validations( $params_spec = NULL, $param_prefix = PARAM_PREF
 			
 			foreach ( $section as $element_key => $element ) {
 				
-				$CI->form_validation->set_rules( $param_prefix.'[' . $element['name'] . ']', lang( $element['label'] ), isset( $element['validation']['rules'] ) ? $element['validation']['rules'] : '' );
+				if ( isset( $element[ 'name' ] ) ) {
+					
+					$CI->form_validation->set_rules( $param_prefix . '[' . $element[ 'name' ] . ']', lang( $element[ 'label' ] ), isset( $element[ 'validation' ][ 'rules' ] ) ? $element[ 'validation' ][ 'rules' ] : '' );
+					
+				}
 				
 			}
 			
@@ -381,6 +388,7 @@ function get_param_element( $element = NULL, $params_values = NULL, $params_spec
 		$class = ( isset( $element['class'] ) AND $element['class'] ) ? $element['class'] : '';
 		$value = ( isset( $element['value'] ) AND $element['value'] ) ? $element['value'] : '';
 		$editor = ( isset( $element['editor'] ) AND $element['editor'] ) ? $element['editor'] : 0;
+		$maxlength = ( isset( $element['maxlength'] ) AND is_numeric( $element['maxlength'] ) ) ? $element['maxlength'] : FALSE;
 		$tip = ( isset( $element['tip'] ) AND $element['tip'] ) ? lang( $element['tip'] ) : '';
 		$icon = ( isset( $element['icon'] ) AND $element['icon'] ) ? $element['icon'] : '';
 		$ext_tip = rawurlencode( $tip );
@@ -434,14 +442,18 @@ function get_param_element( $element = NULL, $params_values = NULL, $params_spec
 			$html = '<td class="field-title" >' . form_error( $formatted_name, '<div class="msg-inline-error">', '</div>' );
 			$html .= '<label title="' .  $tip . '" class="' . $class . '" data-ext-tip="' . $ext_tip . '" for="param-' . $name . '">' . $label . '</label>' . '</td>';
 			
+			// input params
+			$ip = array(
+				
+				'id' => $name,
+				'name' => $formatted_name,
+				'class' => $class,
+				
+			);
+			if ( ( int )$maxlength > 0 ) $ip[ 'maxlength' ] = $maxlength;
+			
 			$html .= '<td class="field" >' . form_input( 
-				array( 
-					'id'=>$name,
-					'name'=>$formatted_name,
-					//'title' => $tip,
-					'class' => $class,
-					//'data-ext-tip' => $ext_tip,
-				),
+				$ip,
 				$params_values[ $name ]
 			) . '</td>';
 			
@@ -455,21 +467,26 @@ function get_param_element( $element = NULL, $params_values = NULL, $params_spec
 			$html = '<td class="field-title" >' . form_error( $formatted_name, '<div class="msg-inline-error">', '</div>' );
 			$html .= '<label title="' .  $tip . '" class="' . $class . '" data-ext-tip="' . $ext_tip . '" for="param-' . $name . '">' . $label . '</label>' . '</td>';
 			
-			// input number params
-			$inp[ 'id' ] = $name;
-			$inp[ 'name' ] = $formatted_name;
-			$inp[ 'class' ] = $class;
+			// input params
+			$ip = array(
+				
+				'id' => $name,
+				'name' => $formatted_name,
+				'class' => $class,
+				
+			);
+			if ( ( int )$maxlength > 0 ) $ip[ 'maxlength' ] = $maxlength;
 			
-			if ( check_var( $disabled ) ) $inp[ 'disabled' ] = TRUE;
-			if ( check_var( $readonly ) ) $inp[ 'readonly' ] = TRUE;
+			if ( check_var( $disabled ) ) $ip[ 'disabled' ] = TRUE;
+			if ( check_var( $readonly ) ) $ip[ 'readonly' ] = TRUE;
 			
-			if ( $min !== NULL ) $inp[ 'min' ] = $min;
-			if ( $max !== NULL ) $inp[ 'max' ] = $max;
-			if ( check_var( $pattern ) ) $inp[ 'pattern' ] = $pattern;
-			if ( $step !== NULL ) $inp[ 'step' ] = $step;
+			if ( $min !== NULL ) $ip[ 'min' ] = $min;
+			if ( $max !== NULL ) $ip[ 'max' ] = $max;
+			if ( check_var( $pattern ) ) $ip[ 'pattern' ] = $pattern;
+			if ( $step !== NULL ) $ip[ 'step' ] = $step;
 			
 			$html .= '<td class="field" >' . form_input_number( 
-				$inp,
+				$ip,
 				$params_values[ $name ]
 			) . '</td>';
 			
@@ -483,14 +500,18 @@ function get_param_element( $element = NULL, $params_values = NULL, $params_spec
 			$html = '<td class="field-title" >' . form_error( $formatted_name, '<div class="msg-inline-error">', '</div>' );
 			$html .= '<label title="' .  $tip . '" class="' . $class . '" data-ext-tip="' . $ext_tip . '" for="param-' . $name . '">' . $label . '</label>' . '</td>';
 			
+			// input params
+			$ip = array(
+				
+				'id' => $name,
+				'name' => $formatted_name,
+				'class' => $class,
+				
+			);
+			if ( ( int )$maxlength > 0 ) $ip[ 'maxlength' ] = $maxlength;
+			
 			$html .= '<td class="field" >' . form_password(
-				array( 
-					'id'=>$name,
-					'name'=>$formatted_name,
-					//'title' => $tip,
-					'class' => $class,
-					//'data-ext-tip' => $ext_tip,
-				 ),
+				$ip,
 				$params_values[ $name ]
 			 ) . '</td>';
 			
@@ -532,15 +553,36 @@ function get_param_element( $element = NULL, $params_values = NULL, $params_spec
 		}
 		else if ( $type == 'radio' ) {
 			
-			$html = '<td class="field-title" >' . form_error( $formatted_name, '<div class="msg-inline-error">', '</div>' );
-			$html .= '<label title="' .  $tip . '" class="' . $class . '" data-ext-tip="' . $ext_tip . '" for="param-' . $name . '">' . $label . '</label>' . '</td>';
+			$html = '<td class="field-radiobox" colspan="2" >' . form_error( $formatted_name, '<div class="msg-inline-error">', '</div>' );
 			
-			$html .= '<td class="field" >' . '<input type="radio" name="'.$formatted_name.'" value="'.$value.'" class="switch '.$class.'" ';
+			$options = array(
+				
+				'name' => $formatted_name,
+				'class' => $class,
+				'value' => $value,
+				'text' => $label,
+				'title' => $tip,
+				
+			);
 			
-			$checked = ( $params_values[$name] AND $params_values[$name] == $value ) ? 'checked="checked"' : '';
+			if ( is_array( $params_values[ $name ] ) ){
+				
+				$checked = in_array( $value, $params_values[ $name ] ) ? TRUE : FALSE;
+				
+			}
+			else {
+				
+				$checked = ( $params_values[ $name ] AND $params_values[ $name ] == $value ) ? TRUE : FALSE;
+				
+			}
 			
-			$html .= $checked;
-			$html .= ' />' . '</td>';
+			$options[ 'checked' ] = $checked;
+			
+			$html .= vui_el_radiobox( $options );
+			
+			//$html .= '<td class="field" >' . '<input type="radio" name="'.$formatted_name.'" value="'.$value.'" class="switch '.$class.'" ';
+			
+			$html .= '</td>';
 			
 			$html = '<tr>' . $html . '</tr>';
 			
@@ -550,27 +592,36 @@ function get_param_element( $element = NULL, $params_values = NULL, $params_spec
 		
 		else if ( $type == 'checkbox' ) {
 			
-			$html = '<td class="field-title" >' . form_error( $formatted_name, '<div class="msg-inline-error">', '</div>' );
-			$html .= '<label title="' .  $tip . '" class="' . $class . '" data-ext-tip="' . $ext_tip . '" for="param-' . $name . '">' . $label . '</label>' . '</td>';
+			$html = '<td class="field-checkbox" >' . form_error( $formatted_name, '<div class="msg-inline-error">', '</div>' );
 			
-			// isso permitirá que o valor do checkbox sempre seja enviado via post, agora como 0
-			$html .= '<td class="field" >' . '<input type="hidden" name="'.$formatted_name.'" value="0" />';
-			
-			$html .= '<input type="checkbox" name="'.$formatted_name.'" value="'.$value.'" class="switch '.$class.'" ';
-			
-			if ( is_array( $params_values[$name] ) ){
+			$options = array(
 				
-				$checked = in_array( $value, $params_values[$name] ) ? 'checked="checked"' : '';
+				'name' => $formatted_name,
+				'class' => $class,
+				'value' => $value,
+				'text' => $label,
+				'title' => $tip,
+				
+			);
+			
+			if ( is_array( $params_values[ $name ] ) ){
+				
+				$checked = in_array( $value, $params_values[ $name ] ) ? TRUE : FALSE;
 				
 			}
 			else {
 				
-				$checked = ( $params_values[$name] AND $params_values[$name] == $value ) ? 'checked="checked"' : '';
+				$checked = ( $params_values[ $name ] AND $params_values[ $name ] == $value ) ? TRUE : FALSE;
 				
 			}
 			
-			$html .= $checked;
-			$html .= ' />' . '</td>';
+			$options[ 'checked' ] = $checked;
+			
+			$html .= vui_el_checkbox( $options );
+			
+			$html .= '<input type="hidden" name="' . $formatted_name . '" value="0" />';
+			
+			$html .= '</td>';
 			
 			$html = '<tr>' . $html . '</tr>';
 			
@@ -603,15 +654,18 @@ function get_param_element( $element = NULL, $params_values = NULL, $params_spec
 			
 			
 			
+			// input params
+			$ip = array(
+				
+				'id' => $name,
+				'name' => $formatted_name,
+				'class' => $class . ( $editor ? ' js-editor' : '' ),
+				
+			);
+			if ( ( int )$maxlength > 0 ) $ip[ 'maxlength' ] = $maxlength;
 			
 			$html .= '<td class="field" >' . '<div>' . form_textarea( 
-				array( 
-					'id'=>$name,
-					'name'=>$formatted_name,
-					//'title' => lang( $tip ),
-					'class'=> $class . ( $editor ? ' js-editor' : '' ),
-					//'data-ext-tip' => $ext_tip,
-				 ),
+				$ip,
 				$params_values[$name]
 			 ) . '</div>' . '</td>';
 			

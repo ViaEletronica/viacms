@@ -9,8 +9,6 @@ function current_menu_id(){
 	
 	$CI =& get_instance();
 	
-	
-	// Primeiro verificamos se os segmentos da url estão em formato
 	$u_array = $CI->uri->ruri_to_assoc();
 	
 	if ( array_key_exists( 'miid', $u_array ) ){
@@ -18,7 +16,7 @@ function current_menu_id(){
 		return $u_array[ 'miid' ];
 		
 	}
-	else{
+	else if ( $CI->mcm->environment == 'site' ){
 		
 		$segment = $CI->uri->rsegment( 4 );
 		
@@ -35,7 +33,7 @@ function current_menu_id(){
 		
 	}
 	
-	return FALSE;
+	return 0;
 	
 }
 
@@ -49,11 +47,13 @@ function get_current_menu_item(){
 	
 	$current_menu_item_id = current_menu_id();
 	
-	$menu_item = $CI->menus_common_model->get_menu_item( $current_menu_item_id );
-	
-	if ( ( $current_menu_item_id AND $current_menu_item_id !== 0 ) AND $menu_item ){
+	if ( ! $CI->load->is_model_loaded( 'menus' ) ) {
 		
-		$menu_item = $menu_item->row_array();
+		$CI->load->model( 'menus_mdl', 'menus' );
+		
+	}
+	
+	if ( ( $current_menu_item_id AND $current_menu_item_id !== 0 ) AND ( $menu_item = $CI->menus->get_menu_item( $current_menu_item_id ) ) ){
 		
 		return $menu_item;
 		

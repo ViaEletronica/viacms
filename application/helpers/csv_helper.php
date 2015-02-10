@@ -7,6 +7,7 @@
  * Inspiration from PHP Cookbook by David Sklar and Adam Trachtenberg
  * 
  * @author		Jérôme Jaglale
+ * @modifier	Frank Souza
  * @link		http://maestric.com/en/doc/php/codeigniter_csv
  */
 
@@ -20,21 +21,25 @@
  */
 if ( ! function_exists('array_to_csv'))
 {
-	function array_to_csv($array, $download = "")
+	// let's add the $delimiter and $enclosure args ;)
+	function array_to_csv( $array, $download = "", $delimiter = ',', $enclosure = '"' )
 	{
 		if ($download != "")
 		{	
 			header('Content-Type: application/csv');
 			header('Content-Disposition: attachement; filename="' . $download . '"');
-		}		
+		}
 
 		ob_start();
 		$f = fopen('php://output', 'w') or show_error("Can't open php://output");
-		$n = 0;		
+		
+		fwrite( $f, "\xEF\xBB\xBF" ); // UTF-8 BOM
+		
+		$n = 0;
 		foreach ($array as $line)
 		{
 			$n++;
-			if ( ! fputcsv($f, $line))
+			if ( ! fputcsv( $f, $line, ( $delimiter !== '' ? $delimiter : ',' ), ( $enclosure !== '' ? $enclosure : '"' ) ) )
 			{
 				show_error("Can't write line $n: $line");
 			}
@@ -43,9 +48,9 @@ if ( ! function_exists('array_to_csv'))
 		$str = ob_get_contents();
 		ob_end_clean();
 
-		if ($download == "")
+		if ( $download == "" )
 		{
-			return $str;	
+			return $str;
 		}
 		else
 		{	
@@ -64,7 +69,7 @@ if ( ! function_exists('array_to_csv'))
  */
 if ( ! function_exists('query_to_csv'))
 {
-	function query_to_csv($query, $headers = TRUE, $download = "")
+	function query_to_csv($query, $headers = TRUE, $download = "" )
 	{
 		if ( ! is_object($query) OR ! method_exists($query, 'list_fields'))
 		{
