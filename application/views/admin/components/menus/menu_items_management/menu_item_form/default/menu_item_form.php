@@ -393,9 +393,7 @@
 
 <?php
 	
-	$this->plugins->load( array( 'yetii', 'modal_articles_picker', ) );
-	
-	if ( $this->plugins->performed( 'yetii' ) ){ ?>
+	if ( $this->plugins->load( 'yetii' ) ){ ?>
 
 <script type="text/javascript" >
 	

@@ -7,10 +7,10 @@
 		<<?= $wrappers_el_type; ?> class="s2">
 			
 			<?php if ( check_var( $href ) ){ ?>
-			<a class="s3 <?= $modal ? 'thumb-modal' : ''; ?>" href="<?= $href; ?>" title="<?= $title; ?>" <?= $target ? 'target="' . $target . '"' : ''; ?> <?= $rel ? 'rel="' . $rel . '"' : ''; ?>>
+			<a class="s3 <?= $modal ? 'thumb-modal' : ''; ?>" href="<?= $href; ?>" <?= element_title( $title ); ?> <?= $target ? 'target="' . $target . '"' : ''; ?> <?= $rel ? 'rel="' . $rel . '"' : ''; ?>>
 			<?php } ?>
 				
-				<img <?= $rel ? 'rel="' . $rel . '"' : ''; ?> src="<?= $src; ?>" alt="<?= $title; ?>" <?= $attr; ?> />
+				<img <?= $rel ? 'rel="' . $rel . '"' : ''; ?> src="<?= $src; ?>" alt="<?= strip_tags( $title ); ?>" <?= element_title( $title ); ?> <?= $attr; ?> />
 				
 			<?php if ( check_var( $href ) ){ ?>
 			</a>

@@ -16,7 +16,7 @@
 	</header>
 	<?php } ?>
 	
-	<div class="article-wrapper">
+	<div class="article article-wrapper">
 		
 		<article class="s1 inner item">
 			

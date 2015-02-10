@@ -13,10 +13,8 @@
 	
 	<?php } ?>
 	
-	<?php foreach( $category[ 'articles' ] as $article ){ ?>
+	<?php foreach( $category[ 'articles' ] as $article ){ 
 	
-	
-	<?php
 	
 	$readmore = check_var( $article['params']['show_readmore_link'] );
 	
@@ -61,6 +59,25 @@
 			<h5 class="article-title">
 				
 				<span class="article-title-content">
+					
+					<?php if ( check_var( $params['show_articles_images'] ) && check_var( $article[ 'image' ] ) ) { ?>
+					
+					<?php
+						
+						$thumb_params = array(
+							
+							'src' => 'thumbs/' . $article[ 'image' ],
+							'href' => get_url( $article[ 'image' ] ),
+							'target' => '_blank',
+							'modal' => TRUE,
+							
+						);
+						
+						echo vui_el_thumb( $thumb_params );
+						
+					?>
+					
+					<?php } ?>
 					
 					<?php if ( $article['params']['show_title_as_link_on_list_view'] ) { ?>
 						

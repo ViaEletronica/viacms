@@ -10,4 +10,6 @@ echo vui_el_button( array( 'url' => $this->articles->get_c_url( 'add' ), 'text' 
 
 echo vui_el_button( array( 'url' => 'admin/' . $component_name . '/component_config/edit_config', 'text' => lang( 'globals_configurations' ), 'icon' => 'config', 'only_icon' => TRUE, ) );
 
+echo vui_el_button( array( 'url' => $this->articles->get_ag_url( 'add' ), 'text' => lang( 'new_gallery' ), 'icon' => 'gallery', 'only_icon' => TRUE, ) );
+
 ?>

@@ -9,7 +9,7 @@
 		
 		$( modalUserSubmitClass + ':not([data-mus-grabbed])' ).each( function( index ) {
 			
-			var ajaxUserSubmitsBaseUrl = '<?= $this->c_urls[ 'us_ajax_management_link' ]; ?>';
+			var ajaxUserSubmitsBaseUrl = 'admin/submit_forms/us_ajax/';
 			
 			var jthis = $( this );
 			

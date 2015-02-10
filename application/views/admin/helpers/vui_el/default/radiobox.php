@@ -14,7 +14,8 @@
 		if ( $form ) $input_params[ 'form' ] = $form;
 		if ( $checked ) $input_params[ 'checked' ] = 'checked';
 		if ( $value ) $input_params[ 'value' ] = $value;
-		if ( $title ) $input_params[ 'title' ] = $title;
+		if ( $title ) $input_params[ 'title' ] = strip_tags( $title );
+		if ( $ext_tip ) $input_params[ 'data-ext-tip' ] = $ext_tip;
 		if ( check_var( $class ) ) $input_params[ 'class' ] = $input_params[ 'class' ] . ' ' . $class;
 		
 		echo form_radio( $input_params );
