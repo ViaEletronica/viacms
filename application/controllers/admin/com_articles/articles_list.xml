@@ -9,6 +9,14 @@
 		
 		<param name="num_featured_articles" type="number" min="-50" default="global" label="num_featured_articles" tip="tip_num_featured_articles" />
 		
+		<param name="articles_load_mode" type="select" default="global" label="articles_load_mode" tip="tip_articles_load_mode">
+			
+			<option value="global">Global</option>
+			<option value="recursive">recursive</option>
+			<option value="current">current</option>
+			
+		</param>
+		
 		<param name="articles_list_order" type="select" default="global" label="articles_list_order" tip="tip_articles_list_order">
 			
 			<option value="global">Global</option>
@@ -52,16 +60,6 @@
 			<option value="50">50</option>
 			<option value="100">100</option>
 			<option value="0">all</option>
-			
-		</param>
-		
-		<param type="spacer" label="categories" />
-		
-		<param name="show_categories_on_list_view" type="select" default="global" label="show_categories_on_list_view" tip="tip_show_categories_on_list_view">
-			
-			<option value="global">global</option>
-			<option value="1">yes</option>
-			<option value="0">no</option>
 			
 		</param>
 		

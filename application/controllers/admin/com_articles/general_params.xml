@@ -26,8 +26,12 @@
 			
 		</param>
 		
-		
-		
+		<param name="articles_load_mode" type="select" default="recursive" label="articles_load_mode" tip="tip_articles_load_mode">
+			
+			<option value="recursive">recursive</option>
+			<option value="current">current</option>
+			
+		</param>
 		
 		<param type="spacer" label="image" />
 		

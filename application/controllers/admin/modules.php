@@ -871,7 +871,7 @@ class Modules extends Main {
 			
 		}
 		else if ( $action == 'edit_menu_item' ){
-			if ( $var1 AND ( $menu_item = $this->menus_model->get_menu_item( $var1 )->row() ) ){
+			if ( $var1 AND ( $menu_item = $this->menus->get_menu_item( $var1 ) ) ){
 				
 				$target_component_item = $this->main_model->get_component_item( $menu_item->component_item_id );
 				$this->load->model( array( 'admin/'.$target_component_item->row()->component_alias.'_model' ) );
@@ -891,7 +891,7 @@ class Modules extends Main {
 				//$data[ 'params' ] = $this->{$target_component_item->row()->component_alias.'_model'}->{'menu_item_'.$target_component_item->row()->alias}( $var1 );
 				
 				// obtendo os parâmetros do item específico do item de menu
-				//$data[ 'menu_item_params' ] = $this->menus_model->get_menu_item_params();
+				//$data[ 'menu_item_params' ] = $this->menus->get_menu_item_params();
 				
 				
 				if ( $menu_item->access_type === 'users' ){

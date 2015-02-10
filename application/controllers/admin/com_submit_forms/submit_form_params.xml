@@ -1,101 +1,328 @@
 <?xml version="1.0" encoding="utf-8"?>
 <params>
-	
+
 	<section name="sending">
-		
+
 		<param name="submit_form_param_send_email_to" type="select" default="contact_emails" label="submit_form_param_send_email_to" tip="tip_submit_form_param_send_email_to">
-			
+
 			<validation rules="trim|required" />
-			
+
 			<option value="contact_emails">contact_emails</option>
 			<option value="custom_emails">custom_emails</option>
-			
+
 		</param>
-		
+
 		<!-- as options deste campo são criadas via php -->
 		<param name="submit_form_param_send_email_to_contact" type="select" default="" label="submit_form_param_send_email_to_contact" tip="tip_submit_form_param_send_email_to_contact">
-			
+
 			<validation rules="trim" />
-			
+
 		</param>
-		
+
 		<param name="submit_form_param_send_email_to_custom_emails" type="textarea" default="" label="submit_form_param_send_email_to_custom_emails" tip="tip_submit_form_param_send_email_to_custom_emails">
-			
+
 			<validation rules="trim" />
-			
+
 		</param>
-		
+
 		<param type="spacer" default="" label="message" />
-		
+
 		<param name="submit_form_param_send_email_to_from" type="text" default="" label="submit_form_param_send_email_to_from" tip="tip_submit_form_param_send_email_to_from">
-			
+
 			<validation rules="trim" />
-			
+
 		</param>
-		
+
 		<param name="submit_form_param_send_email_to_from_name" type="text" default="" label="submit_form_param_send_email_to_from_name" tip="tip_submit_form_param_send_email_to_from_name">
-			
+
 			<validation rules="trim" />
-			
+
 		</param>
-		
+
 		<param name="submit_form_param_send_email_to_reply_to" type="text" default="" label="submit_form_param_send_email_to_reply_to" tip="tip_submit_form_param_send_email_to_reply_to">
-			
+
 			<validation rules="trim" />
-			
+
 		</param>
-		
+
 		<param name="submit_form_param_send_email_to_cc" type="text" default="" label="submit_form_param_send_email_to_cc" tip="tip_submit_form_param_send_email_to_cc">
-			
+
 			<validation rules="trim" />
-			
+
 		</param>
-		
+
 		<param name="submit_form_param_send_email_to_bcc" type="text" default="" label="submit_form_param_send_email_to_bcc" tip="tip_submit_form_param_send_email_to_bcc">
-			
+
 			<validation rules="trim" />
-			
+
 		</param>
-		
+
 		<param name="submit_form_param_send_email_to_subject" type="text" default="" label="submit_form_param_send_email_to_subject" tip="tip_submit_form_param_send_email_to_subject">
-			
+
 			<validation rules="trim" />
-			
+
 		</param>
-		
+
 		<param name="submit_form_sending_email_layout_source" type="select" default="layouts_list" label="submit_form_sending_email_layout_source" tip="tip_submit_form_sending_email_layout_source">
-			
+
 			<validation rules="trim|required" />
-			
+
 			<option value="layouts_list">layouts_list</option>
 			<option value="custom_layout">custom_layout</option>
-			
+
 		</param>
-		
+
 		<!-- as options deste campo são criadas via php -->
 		<param name="submit_form_sending_email_layout_view" type="select" default="default" label="submit_form_sending_email_layout_view" tip="tip_submit_form_sending_email_layout_view">
-			
+
 			<validation rules="trim" />
-			
+
 		</param>
-		
+
+		<param name="submit_form_sending_email_show_empty_fields" type="select" default="1" label="submit_form_sending_email_show_empty_fields" tip="tip_submit_form_sending_email_show_empty_fields">
+
+			<option value="1">yes</option>
+			<option value="0">no</option>
+
+		</param>
+
 		<param name="submit_form_sending_email_layout_custom" type="textarea" default="" label="submit_form_sending_email_layout_custom" tip="tip_submit_form_sending_email_layout_custom">
-			
+
 			<validation rules="trim" />
-			
+
 		</param>
-		
+
+		<param type="spacer" default="" label="security" />
+
+		<param name="submit_forms_allow_html_tags" type="select" default="0" label="submit_forms_allow_html_tags" tip="tip_submit_forms_allow_html_tags">
+
+			<option value="1">yes</option>
+			<option value="0">no</option>
+
+		</param>
+
+		<param name="submit_forms_enable_xss_filtering" type="select" default="1" label="submit_forms_enable_xss_filtering" tip="tip_submit_forms_enable_xss_filtering">
+
+			<option value="1">yes</option>
+			<option value="0">no</option>
+
+		</param>
+
 	</section>
-	
+
+	<section name="post_sending_messages">
+
+		<!-- sfpsm = submit form post sending messages -->
+
+		<!-- Envio salvo com sucesso no banco -->
+		<param name="sfpsm_user_submit_save_into_db_success_title" type="textarea" default="Thank you for your message!" label="sfpsm_user_submit_save_into_db_success_title" tip="tip_sfpsm_user_submit_save_into_db_success_title">
+
+			<validation rules="trim" />
+
+		</param>
+
+		<param name="sfpsm_user_submit_save_into_db_success" type="textarea" default="Your message was successfully received!" label="sfpsm_user_submit_saved_into_db" tip="tip_sfpsm_user_submit_saved_into_db">
+
+			<validation rules="trim" />
+
+		</param>
+
+
+
+		<param name="sfpsm_user_submit_save_into_db_error_title" type="textarea" default="An error occurred while saving the message!" label="sfpsm_user_submit_save_into_db_error_title" tip="tip_sfpsm_user_submit_save_into_db_error_title">
+
+			<validation rules="trim" />
+
+		</param>
+
+		<param name="sfpsm_user_submit_save_into_db_error" type="textarea" default="Unable to save the message into the database!" label="sfpsm_user_submit_save_into_db_error" tip="tip_sfpsm_user_submit_save_into_db_error">
+
+			<validation rules="trim" />
+
+		</param>
+
+
+
+		<param name="sfpsm_user_submit_email_sent_success_title" type="textarea" default="Message sent successfully!" label="sfpsm_user_submit_email_sent_success_title" tip="tip_sfpsm_user_submit_email_sent_success_title">
+
+			<validation rules="trim" />
+
+		</param>
+
+		<param name="sfpsm_user_submit_email_sent_success" type="textarea" default="Your message was successfully sent!" label="sfpsm_user_submit_email_sent_success" tip="tip_sfpsm_user_submit_email_sent_success">
+
+			<validation rules="trim" />
+
+		</param>
+
+
+
+		<param name="sfpsm_user_submit_email_sent_validation_error_title" type="textarea" default="An error occurred while trying to send the message!" label="sfpsm_user_submit_email_sent_validation_error_title" tip="tip_sfpsm_user_submit_email_sent_validation_error_title">
+
+			<validation rules="trim" />
+
+		</param>
+
+		<param name="sfpsm_user_submit_email_sent_validation_error" type="textarea" default="Please correct the following errors and try again!" label="sfpsm_user_submit_email_sent_validation_error" tip="tip_sfpsm_user_submit_email_sent_validation_error">
+
+			<validation rules="trim" />
+
+		</param>
+
+
+
+		<param name="sfpsm_user_submit_email_sent_internal_error_title" type="textarea" default="Error trying to send message!" label="sfpsm_user_submit_email_sent_internal_error_title" tip="tip_sfpsm_user_submit_email_sent_internal_error_title">
+
+			<validation rules="trim" />
+
+		</param>
+
+		<param name="sfpsm_user_submit_email_sent_internal_error" type="textarea" default="An internal error occurred while trying to send your message!" label="sfpsm_user_submit_email_sent_internal_error" tip="tip_sfpsm_user_submit_email_sent_internal_error">
+
+			<validation rules="trim" />
+
+		</param>
+
+
+
+		<param name="sfpsm_user_submit_email_sent_to_submitter_success_title" type="textarea" default="Message sent successfully to the submitter!" label="sfpsm_user_submit_email_sent_to_submitter_success_title" tip="tip_sfpsm_user_submit_email_sent_to_submitter_success_title">
+
+			<validation rules="trim" />
+
+		</param>
+
+		<param name="sfpsm_user_submit_email_sent_to_submitter_success" type="textarea" default="We sent a message to the e-mail address provided on the form, please check!" label="sfpsm_user_submit_email_sent_to_submitter_success" tip="tip_sfpsm_user_submit_email_sent_to_submitter_success">
+
+			<validation rules="trim" />
+
+		</param>
+
+
+
+		<param name="sfpsm_user_submit_email_sent_to_submitter_internal_error_title" type="textarea" default="Error trying to send message!" label="sfpsm_user_submit_email_sent_to_submitter_internal_error_title" tip="tip_sfpsm_user_submit_email_sent_to_submitter_internal_error_title">
+
+			<validation rules="trim" />
+
+		</param>
+
+		<param name="sfpsm_user_submit_email_sent_to_submitter_internal_error" type="textarea" default="An internal error occurred while trying to send the message to the submitter!" label="sfpsm_user_submit_email_sent_to_submitter_internal_error" tip="tip_sfpsm_user_submit_email_sent_to_submitter_internal_error">
+
+			<validation rules="trim" />
+
+		</param>
+
+	</section>
+
+	<section name="submitter_message_receiving">
+
+		<!-- sfsmr = submit form submitter message receiving -->
+		<param name="sfsmr_send_copy_to_submitter" type="select" default="0" label="sfsmr_send_copy_to_submitter" tip="tip_sfsmr_send_copy_to_submitter">
+
+			<option value="1">yes</option>
+			<option value="0">no</option>
+
+		</param>
+
+		<param name="sfsmr_email_field" type="text" default="" label="sfsmr_email_field" tip="tip_sfsmr_email_field">
+
+			<validation rules="trim" />
+
+		</param>
+
+		<param name="sfsmr_from" type="text" default="" label="sfsmr_from" tip="tip_sfsmr_from">
+
+			<validation rules="trim" />
+
+		</param>
+
+		<param name="sfsmr_from_name" type="text" default="" label="sfsmr_from_name" tip="tip_sfsmr_from_name">
+
+			<validation rules="trim" />
+
+		</param>
+
+		<param name="sfsmr_reply_to" type="text" default="" label="sfsmr_reply_to" tip="tip_sfsmr_reply_to">
+
+			<validation rules="trim" />
+
+		</param>
+
+		<param name="sfsmr_subject" type="text" default="" label="sfsmr_subject" tip="tip_sfsmr_subject">
+
+			<validation rules="trim" />
+
+		</param>
+
+		<param name="sfsmr_layout_source" type="select" default="layouts_list" label="sfsmr_layout_source" tip="tip_sfsmr_layout_source">
+
+			<validation rules="trim|required" />
+
+			<option value="layouts_list">layouts_list</option>
+			<option value="custom_layout">custom_layout</option>
+
+		</param>
+
+		<!-- as options deste campo são criadas via php -->
+		<param name="sfsmr_layout_view" type="select" default="default" label="sfsmr_layout_view" tip="tip_sfsmr_layout_view">
+
+			<validation rules="trim" />
+
+		</param>
+
+		<param name="sfsmr_message_prefix_custom" type="textarea" default="" label="sfsmr_message_prefix_custom" tip="tip_sfsmr_message_prefix_custom">
+
+			<validation rules="trim" />
+
+		</param>
+
+		<param name="sfsmr_message_suffix_custom" type="textarea" default="" label="sfsmr_message_suffix_custom" tip="tip_sfsmr_message_suffix_custom">
+
+			<validation rules="trim" />
+
+		</param>
+
+		<param name="sfsmr_show_empty_fields" type="select" default="1" label="sfsmr_show_empty_fields" tip="tip_sfsmr_show_empty_fields">
+
+			<option value="1">yes</option>
+			<option value="0">no</option>
+
+		</param>
+
+		<param name="sfsmr_layout_custom" type="textarea" default="" label="sfsmr_layout_custom" tip="tip_sfsmr_layout_custom">
+
+			<validation rules="trim" />
+
+		</param>
+
+	</section>
+
 	<section name="look_and_feel">
-		
+
 		<!-- as options deste campo são criadas via php -->
 		<param name="submit_form_layout_view" type="select" default="default" label="submit_form_layout_view" tip="tip_submit_form_layout_view">
-			
+
 			<validation rules="trim" />
-			
+
 		</param>
-		
+
 	</section>
-	
+
+	<section name="submit_export_params">
+
+		<param type="spacer" label="csv_export" />
+
+		<param name="submit_form_export_csv_delimiter" maxlength="1" type="text" default="," label="submit_form_export_csv_delimiter" tip="tip_submit_form_export_csv_delimiter">
+
+			<validation rules="trim|max_length[1]" />
+
+		</param>
+
+		<param name="submit_form_export_csv_enclosure" maxlength="1" type="text" default="&quot;" label="submit_form_export_csv_enclosure" tip="tip_submit_form_export_csv_enclosure">
+
+			<validation rules="trim|max_length[1]" />
+
+		</param>
+
+	</section>
+
 </params>

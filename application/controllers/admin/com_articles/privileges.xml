@@ -26,15 +26,8 @@
 		<param name="articles_management_view" value="articles_management_can_view_only_low_groups" type="radio" default="" label="articles_management_can_view_only_low_groups" tip="tip_articles_management_can_view_only_low_groups" />
 		<param name="articles_management_view" value="articles_management_can_view_only_your_own" type="radio" default="checked" label="articles_management_can_view_only_your_own" tip="tip_articles_management_can_view_only_your_own" />
 		
-		<param type="spacer" label="viewing_articles" />
-		
-		<param name="articles_management_view" value="articles_management_can_view_all_articles" type="radio" default="" label="articles_management_can_view_all_articles" tip="tip_articles_management_can_view_all_articles" />
-		<param name="articles_management_view" value="articles_management_can_view_only_same_and_low_group_level" type="radio" default="" label="articles_management_can_view_only_same_and_low_group_level" tip="tip_articles_management_can_view_only_same_and_low_group_level" />
-		<param name="articles_management_view" value="articles_management_can_view_only_same_group_level" type="radio" default="" label="articles_management_can_view_only_same_group_level" tip="tip_articles_management_can_view_only_same_group_level" />
-		<param name="articles_management_view" value="articles_management_can_view_only_same_group_and_below" type="radio" default="" label="articles_management_can_view_only_same_group_and_below" tip="tip_articles_management_can_view_only_same_group_and_below" />
-		<param name="articles_management_view" value="articles_management_can_view_only_same_group" type="radio" default="" label="articles_management_can_view_only_same_group" tip="tip_articles_management_can_view_only_same_group" />
-		<param name="articles_management_view" value="articles_management_can_view_only_low_groups" type="radio" default="" label="articles_management_can_view_only_low_groups" tip="tip_articles_management_can_view_only_low_groups" />
-		<param name="articles_management_view" value="articles_management_can_view_only_your_own" type="radio" default="checked" label="articles_management_can_view_only_your_own" tip="tip_articles_management_can_view_only_your_own" />
+		<param name="privileges" value="articles_management_can_view_archived_articles" type="checkbox" default="" label="articles_management_can_view_archived_articles" tip="tip_articles_management_can_view_archived_articles" />
+		<param name="privileges" value="articles_management_can_view_unpublished_articles" type="checkbox" default="" label="articles_management_can_view_unpublished_articles" tip="tip_articles_management_can_view_unpublished_articles" />
 		
 	</section>
 	

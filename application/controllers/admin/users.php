@@ -615,7 +615,8 @@ class Users extends Main {
 						msg(('user_group_updated'),'success');
 						
 						if ($this->input->post('submit_apply')){
-							redirect('admin'.$this->uri->ruri_string());
+							
+							//redirect('admin'.$this->uri->ruri_string());
 						}
 						else{
 							redirect_last_url();
