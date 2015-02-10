@@ -2,7 +2,7 @@
 
 class Modal_users_submits_plugin extends Plugins_mdl{
 	
-	public function run( &$data, $params = NULL ){
+	public function run( & $data, $params = NULL ){
 		
 		$return = FALSE;
 		
@@ -10,7 +10,7 @@ class Modal_users_submits_plugin extends Plugins_mdl{
 			
 			log_message( 'debug', '[Plugins] Modal Users submits plugin initialized' );
 			
-			$this->voutput->append_head_script_declaration( 'modal_users_submits', $this->load->view( 'admin/plugins/modal_users_submits/default/modal_users_submits', NULL, TRUE ), NULL, NULL );
+			$this->voutput->append_head_script_declaration( 'modal_users_submits', $this->load->view( 'admin/plugins/modal_users_submits/default/modal_users_submits', $data, TRUE ), NULL, NULL );
 			
 			$return = TRUE;
 			

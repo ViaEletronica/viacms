@@ -12,7 +12,7 @@ class Viacms_live_search_plugin extends Plugins_mdl{
 			
 			$this->voutput->append_head_stylesheet( 'viacms_live_search', STYLES_DIR_URL . '/plugins/viacms-live-search/viacms.liveSearch.css' );
 			$this->voutput->append_head_script( 'viacms_live_search', JS_DIR_URL . '/plugins/viacms-live-search/viacms.liveSearch.js' );
-			$this->voutput->append_head_script_declaration( 'viacms_live_search', $this->load->view( 'admin/plugins/viacms_live_search/default/viacms_live_search', $data, TRUE ), NULL, NULL );
+			$this->voutput->append_head_script_declaration( 'viacms_live_search', $this->load->view( 'plugins/viacms_live_search/default/viacms_live_search', $data, TRUE ), NULL, NULL );
 			
 			$return = TRUE;
 			

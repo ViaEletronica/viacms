@@ -2,7 +2,7 @@
 
 class Image_cropper_plugin extends Plugins_mdl{
 	
-	public function run( &$data, $params = NULL ){
+	public function run( & $params = NULL ){
 		
 		$post = check_var( $params[ 'post' ] ) ? $params[ 'post' ] : FALSE;
 		$return = FALSE;
@@ -11,7 +11,7 @@ class Image_cropper_plugin extends Plugins_mdl{
 			
 			log_message( 'debug', '[Plugins] Image cropper plugin initialized with POST request' );
 			
-			$image_source =								( check_var( $post[ 'image_source' ] ) AND file_exists( FCPATH . str_replace( base_url(), '', $post[ 'image_source' ] ) ) ) ? FCPATH . str_replace( base_url(), '', $post[ 'image_source' ] ) : FALSE;
+			$image_source =								( check_var( $post[ 'image_source' ] ) AND file_exists( FCPATH . str_replace( base_url(), '', urldecode( $post[ 'image_source' ] ) ) ) ) ? FCPATH . str_replace( base_url(), '', urldecode( $post[ 'image_source' ] ) ) : FALSE;
 			
 			$crop =										check_var( $post[ 'crop' ] ) ? TRUE : FALSE;
 			$crop_x =									isset( $post[ 'crop' ][ 'image_data' ][ 'x' ] ) ? (int)$post[ 'crop' ][ 'image_data' ][ 'x' ] : FALSE;
@@ -40,9 +40,9 @@ class Image_cropper_plugin extends Plugins_mdl{
 			
 			if ( $crop AND $image_source AND is_int( $crop_x ) AND is_int( $crop_y ) AND is_int( $crop_w ) AND is_int( $crop_h ) ){
 				
-				$this->load->library('image_lib');
+				$this->load->library( 'image_lib' );
 				
-				$config['image_library'] = 'gd2';
+				$config[ 'image_library' ] = 'gd2';
 				$config['source_image']	= $tmp_image_source;
 				$config['width']	= $crop_w;
 				$config['height']	= $crop_h;

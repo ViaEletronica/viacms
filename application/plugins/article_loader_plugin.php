@@ -6,7 +6,7 @@ class Article_loader_plugin extends Plugins_mdl{
 		
 		log_message( 'debug', '[Plugins] Article loader plugin initialized' );
 		
-		$regex = '/{loadarticle\s*.*?}/i';
+		$regex = '/{load_article \s*.*?}/i';
 		
 		$content = $this->voutput->get_content();
 		
@@ -14,11 +14,15 @@ class Article_loader_plugin extends Plugins_mdl{
 		
 		if ( count( $matches[ 0 ] ) ){
 			
-			$this->load->model( array( 'articles_mdl', 'articles' ) );
-			
-			foreach ( $matches[ 0 ] as $key => $value ) {
+			if ( ! $this->load->is_model_loaded( 'articles' ) ) {
 				
-				$article_array = str_replace( '{', '', $value );
+				$this->load->model( 'articles_mdl', 'articles' );
+				
+			}
+			
+			foreach ( $matches[ 0 ] as $key => $match ) {
+				
+				$article_array = str_replace( '{', '', $match );
 				$article_array = str_replace( '}', '', $article_array );
 				$article_array = trim( $article_array );
 				
@@ -26,12 +30,31 @@ class Article_loader_plugin extends Plugins_mdl{
 				
 				unset( $article_array[ 0 ] );
 				
-				$article_array_final = array(
+				$plugin_params = array(
 					
 					'menu_item_id' => $this->mcm->current_menu_item[ 'id' ],
-					'show_readmore_link' => 1,
-					'readmore_text' => '',
-					'text_to_show' => 'introtext', // introtext, fulltext, both or 0
+					
+					/*
+					 * If you want to load more than one category (using the plugin several times),
+					 * and would keep them side by side, specify here the number of categories in the same line.
+					 * This configuration depends on the layout and template used.
+					 */
+					'inline_col' => 1,
+					'wrapper_class' => '',
+					'url' => FALSE, // string or FALSE | overwrite article url
+					'show_image' => TRUE,
+					'image_as_link' => TRUE,
+					'link_mode' => 'article', // image, article
+					'show_title' => TRUE,
+					'title_as_link' => TRUE,
+					'created_date' => FALSE,
+					'created_by' => FALSE,
+					'category_title' => FALSE,
+					'category_title_as_link' => TRUE,
+					'show_readmore' => TRUE,
+					'show_content' => TRUE,
+					'content_word_limit' => 20,
+					'readmore_text' => lang( 'readmore' ),
 					
 				);
 				
@@ -39,15 +62,74 @@ class Article_loader_plugin extends Plugins_mdl{
 					
 					$attr = explode( '=', $attr );
 					
-					$article_array_final[ $attr[ 0 ] ] = $attr[ 1 ];
+					$_config = $attr[ 0 ];
+					$_value = $attr[ 1 ];
+					
+					$plugin_params[ $attr[ 0 ] ] = $attr[ 1 ];
+					
+					if ( in_array( $_config , array(
+					
+						'show_image',
+						'image_as_link',
+						'show_title',
+						'title_as_link',
+						'created_date',
+						'created_by',
+						'category_title',
+						'category_title_as_link',
+						'show_readmore',
+						'show_content',
+						
+					) ) ) {
+						
+						$plugin_params[ $_config ] = ( bool ) $_value;
+						
+					}
+					else if ( $_config === 'url' ) {
+						
+						if ( is_string( $_value ) AND strlen( $_value ) > 0 ) {
+							
+							$plugin_params[ $_config ] = $_value;
+							
+						}
+						
+					}
+					else if ( $_config === 'content_word_limit' ) {
+						
+						if ( is_numeric( $_value ) AND $_value > 0 ) {
+							
+							$plugin_params[ $_config ] = $_value;
+							
+						}
+						else if ( is_numeric( $_value ) AND $_value == 0 ) {
+							
+							$plugin_params[ $_config ] = FALSE;
+							
+						}
+						
+					}
+					else if ( $_config === 'inline_col' ) {
+						
+						if ( is_numeric( $_value ) AND $_value > 0 ) {
+							
+							$plugin_params[ $_config ] = ( int ) $_value;
+							
+						}
+						
+					}
+					else {
+						
+						$plugin_params[ $_config ] = $_value;
+						
+					}
 					
 				}
 				
 				
 				
-				if ( $article_array_final[ 'menu_item_id' ] != $this->mcm->current_menu_item[ 'id' ] ){
+				if ( $plugin_params[ 'menu_item_id' ] != $this->mcm->current_menu_item[ 'id' ] ){
 					
-					$menu_item = $this->menus_common_model->get_menu_item( $article_array_final[ 'menu_item_id' ] )->row_array();
+					$menu_item = $this->menus->get_menu_item( $plugin_params[ 'menu_item_id' ] );
 					
 				}
 				else{
@@ -71,75 +153,68 @@ class Article_loader_plugin extends Plugins_mdl{
 					
 				}
 				
-				// get articles params
-				$gap = array(
+				// getting the article
+				$search_config = array(
 					
-					'art_id' => $article_array_final[ 'id' ],
-					'limit' => 1,
+					'plugins' => 'articles_search',
+					'ipp' => 1,
+					'random' => FALSE,
+					'allow_empty_terms' => TRUE,
+					'plugins_params' => array(
+						
+						'articles_search' => array(
+							
+							'article_id' => $plugin_params[ 'id' ],
+							'filter_params' => TRUE,
+							
+						),
+						
+					),
 					
 				);
 				
-				if ( $article = $this->articles->get_articles_respecting_privileges( $gap )->row_array() ){
+				$this->load->library( 'search' );
+				$this->search->config( $search_config );
+				
+				$article = $this->search->get_full_results( 'articles_search', TRUE );
+				
+				if ( $article ){
 					
-					$article[ 'params' ] = filter_params( $this->mcm->article_component[ 'params' ], get_params( $article[ 'params' ] ) );
+					$article = $article[ 0 ];
 					
-					if ( ( @$article_array_final[ 'text_to_show' ] == 'introtext' OR @$article_array_final[ 'text_to_show' ] == 'both' ) AND @$article[ 'introtext' ] ) {
-						
-						$readmore_link = '';
-						
-						if ( @$article_array_final[ 'show_readmore_link' ] ){
-							
-							$readmore_link .= '<div class="article-read-more-link-wrapper">';
-							$readmore_link .= '<a class="article-read-more-link" href="' . get_url( 'articles/index/article_detail/' . $menu_item[ 'id' ] . '/' . $article[ 'id' ] ) . '">' . lang( @$article_array_final[ 'readmore_text' ] ? $article_array_final[ 'readmore_text' ] : $article[ 'params' ][ 'readmore_text' ] ) . '</a>';
-							$readmore_link .= '</div>';
-							
-						}
-						
-						$content = str_replace( $value, $article[ 'introtext' ] . $readmore_link, $content );
-						
-					}
-					else if ( @$article_array_final[ 'text_to_show' ] == 0 ) {
-						
-						$readmore_link = '';
-						
-						if ( @$article_array_final[ 'show_readmore_link' ] ){
-							
-							$readmore_link .= '<div class="article-read-more-link-wrapper">';
-							$readmore_link .= '<a class="article-read-more-link" href="' . get_url( 'articles/index/article_detail/' . $menu_item[ 'id' ] . '/' . $article[ 'id' ] ) . '">' . lang( @$article_array_final[ 'readmore_text' ] ? $article_array_final[ 'readmore_text' ] : $article[ 'params' ][ 'readmore_text' ] ) . '</a>';
-							$readmore_link .= '</div>';
-							
-						}
-						
-						$content = str_replace( $value, $readmore_link, $content );
-						
-					}
-					else{
-						
-						$content = str_replace( $value, $article[ 'fulltext' ], $content );
-						
-					}
+					$article[ 'url' ] = $plugin_params[ 'url' ] ? $plugin_params[ 'url' ] : $article[ 'url' ];
+					
+				}
+				else {
+					
+					return FALSE;
 					
 				}
 				
-				$content = str_replace( $value, '', $content );
+				$data[ 'params' ] = $plugin_params;
+				$data[ 'article' ] = $article;
 				
-				$this->voutput->set_content( $content );
+				$view = $this->load->view( 'plugins/article_loader/default/article_loader', $data, TRUE );
 				
-				/* 
-				 * -------------------------------------------------------------------------------------------------
-				 * Executa novamente os plugins de conteúdo
-				 */
-				
-				// carrega os plugins de conteúdo
-				parent::load( NULL, 'content' );
-				
-				//parent::_set_performed( 'article_loader' );
-				
-				/* 
-				 * -------------------------------------------------------------------------------------------------
-				 */
+				$content = str_replace( $match, minify_html( $view ), $content );
 				
 			}
+			
+			$this->voutput->set_content( $content );
+			
+			/* 
+			 * -------------------------------------------------------------------------------------------------
+			 * Executa novamente os plugins de conteúdo
+			 */
+			
+			// carrega os plugins de conteúdo
+			parent::load( NULL, 'content' );
+			
+			//parent::_set_performed( 'article_loader' );
+			
+			/* 
+			 * -------------------------------------------------------------------------------------------------
+			 */
 			
 		}
 		
