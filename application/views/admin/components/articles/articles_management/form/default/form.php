@@ -1,6 +1,6 @@
 <?php
 	
-	$this->plugins->load( array( 'names' => array( 'image_cropper', 'fancybox', 'modal_rf_file_picker', 'yetii' ), 'types' => array( 'js_time_picker', ) ) );
+	$this->plugins->load( array( 'names' => array( 'image_cropper', 'fancybox', 'modal_rf_file_picker', 'yetii' ), 'types' => array( 'js_text_editor', 'js_time_picker', ) ) );
 	
 	$created_date_time = ( check_var( $article[ 'created_date' ] ) ) ? strtotime( $article[ 'created_date' ] ) : gmt_to_local( now(), $this->mcm->filtered_system_params[ 'time_zone' ] );
 	$created_date = $this->input->post( 'created_date' ) ? $this->input->post( 'created_date' ) : strftime( '%Y-%m-%d', $created_date_time );
@@ -92,7 +92,7 @@
 								
 							</div>
 							
-							<? } ?>
+							<?php } ?>
 							
 						</div>
 						
@@ -234,7 +234,7 @@
 							?>
 							
 							<?= form_label( lang( $field_name ) ); ?>
-							<?= form_dropdown( $field_name, $field_options, set_value( $field_name, @$article[ $field_name ] ? @$article[ $field_name ] : 1 ), $field_attr ); ?>
+							<?= form_dropdown( $field_name, $field_options, set_value( $field_name, isset( $article[ $field_name ] ) ? $article[ $field_name ] : 1 ), $field_attr ); ?>
 							
 							<?php
 								
@@ -325,7 +325,7 @@
 							
 						</legend>
 						
-						<div id="introtext-fulltext">
+						<div id="introtext-fulltext" class="vui-field-wrapper">
 							
 							<?php
 								
@@ -367,7 +367,7 @@
 							
 						</div>
 						
-						<div id="full-content" class="hidden">
+						<div id="full-content" class="hidden vui-field-wrapper">
 							
 							<legend>
 								
