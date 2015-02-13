@@ -10,53 +10,9 @@ class Main extends CI_controller {
 	public $html_data = array();
 
 	public function __construct(){
-		
+
 		parent::__construct();
-/*
-		$emails = file_get_contents( '/var/www/sites/corpos-em-par/emails.txt' );
 
-		$emails = explode( "\n", $emails );
-
-		$emails_selecionados = array();
-
-		$this->load->helper('email');
-
-		$limit = 430;
-
-		$i = 1;
-
-		$str_emails_selecionados = '';
-
-		shuffle( $emails );
-
-		foreach ( $emails as $key => $email ) {
-
-			$email = explode( ';', $email );
-
-			if ( ( isset( $email[ 1 ] ) ) AND valid_email( trim( $email[ 1 ] ) ) ) {
-
-				$emails_selecionados[] = $email[ 1 ];
-				$str_emails_selecionados .= $email[ 1 ] . ', ';
-
-				if ( $i == $limit ) {
-
-					break;
-
-				}
-				else {
-
-					$i++;
-
-				}
-
-			}
-
-		}
-
-		$str_emails_selecionados = rtrim( $str_emails_selecionados, ', ' );
-
-		echo $str_emails_selecionados . '<br />';
-*/
 		/*
 		 * -------------------------------------------------------------------------------------------------
 		 * carregando helpers, libraries and models
