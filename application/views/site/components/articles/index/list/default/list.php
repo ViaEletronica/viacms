@@ -233,9 +233,74 @@
 
 		?>
 
-		<?php foreach( $articles as $article ){ ?><?php
+		<?php foreach( $articles as $article ){
 
-			?><div class="article article-wrapper <?php echo ( $featured_counter < $max_featured_articles ? 'featured featured-' . $featured_counter : '' ); $featured_counter++; ?> columns-<?= $params['articles_list_columns']; ?> col column-<?= $column_counter; ?> <?= ( ! ( check_var( $article['params']['show_image_on_list_view'] ) AND check_var( $article[ 'image' ] ) ) ? 'no-image' : '' ); ?> <?= ( ! check_var( $article['params']['show_readmore_link']) ? 'no-readmore' : '' ); ?> <?= ( ! check_var( $article['params']['show_full_text_on_list_view'] ) ? 'no-full-text' : '' ); ?> <?= ( ! check_var( $article['params']['show_introtext_on_list_view'] ) ? 'no-intro-text' : '' ); ?> <?= ( ! check_var( $article['params']['show_created_date_on_list_view'] ) ? 'no-created-date' : '' ); ?> <?= ( ! check_var( $article['params']['show_created_by_on_list_view'] ) ? 'no-created-by' : '' ); ?> <?= ( ! check_var( $article['params']['show_article_category_on_list_view'] ) ? 'no-category-title' : '' ); ?> <?= ( ! check_var( $article['params']['show_title_on_list_view'] ) ? 'no-title' : '' ); ?>">
+			$article_wrapper_class = 'article article-wrapper';
+
+			if ( $featured_counter < $max_featured_articles ) {
+
+				$article_wrapper_class .= ' featured-articles-' . $max_featured_articles . ' featured featured-' . $featured_counter;
+				$featured_counter++;
+
+			}
+
+			$article_wrapper_class .= ' col';
+
+			if ( $featured_counter == $max_featured_articles ) {
+
+				$article_wrapper_class .= ' columns-' . $params[ 'articles_list_columns' ] . ' column-' . $column_counter;
+
+			}
+
+			if ( ! ( check_var( $article[ 'params' ][ 'show_image_on_list_view' ] ) AND check_var( $article[ 'image' ] ) ) ) {
+
+				$article_wrapper_class .= ' no-image';
+
+			}
+
+			if ( ! check_var( $article[ 'params' ][ 'show_readmore_link' ] ) ) {
+
+				$article_wrapper_class .= ' no-readmore';
+
+			}
+
+			if ( ! check_var( $article[ 'params' ][ 'show_full_text_on_list_view' ] ) ) {
+
+				$article_wrapper_class .= ' no-full-text';
+
+			}
+
+			if ( ! check_var( $article[ 'params' ][ 'show_introtext_on_list_view' ] ) ) {
+
+				$article_wrapper_class .= ' no-intro-text';
+
+			}
+
+			if ( ! check_var( $article[ 'params' ][ 'show_created_date_on_list_view' ] ) ) {
+
+				$article_wrapper_class .= ' no-created-date';
+
+			}
+
+			if ( ! check_var( $article[ 'params' ][ 'show_created_by_on_list_view' ] ) ) {
+
+				$article_wrapper_class .= ' no-created-by';
+
+			}
+
+			if ( ! check_var( $article[ 'params' ][ 'show_article_category_on_list_view' ] ) ) {
+
+				$article_wrapper_class .= ' no-category-title';
+
+			}
+
+			if ( ! check_var( $article[ 'params' ][ 'show_title_on_list_view' ] ) ) {
+
+				$article_wrapper_class .= ' no-title';
+
+			}
+
+		?><div class="<?= $article_wrapper_class; ?>">
 
 			<?php
 
@@ -244,6 +309,7 @@
 
 				$modified_date_time = ( check_var( $article[ 'modified_date' ] ) ) ? strtotime( $article[ 'modified_date' ] ) : gmt_to_local( now(), $this->mcm->filtered_system_params[ 'time_zone' ] );
 				$modified_time = strftime( '%T', $modified_date_time );
+
 			?>
 
 			<article class="s1 inner item">
@@ -268,9 +334,8 @@
 
 				<?php } ?>
 
+				<?php if ( $article[ 'params' ][ 'show_title_on_list_view' ] ) { ?>
 				<div class="title article-title-wrapper">
-
-					<?php if ( $article[ 'params' ][ 'show_title_on_list_view' ] ) { ?>
 
 					<header class="s1 inner">
 
@@ -298,9 +363,8 @@
 
 					</header>
 
-					<?php } ?>
-
 				</div>
+				<?php } ?>
 
 				<?php if ( $article[ 'params' ][ 'show_created_date_on_list_view' ] ) { ?>
 				<div class="info article-info-wrapper">
@@ -322,7 +386,7 @@
 				</div>
 				<?php } ?>
 
-				<?php if ( $article['params']['show_introtext_on_list_view'] AND $article['introtext'] ) { ?>
+				<?php if ( $article[ 'params' ][ 'show_introtext_on_list_view' ] AND $article[ 'introtext' ] ) { ?>
 				<div class="content introtext article-content-wrapper">
 
 					<div class="article-content-intro-text-wrapper">
@@ -408,7 +472,7 @@
 
 			</article>
 
-		</div><?php if ( $column_counter == $params['articles_list_columns'] ){
+		</div><?php if ( $featured_counter == $max_featured_articles AND $column_counter == $params[ 'articles_list_columns' ] ){
 
 				$column_counter = 1;
 
