@@ -901,10 +901,10 @@ class Articles extends Main {
 				$data[ 'params_spec' ] = $this->articles_model->get_article_params();
 
 				// cruzando os valores padrões das especificações com os do DB
-				$data['final_params_values'] = array_merge( $data['params_spec']['params_spec_values'], $data['current_params_values'] );
+				$data[ 'final_params_values' ] = array_merge( $data['params_spec']['params_spec_values'], $data['current_params_values'] );
 
 				// definindo as regras de validação
-				set_params_validations( $data['params_spec']['params_spec'] );
+				set_params_validations( $data[ 'params_spec' ][ 'params_spec' ] );
 
 				// Params ------------------------------------------
 				// -------------------------------------------------
@@ -964,7 +964,7 @@ class Articles extends Main {
 				// se a validação dos campos for positiva
 				else if ( $this->form_validation->run() AND ( $this->input->post( 'submit' ) OR $this->input->post( 'submit_apply' ) ) ){
 
-					$db_data = elements(array(
+					$db_data = elements( array(
 
 						'created_by_id',
 						'status',
@@ -1019,13 +1019,17 @@ class Articles extends Main {
 
 					$db_data[ 'modified_by_id' ] = $this->users_common_model->user_data[ 'id' ];
 
-					$db_data['created_date'] = $this->input->post( 'created_date' ) . ' ' . $this->input->post( 'created_time' );
+					$db_data[ 'created_date' ] = $this->input->post( 'created_date' ) . ' ' . $this->input->post( 'created_time' );
 
 					if ( $db_data[ 'alias' ] == '' ){
 						$db_data[ 'alias' ] = url_title( $db_data[ 'title' ], '-', TRUE );
 					}
 
-					$db_data['params'] = json_encode( $db_data['params'] );
+					// merging current article params with new
+					$db_data[ 'params' ] = array_merge_recursive_distinct( $article[ 'params' ], $db_data[ 'params' ] );
+					
+					// json encoding
+					$db_data[ 'params' ] = json_encode( $db_data[ 'params' ] );
 
 					if ( $action == 'e' ) {
 
