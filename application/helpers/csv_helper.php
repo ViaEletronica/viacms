@@ -5,7 +5,7 @@
 /**
  * CSV Helpers
  * Inspiration from PHP Cookbook by David Sklar and Adam Trachtenberg
- * 
+ *
  * @author		Jérôme Jaglale
  * @modifier	Frank Souza
  * @link		http://maestric.com/en/doc/php/codeigniter_csv
@@ -22,24 +22,28 @@
 if ( ! function_exists('array_to_csv'))
 {
 	// let's add the $delimiter and $enclosure args ;)
-	function array_to_csv( $array, $download = "", $delimiter = ',', $enclosure = '"' )
+	function array_to_csv( $array, $download = "", $separator = ',', $enclosure = '"' )
 	{
 		if ($download != "")
-		{	
+		{
 			header('Content-Type: application/csv');
 			header('Content-Disposition: attachement; filename="' . $download . '"');
 		}
 
 		ob_start();
 		$f = fopen('php://output', 'w') or show_error("Can't open php://output");
-		
+
 		fwrite( $f, "\xEF\xBB\xBF" ); // UTF-8 BOM
-		
+
 		$n = 0;
 		foreach ($array as $line)
 		{
 			$n++;
-			if ( ! fputcsv( $f, $line, ( $delimiter !== '' ? $delimiter : ',' ), ( $enclosure !== '' ? $enclosure : '"' ) ) )
+
+			$separator = ( $separator !== '' ? $separator : ',' );
+
+			#if ( ! fputcsv( $f, $line, ( $delimiter !== '' ? $delimiter : ',' ), ( $enclosure !== '' ? $enclosure : chr( 0 ) ) ) )
+			if ( ! fwrite( $f, $enclosure . implode( $enclosure . $separator . $enclosure , $line ) . $enclosure . "\n" ) )
 			{
 				show_error("Can't write line $n: $line");
 			}
@@ -53,9 +57,9 @@ if ( ! function_exists('array_to_csv'))
 			return $str;
 		}
 		else
-		{	
+		{
 			echo $str;
-		}		
+		}
 	}
 }
 
@@ -75,9 +79,9 @@ if ( ! function_exists('query_to_csv'))
 		{
 			show_error('invalid query');
 		}
-		
+
 		$array = array();
-		
+
 		if ($headers)
 		{
 			$line = array();
@@ -87,7 +91,7 @@ if ( ! function_exists('query_to_csv'))
 			}
 			$array[] = $line;
 		}
-		
+
 		foreach ($query->result_array() as $row)
 		{
 			$line = array();
