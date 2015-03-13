@@ -21,7 +21,7 @@ class Articles extends Main {
 		set_current_component();
 
 		// verifica se o usuário atual possui privilégios para gerenciar artigos
-		if ( ! $this->users_common_model->check_privileges('articles_management_articles_management') ){
+		if ( ! $this->ucm->check_privileges('articles_management_articles_management') ){
 			msg(('access_denied'),'title');
 			msg(('access_denied_articles_management_articles_management'),'error');
 			redirect_last_url();
@@ -233,7 +233,7 @@ class Articles extends Main {
 								$created_date_time = gmt_to_local( now(), $this->mcm->filtered_system_params[ 'time_zone' ] );
 								$created_date_time = strftime( '%Y-%m-%d %T', $created_date_time );
 								$article[ 'created_date' ] = $article[ 'modified_date' ] = $article[ 'publish_datetime' ] = $created_date_time;
-								$article[ 'created_by_id' ] = $article[ 'modified_by_id' ] = $article[ 'publish_user_id' ] = $this->users_common_model->user_data[ 'id' ];
+								$article[ 'created_by_id' ] = $article[ 'modified_by_id' ] = $article[ 'publish_user_id' ] = $this->ucm->user_data[ 'id' ];
 
 								$articles[] = $article;
 
@@ -349,13 +349,13 @@ class Articles extends Main {
 
 		if (
 
-			is_numeric( $this->users_common_model->get_user_preference( $this->mcm->environment . '_articles_items_per_page' ) ) AND
-			$this->users_common_model->get_user_preference( $this->mcm->environment . '_articles_items_per_page' ) > -1 AND
+			is_numeric( $this->ucm->get_user_preference( $this->mcm->environment . '_articles_items_per_page' ) ) AND
+			$this->ucm->get_user_preference( $this->mcm->environment . '_articles_items_per_page' ) > -1 AND
 			! isset( $post[ 'ipp' ] )
 
 		){
 
-			$ipp = $this->users_common_model->get_user_preference( $this->mcm->environment . '_articles_items_per_page' );
+			$ipp = $this->ucm->get_user_preference( $this->mcm->environment . '_articles_items_per_page' );
 
 		}
 		else if ( ! isset( $ipp ) OR $ipp == -1 ){
@@ -401,118 +401,21 @@ class Articles extends Main {
 				// -------------------------------------------------
 				// Ordering ----------------------------------------
 
-				if ( ! ( ( $order_by_direction = $this->users_common_model->get_user_preference( 'articles_order_by_direction' ) ) != FALSE ) ){
+				if ( ! ( ( $order_by_direction = $this->ucm->get_user_preference( 'articles_order_by_direction' ) ) != FALSE ) ){
 
 					$order_by_direction = 'ASC';
 
 				}
 
-				// order by complement
-				$comp_ob = '';
+				if ( check_var( $this->ucm->get_user_preference( 'articles_order_by' ) ) ){
 
-				if ( ( $order_by = $this->users_common_model->get_user_preference( 'articles_order_by' ) ) != FALSE ){
+					$order_by = $this->ucm->get_user_preference( 'articles_order_by' );
 
-					$data[ 'order_by' ] = $order_by;
-
-					switch ( $order_by ) {
-
-						case 'id':
-
-							$order_by = 't1.id';
-							break;
-
-						case 'image':
-
-							$order_by = 'if( `t1`.`image` = \'\' or `t1`.`image` is null, 1, 0 ), `t1`.`image`';
-							$comp_ob = ', t1.ordering ' . $order_by_direction . ', t1.title ' . $order_by_direction;
-							break;
-
-						case 'title':
-
-							$order_by = 't1.title';
-							break;
-
-						case 'alias':
-
-							$order_by = 't1.alias';
-							break;
-
-						case 'category_id':
-
-							$order_by = 't1.category_id';
-							break;
-
-						case 'category_title':
-
-							$order_by = 't7.title';
-							$comp_ob = ', t2.title ' . $order_by_direction . ', t2.ordering ' . $order_by_direction . ', t1.ordering ' . $order_by_direction . ', t1.title ' . $order_by_direction;
-							break;
-
-						case 'ordering':
-
-							$order_by = 't1.ordering';
-							break;
-
-						case 'status':
-
-							$order_by = 't1.status';
-							break;
-
-						case 'access_type':
-
-							$order_by = 't1.access_type';
-							break;
-
-						case 'created_by_id':
-
-							$order_by = 't1.created_by_id';
-							break;
-
-						case 'created_by_name':
-
-							$order_by = 't3.name';
-							break;
-
-						case 'created_date':
-
-							$order_by = 't1.created_date';
-							break;
-
-						case 'modified_by_id':
-
-							$order_by = 't1.modified_by_id';
-							break;
-
-						case 'modified_date':
-
-							$order_by = 't1.modified_date';
-							break;
-
-						case 'created_by_alias':
-
-							$order_by = 't1.created_by_alias';
-							break;
-
-						default:
-
-							$order_by = 't1.id';
-							$data[ 'order_by' ] = 'id';
-
-							break;
-
-					}
 
 				}
-				else{
-
-					$order_by = 't1.id';
-					$data[ 'order_by' ] = 'id';
-
-				}
+				$data[ 'order_by' ] = $order_by;
 
 				$data[ 'order_by_direction' ] = $order_by_direction;
-
-				$order_by = $order_by . ' ' . $order_by_direction . $comp_ob;
 
 				// Ordering ----------------------------------------
 				// -------------------------------------------------
@@ -524,7 +427,7 @@ class Articles extends Main {
 				if ( isset( $post[ 'ipp' ] ) AND isset( $post[ 'submit_change_ipp' ] ) ){
 
 					// setting the user preference
-					$this->users_common_model->set_user_preferences( array( $this->mcm->environment . '_articles_items_per_page' => $post[ 'ipp' ] ) );
+					$this->ucm->set_user_preferences( array( $this->mcm->environment . '_articles_items_per_page' => $post[ 'ipp' ] ) );
 
 					// we also have to set the current page as 1, to cut the risk of the search result falls outside the range
 					$cp = 1;
@@ -534,14 +437,14 @@ class Articles extends Main {
 				// -------------
 
 				// category
-				$filter_by_category = $this->users_common_model->get_user_preference( 'articles_filter_by_category' );
+				$filter_by_category = $this->ucm->get_user_preference( 'articles_filter_by_category' );
 
 				if ( isset( $post[ 'articles_filter_by_category' ] ) AND isset( $post[ 'submit_filter_by_category' ] ) ){
 
 					$filter_by_category = $post[ 'articles_filter_by_category' ];
 
 					// setting the user preference
-					$this->users_common_model->set_user_preferences( array( 'articles_filter_by_category' => $filter_by_category ) );
+					$this->ucm->set_user_preferences( array( 'articles_filter_by_category' => $filter_by_category ) );
 
 					// we also have to set the current page as 1, to cut the risk of the search result falls outside the range
 					$cp = 1;
@@ -570,16 +473,13 @@ class Articles extends Main {
 					'cp' => $cp,
 					'terms' => $terms,
 					'allow_empty_terms' => ( $action === 's' ? FALSE : TRUE ),
-					'order_by' => array( // deve-se enviar um array associativo, onde cada chave deve ser so nome do plugin, order by não pode ser usado globalmente, apenas por plugin
-
-						'articles_search' => $order_by, // pode ser um array
-
-					),
 					'plugins_params' => array( // se deve passar um array associativo, onde cada chave deve ser so nome do plugin
 
 						'articles_search' => array(
 
 							'category_id' => $category_id,
+							'order_by' => $order_by,
+							'order_by_direction' => $order_by_direction,
 
 						),
 
@@ -731,9 +631,9 @@ class Articles extends Main {
 
 			else if ( ( $action == 'cob' ) AND $order_by ){
 
-				$this->users_common_model->set_user_preferences( array( 'articles_order_by' => $order_by ) );
+				$this->ucm->set_user_preferences( array( 'articles_order_by' => $order_by ) );
 
-				if ( ( $order_by_direction = $this->users_common_model->get_user_preference( 'articles_order_by_direction' ) ) != FALSE ){
+				if ( ( $order_by_direction = $this->ucm->get_user_preference( 'articles_order_by_direction' ) ) != FALSE ){
 
 					switch ( $order_by_direction ) {
 
@@ -749,12 +649,12 @@ class Articles extends Main {
 
 					}
 
-					$this->users_common_model->set_user_preferences( array( 'articles_order_by_direction' => $order_by_direction ) );
+					$this->ucm->set_user_preferences( array( 'articles_order_by_direction' => $order_by_direction ) );
 
 				}
 				else {
 
-					$this->users_common_model->set_user_preferences( array( 'articles_order_by_direction' => 'ASC' ) );
+					$this->ucm->set_user_preferences( array( 'articles_order_by_direction' => 'ASC' ) );
 
 				}
 
@@ -781,7 +681,7 @@ class Articles extends Main {
 				if ( $action == 'a' ){
 
 					// checking articles management privileges
-					if ( ! $this->users_common_model->check_privileges( 'articles_management_can_add_articles' ) ){
+					if ( ! $this->ucm->check_privileges( 'articles_management_can_add_articles' ) ){
 
 						msg( ( 'access_denied' ), 'title' );
 						msg( ( 'access_denied_articles_management_can_add_articles' ), 'error' );
@@ -791,7 +691,7 @@ class Articles extends Main {
 
 					$article = array();
 
-					$article[ 'created_by_id' ] = $this->users_common_model->user_data[ 'id' ];
+					$article[ 'created_by_id' ] = $this->ucm->user_data[ 'id' ];
 
 				}
 
@@ -802,9 +702,9 @@ class Articles extends Main {
 					// -------------------------------------------------
 					// Checking privileges -----------------------------
 
-					if ( $article_user_id != $this->users_common_model->user_data[ 'id' ] AND ! $this->users_common_model->check_privileges( 'articles_management_can_edit_all_articles' ) ){
+					if ( $article_user_id != $this->ucm->user_data[ 'id' ] AND ! $this->ucm->check_privileges( 'articles_management_can_edit_all_articles' ) ){
 
-						if ( $this->users_common_model->check_privileges( 'articles_management_can_edit_only_your_own_user' ) ){
+						if ( $this->ucm->check_privileges( 'articles_management_can_edit_only_your_own_user' ) ){
 
 							msg( ( 'access_denied' ),'title' );
 							msg( ( 'access_denied_articles_management_can_edit_only_your_own_user' ), 'error' );
@@ -812,19 +712,19 @@ class Articles extends Main {
 							redirect_last_url();
 
 						}
-						else if ( ! $this->users_common_model->check_privileges( 'articles_management_can_edit_only_your_own_user' ) ){
+						else if ( ! $this->ucm->check_privileges( 'articles_management_can_edit_only_your_own_user' ) ){
 
-							$is_on_same_or_below_group_level = $this->users_common_model->check_if_user_is_on_same_and_low_group_level( $article_user_id );
-							$is_on_same_group_level = $this->users_common_model->check_if_user_is_on_same_group_level( $article_user_id );
-							$is_on_same_group_or_below = $this->users_common_model->check_if_user_is_on_same_group_and_below( $article_user_id );
-							$is_on_same_group = $this->users_common_model->check_if_user_is_on_same_group( $article_user_id );
-							$is_on_below_groups = $this->users_common_model->check_if_user_is_on_below_groups( $article_user_id );
+							$is_on_same_or_below_group_level = $this->ucm->check_if_user_is_on_same_and_low_group_level( $article_user_id );
+							$is_on_same_group_level = $this->ucm->check_if_user_is_on_same_group_level( $article_user_id );
+							$is_on_same_group_or_below = $this->ucm->check_if_user_is_on_same_group_and_below( $article_user_id );
+							$is_on_same_group = $this->ucm->check_if_user_is_on_same_group( $article_user_id );
+							$is_on_below_groups = $this->ucm->check_if_user_is_on_below_groups( $article_user_id );
 
-							$can_edit_only_same_and_low_group_level = $this->users_common_model->check_privileges( 'articles_management_can_edit_only_same_and_low_group_level' );
-							$can_edit_only_same_group_level = $this->users_common_model->check_privileges( 'articles_management_can_edit_only_same_group_level' );
-							$can_edit_only_same_group_and_below = $this->users_common_model->check_privileges( 'articles_management_can_edit_only_same_group_and_below' );
-							$can_edit_only_same_group = $this->users_common_model->check_privileges( 'articles_management_can_edit_only_same_group' );
-							$can_edit_only_below_groups = $this->users_common_model->check_privileges( 'articles_management_can_edit_only_low_groups' );
+							$can_edit_only_same_and_low_group_level = $this->ucm->check_privileges( 'articles_management_can_edit_only_same_and_low_group_level' );
+							$can_edit_only_same_group_level = $this->ucm->check_privileges( 'articles_management_can_edit_only_same_group_level' );
+							$can_edit_only_same_group_and_below = $this->ucm->check_privileges( 'articles_management_can_edit_only_same_group_and_below' );
+							$can_edit_only_same_group = $this->ucm->check_privileges( 'articles_management_can_edit_only_same_group' );
+							$can_edit_only_below_groups = $this->ucm->check_privileges( 'articles_management_can_edit_only_low_groups' );
 
 							if ( $can_edit_only_same_and_low_group_level AND ! ( $is_on_same_or_below_group_level ) ){
 
@@ -878,8 +778,8 @@ class Articles extends Main {
 				$data[ 'f_action' ] = $action;
 				$data[ 'categories' ] = $this->articles->get_categories_tree( array( 'array' => $this->articles->get_categories() ) );
 				$data[ 'article' ] = & $article;
-				$data[ 'users' ] = $this->users_common_model->get_users_checking_privileges()->result_array();
-				$data[ 'users_groups' ] = $this->users_common_model->get_accessible_users_groups( $this->users_common_model->user_data[ 'id' ] );
+				$data[ 'users' ] = $this->ucm->get_users_checking_privileges()->result_array();
+				$data[ 'users_groups' ] = $this->ucm->get_accessible_users_groups( $this->ucm->user_data[ 'id' ] );
 
 				// -------------------------------------------------
 				// Params ------------------------------------------
@@ -1017,7 +917,7 @@ class Articles extends Main {
 
 					$db_data[ 'modified_date' ] = $modified_date_time;
 
-					$db_data[ 'modified_by_id' ] = $this->users_common_model->user_data[ 'id' ];
+					$db_data[ 'modified_by_id' ] = $this->ucm->user_data[ 'id' ];
 
 					$db_data[ 'created_date' ] = $this->input->post( 'created_date' ) . ' ' . $this->input->post( 'created_time' );
 
@@ -1027,7 +927,7 @@ class Articles extends Main {
 
 					// merging current article params with new
 					$db_data[ 'params' ] = array_merge_recursive_distinct( $article[ 'params' ], $db_data[ 'params' ] );
-					
+
 					// json encoding
 					$db_data[ 'params' ] = json_encode( $db_data[ 'params' ] );
 
@@ -1438,13 +1338,13 @@ class Articles extends Main {
 
 		if (
 
-			is_numeric( $this->users_common_model->get_user_preference( $this->mcm->environment . '_articles_categories_items_per_page' ) ) AND
-			$this->users_common_model->get_user_preference( $this->mcm->environment . '_articles_categories_items_per_page' ) > -1 AND
+			is_numeric( $this->ucm->get_user_preference( $this->mcm->environment . '_articles_categories_items_per_page' ) ) AND
+			$this->ucm->get_user_preference( $this->mcm->environment . '_articles_categories_items_per_page' ) > -1 AND
 			! isset( $post[ 'ipp' ] )
 
 		){
 
-			$ipp = $this->users_common_model->get_user_preference( $this->mcm->environment . '_articles_categories_items_per_page' );
+			$ipp = $this->ucm->get_user_preference( $this->mcm->environment . '_articles_categories_items_per_page' );
 
 		}
 		else if ( ! isset( $ipp ) OR $ipp == -1 ){
@@ -1487,7 +1387,7 @@ class Articles extends Main {
 				// -------------------------------------------------
 				// Columns ordering --------------------------------
 
-				if ( ! ( ( $order_by_direction = $this->users_common_model->get_user_preference( 'articles_categories_order_by_direction' ) ) != FALSE ) ){
+				if ( ! ( ( $order_by_direction = $this->ucm->get_user_preference( 'articles_categories_order_by_direction' ) ) != FALSE ) ){
 
 					$order_by_direction = 'ASC';
 
@@ -1496,7 +1396,7 @@ class Articles extends Main {
 				// order by complement
 				$comp_ob = '';
 
-				if ( ( $order_by = $this->users_common_model->get_user_preference( 'articles_categories_order_by' ) ) != FALSE ){
+				if ( ( $order_by = $this->ucm->get_user_preference( 'articles_categories_order_by' ) ) != FALSE ){
 
 					$data[ 'order_by' ] = $order_by;
 
@@ -1563,7 +1463,7 @@ class Articles extends Main {
 				if ( isset( $post[ 'ipp' ] ) AND isset( $post[ 'submit_change_ipp' ] ) ){
 
 					// setting the user preference
-					$this->users_common_model->set_user_preferences( array( $this->mcm->environment . '_articles_categories_items_per_page' => $post[ 'ipp' ] ) );
+					$this->ucm->set_user_preferences( array( $this->mcm->environment . '_articles_categories_items_per_page' => $post[ 'ipp' ] ) );
 
 					// we also have to set the current page as 1, to cut the risk of the search result falls outside the range
 					$cp = 1;
@@ -1802,9 +1702,9 @@ class Articles extends Main {
 
 			else if ( ( $action == 'cob' ) AND $order_by ){
 
-				$this->users_common_model->set_user_preferences( array( 'articles_categories_order_by' => $order_by ) );
+				$this->ucm->set_user_preferences( array( 'articles_categories_order_by' => $order_by ) );
 
-				if ( ( $order_by_direction = $this->users_common_model->get_user_preference( 'articles_categories_order_by_direction' ) ) != FALSE ){
+				if ( ( $order_by_direction = $this->ucm->get_user_preference( 'articles_categories_order_by_direction' ) ) != FALSE ){
 
 					switch ( $order_by_direction ) {
 
@@ -1820,12 +1720,12 @@ class Articles extends Main {
 
 					}
 
-					$this->users_common_model->set_user_preferences( array( 'articles_categories_order_by_direction' => $order_by_direction ) );
+					$this->ucm->set_user_preferences( array( 'articles_categories_order_by_direction' => $order_by_direction ) );
 
 				}
 				else {
 
-					$this->users_common_model->set_user_preferences( array( 'articles_categories_order_by_direction' => 'ASC' ) );
+					$this->ucm->set_user_preferences( array( 'articles_categories_order_by_direction' => 'ASC' ) );
 
 				}
 
@@ -2103,7 +2003,7 @@ class Articles extends Main {
 
 					$articles = $this->search->get_full_results( 'articles_search' );
 
-					$childrens_categories = $this->articles->get_categories( $category_id );
+					$childrens_categories = $this->articles->get_categories( $category_id, TRUE, FALSE );
 
 					if ( $articles ){
 

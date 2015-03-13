@@ -243,7 +243,7 @@ class Articles_search_plugin extends Plugins_mdl{
 				}
 
 				$search_config[ 'order_by' ][ 'articles_search' ] = $order_by;
-				$search_config[ 'order_by_direction' ][ 'articles_search' ] = NULL;
+				$search_config[ 'order_by_direction' ][ 'articles_search' ] = $order_by_direction;
 				$search_config[ 'random' ] = $random;
 
 				$order_by = $order_by . ' ' . $order_by_direction . $comp_ob;
@@ -384,17 +384,17 @@ class Articles_search_plugin extends Plugins_mdl{
 			// -------------------------------------------------
 			// Status filtering ---------------------------------
 
-			if ( $this->session->userdata( environment() . '_login' ) ){
+			if ( $this->ucm->is_logged_in() ){
 
 				// if status is not set, it means that there is no status filter
 				if ( ! isset( $status ) ) {
 
-					if ( $this->users_common_model->check_privileges( 'articles_management_can_view_archived_articles' ) ) {
+					if ( $this->ucm->check_privileges( 'articles_management_can_view_archived_articles' ) ) {
 
 						$status_condition[] = '^' . -1 . '$';
 
 					}
-					if ( $this->users_common_model->check_privileges( 'articles_management_can_view_unpublished_articles' ) ) {
+					if ( $this->ucm->check_privileges( 'articles_management_can_view_unpublished_articles' ) ) {
 
 						$status_condition[] = '^' . 0 . '$';
 
@@ -420,7 +420,7 @@ class Articles_search_plugin extends Plugins_mdl{
 				}
 
 				// can view all articles, we can override the default conditions array, removing access type and status filters
-				if ( $this->users_common_model->check_privileges( 'articles_management_can_view_all_articles' ) ){
+				if ( $this->ucm->check_privileges( 'articles_management_can_view_all_articles' ) ){
 
 					// if there's no status filter, we can disable this for this privilege
 					if ( ! isset( $status ) ) {
@@ -445,25 +445,25 @@ class Articles_search_plugin extends Plugins_mdl{
 					}
 					else {
 
-						$_access_type_condition[] = '`t1`.`created_by_id` = "' . $this->users_common_model->user_data[ 'id' ] . '"'; // yep, current user filter here
+						$_access_type_condition[] = '`t1`.`created_by_id` = "' . $this->ucm->user_data[ 'id' ] . '"'; // yep, current user filter here
 
 					}
 
 					$_access_type_condition[ 'at_default' ] = $default_condition_array[ 'access_type_condition' ];
-					$_access_type_condition[ 'at_users' ] = '( `t1`.`access_type` = \'users\' AND `t1`.`access_id` LIKE \'%>' . $this->users_common_model->user_data[ 'id' ] . '<%\' )';
-					$_access_type_condition[ 'at_users_groups' ] = '( `t1`.`access_type` = \'users_groups\' AND `t1`.`access_id` LIKE \'%>' . $this->users_common_model->user_data[ 'group_id' ] . '<%\' )';
+					$_access_type_condition[ 'at_users' ] = '( `t1`.`access_type` = \'users\' AND `t1`.`access_id` LIKE \'%>' . $this->ucm->user_data[ 'id' ] . '<%\' )';
+					$_access_type_condition[ 'at_users_groups' ] = '( `t1`.`access_type` = \'users_groups\' AND `t1`.`access_id` LIKE \'%>' . $this->ucm->user_data[ 'group_id' ] . '<%\' )';
 
 					// Can view public articles and your own -----------
 					// -------------------------------------------------
 
-					if ( ! $this->users_common_model->check_privileges( 'articles_management_can_view_only_your_own' ) ){
+					if ( ! $this->ucm->check_privileges( 'articles_management_can_view_only_your_own' ) ){
 
 						// getting accessible user groups
 						$accessible_users_groups = $this->articles->view_articles_get_accessible_users_groups();
 
 						if ( check_var( $accessible_users_groups ) ) {
 
-							$users_groups[] = '(.*)>' . $this->users_common_model->user_data[ 'group_id' ] . '<(.*)';
+							$users_groups[] = '(.*)>' . $this->ucm->user_data[ 'group_id' ] . '<(.*)';
 
 							foreach ( $accessible_users_groups as $key => $users_group ) {
 
