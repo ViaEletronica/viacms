@@ -6,8 +6,9 @@ $lang['Submit_forms'] = 																		"Formulários";
 $lang['submit_forms'] = 																		"Formulários";
 $lang['submit_form_id'] = 																		"Id do formulário";
 $lang['submit_form_title'] = 																	"Título do formulário";
-$lang['no_submit_forms'] = 																		"Não há nenhum formulário cadastrado";
+$lang['no_submit_forms'] = 																		"Não há formulários cadastrados. <a href=\"admin/submit_forms/sfm/a/asf\" target=\"_blank\">Clique aqui</a> para criar um novo formulário";
 $lang['add_submit_form'] = 																		"Novo formulário";
+$lang['new_submit_form'] = 																		$lang['add_submit_form'];
 
 // post sending messages
 $lang['post_sending_messages'] = 																"Mensagens pós envio";
@@ -20,13 +21,17 @@ $lang['tip_sfpsm_user_submit_save_into_db_success'] =											"Mensagem exibid
 
 
 // email sending
-$lang['sending'] = 																				"Envio do formulário";
+$lang['submit_form_param_email_receiving'] = 													"Recebimento via e-mail";
+$lang['tip_submit_form_param_email_receiving'] = 												"Se ativo, além do salvamento no banco de dados, os envios também serão enviados por e-mail.";
+$lang['sending'] = 																				"Envio";
 $lang['submit_form_param_send_email_to'] = 														"E-mails de destino";
 $lang['tip_submit_form_param_send_email_to'] = 													"<p>Defina para onde as mensagens devem ser enviadas.</p><ul><li><strong>E-mails do contato:</strong> Se selecionado, as mensagens serão enviadas para todos os e-mails do contato selecionado no campo <strong><i>Contato de recebimento</i></strong>. <span class=\"warning\"><strong>Importante: </strong>Tenha certeza que os e-mails do contato selecionado estão <strong>marcados para recebimento de mensagens</strong>. Você pode definir isto nas configurações do contato.</span></li><li><strong>E-mails personalizados:</strong> Se selecionado, as mensagens serão enviadas para os e-mails definidos no campo <strong><i>E-mails de recebimento personalizados</i></strong>.</li></ul>";
 $lang['submit_form_param_send_email_to_contact'] =												"Contato de recebimento";
 $lang['tip_submit_form_param_send_email_to_contact'] =											"<p>Se você selecionou a opção <strong><i>E-mails do contato</i></strong> no campo <strong><i>E-mails de destino</i></strong>, defina aqui o contato que recebrá as mensagens.</p><p><span class=\"warning\"><br /><strong>Importante: </strong>Tenha certeza que os e-mails do contato selecionado estão <strong>marcados para recebimento de mensagens</strong>. Você pode definir isto nas configurações do contato.</span></p>";
 $lang['submit_form_param_send_email_to_custom_emails'] =										"E-mails de recebimento personalizados";
 $lang['tip_submit_form_param_send_email_to_custom_emails'] =									"<p>Se você selecionou a opção <strong><i>E-mails personalizados</i></strong> no campo <strong><i>E-mails de destino</i></strong>, defina aqui os endereços de e-mail para os quais serão enviadas as mensagens.</p><p>Se desejar mais de um endereço de e-mail, informe um por linha.</p>";
+
+$lang['submitter_message_receiving'] = 															"Envio para usuários";
 
 $lang['submit_form_param_send_email_to_from'] =													"De (e-mail)";
 $lang['submit_form_param_send_email_to_from_name'] =											"Em nome de";
@@ -41,6 +46,12 @@ $lang['submit_form_sending_email_layout_view'] =												"Modelo de envio";
 $lang['submit_form_sending_email_show_empty_fields'] =											"Enviar campos em branco";
 $lang['submit_form_sending_email_layout_custom'] =												"Modelo de envio personalizado";
 
+$lang['us_search_pre_text'] = 																	"Texto antes do formulário";
+$lang['us_search_pos_text'] = 																	"Texto após o formulário";
+$lang['us_show_search_pre_text_on_normal'] = 													"Exibir antes das buscas";
+$lang['tip_us_show_search_pre_text_on_normal'] = 												"Esta opção definirá se o texto antes do formulário de busca será exibido antes de uma busca ser efetuada.";
+$lang['us_show_search_pre_text_on_search'] = 													"Exibir após as buscas";
+$lang['tip_us_show_search_pre_text_on_search'] = 												"Esta opção definirá se o texto antes do formulário de busca será exibido após uma busca ser efetuada.";
 
 
 
@@ -133,6 +144,7 @@ $lang['users_submits_export_error'] = 															"Erro ao tentar exportar";
 $lang['no_users_submits_selected'] = 															"Nenhum envio selecionado";
 $lang['select_submissions_to_export'] = 														"Por favor, selecione os envios que deseja exportar";
 $lang['users_submits_removed_success'] = 														"Envios excluídos com sucesso!";
+$lang['columns_to_show'] = 																		"Colunas visíveis";
 
 
 

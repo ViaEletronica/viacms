@@ -66,6 +66,8 @@ $lang['date_format_1'] =																			"%d/%m/%Y";
 $lang['time_format_1'] =																			"%H:%M:%S";
 
 $lang['publish_time_format_1'] =																	"Publicado em %s de %s de %s às %s:%s";
+$lang['publish_time_format_2'] =																	"Criado em %s de %s de %s às %s:%s";
+$lang['update_time_format_1'] =																		"Atualizado em %s de %s de %s às %s:%s";
 
 
 // Formatos de datas padrões
