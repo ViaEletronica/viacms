@@ -39,22 +39,24 @@ class Viacms_Form_validation extends CI_Form_validation {
 	
 	
 	
-	function _domain_exists( $email, $record = 'MX' ){
+	function _domain_exists( $str, $record = 'ANY' ){
 		
-		list( $user, $domain ) = explode( '@', $email );
-		
-		return checkdnsrr( $domain, $record );
+		return checkdnsrr( $str, $record );
 		
 	}
 	
-	function valid_domain( $str, $field ){
+	function _valid_domain( $str ){
 		
-		if( $this->_domain_exists( $str ) ) {
+		if ( $str ) {
 			
-			return TRUE;
-			
-		}
-		else {
+			if ( ( preg_match("/^([a-z\d](-*[a-z\d])*)(\.([a-z\d](-*[a-z\d])*))*$/i", $str) //valid chars check
+				&& preg_match("/^.{1,253}$/", $str) //overall length check
+				&& preg_match("/^[^\.]{1,63}(\.[^\.]{1,63})*$/", $str ) ) ) //length of each label )
+			{
+				
+				return TRUE;
+				
+			}
 			
 			return FALSE;
 			
@@ -62,7 +64,52 @@ class Viacms_Form_validation extends CI_Form_validation {
 		
 	}
 	
-	function valid_email_dns( $str, $field ){
+	function valid_domain( $str ){
+		
+		if ( $str ) {
+			
+			if ( $this->_valid_domain( $str ) ) {
+				
+				return TRUE;
+				
+			}
+			
+			$this->CI->form_validation->set_message( 'valid_domain', lang( 'validation_rule_valid_domain_is_invalid' ) );
+			return FALSE;
+			
+		}
+		
+	}
+	
+	function valid_domain_dns( $str ){
+		
+		if ( $str ) {
+			
+			if ( $this->_valid_domain( $str ) ) {
+				
+				if ( $this->_domain_exists( $str ) ) {
+				
+					return TRUE;
+					
+				}
+				else {
+					
+					$this->CI->form_validation->set_message( 'valid_domain_dns', lang( 'validation_rule_valid_domain_dns_not_exists' ) );
+					
+					return FALSE;
+					
+				}
+				
+			}
+			
+			$this->CI->form_validation->set_message( 'valid_domain_dns', lang( 'validation_rule_valid_domain_dns_is_invalid' ) );
+			return FALSE;
+			
+		}
+		
+	}
+	
+	function valid_email_dns( $str ){
 		
 		$this->ci->load->library( 'verify_email' );
 		
@@ -70,17 +117,16 @@ class Viacms_Form_validation extends CI_Form_validation {
 		
 		if ( $this->ci->verify_email->check( $email ) ) {
 			
-			$this->CI->form_validation->set_message( 'valid_email_dns', lang( 'email &lt;' . $email . '&gt; exist!' ) );
 			return TRUE;
 			
 		} elseif ( $this->ci->verify_email->isValid( $email ) ) {
 			
-			$this->CI->form_validation->set_message( 'valid_email_dns', lang( 'email &lt;' . $email . '&gt; valid, but not exist!' ) );
+			$this->CI->form_validation->set_message( 'valid_email_dns', sprintf( lang( 'valid_email_dns_not_exists' ), $email ) );
 			return FALSE;
 			
 		} else {
 			
-			$this->CI->form_validation->set_message( 'valid_email_dns', lang( 'email &lt;' . $email . '&gt; not valid and not exist!' ) );
+			$this->CI->form_validation->set_message( 'valid_email_dns', sprintf( lang( 'valid_email_dns_is_invalid' ), $email ) );
 			return FALSE;
 		    
 		}
@@ -149,7 +195,7 @@ class Viacms_Form_validation extends CI_Form_validation {
 	}
 	
 	// Add a validation rule wich allow spaces no alphanumeric function
-	public function alpha_dash_space( $str, $field ){
+	public function alpha_dash_space( $str ){
 		
 		$this->CI->form_validation->set_message( 'alpha_dash_space', lang( 'validation_rule_alpha_dash_spaces' ) );
 		

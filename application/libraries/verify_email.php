@@ -120,7 +120,10 @@ class Verify_email {
 			$timeout = ceil($this->_maxConnectionTimeout / count($mxs));
 			foreach ($mxs as $host) {
 //				if ($fp = @fsockopen($host, $this->_port, $errno, $errstr, $timeout)) {
-				if ($fp = @stream_socket_client("tcp://" . $host . ":" . $this->_port, $errno, $errstr, $timeout)) {
+				
+				$fp = stream_socket_client( "tcp://" . $host . ":" . $this->_port, $errno, $errstr, $timeout );
+				
+				if ( $fp ) {
 					
 					stream_set_timeout($fp, $this->_maxStreamTimeout);
 					stream_set_blocking($fp, 1);
@@ -135,6 +138,7 @@ class Verify_email {
 				}
 			}
 			if ($fp) {
+				
 				$this->_fsockquery($fp, "HELO " . $this->_fromDomain);
 				//$this->_fsockquery($fp, "VRFY " . $email);
 				$this->_fsockquery($fp, "MAIL FROM: <" . $this->_fromName . '@' . $this->_fromDomain . ">");
